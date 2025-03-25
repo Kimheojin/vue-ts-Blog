@@ -3,7 +3,7 @@
 </script>
 
 <template>
-
+  asdfasfd
 </template>
 
 <style scoped>
