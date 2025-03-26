@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  카테고리 바
+ 라우터 들어갈곳
 </template>
 
 <style scoped>

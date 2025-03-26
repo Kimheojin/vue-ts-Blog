@@ -4,6 +4,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Menu from "../components/Menu.vue";
 
 
+
 const routes = [
 
     {
@@ -12,7 +13,6 @@ const routes = [
             menu: Menu
         }
     },
-
 
 ];
 
