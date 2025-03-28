@@ -13,15 +13,19 @@ const goToGithub = () => {
 </script>
 
 <template>
-  <div class="header-container">
-    <div class="github-icon" @click="goToGithub">
-      <img src="/github-logo.png" alt="GitHub" />
+
+    <div class="header-container">
+      <div class="github-icon" @click="goToGithub">
+        <img src="/github-logo.png" alt="GitHub" />
+      </div>
+      <div class="site-title" @click="goHome">허진 블로그</div>
     </div>
-    <div class="site-title" @click="goHome">허진 블로그</div>
-  </div>
+
+
 </template>
 
 <style scoped>
+
 .header-container {
   display: flex;
   align-items: center;
@@ -30,16 +34,15 @@ const goToGithub = () => {
 }
 
 .github-icon {
+  display: flex;
+  align-items: center; /* 세로 중앙 정렬 */
+  margin-right: 10px;
   cursor: pointer;
-  margin-right: 15px;
-  position: absolute;
-  left: 0;
-  top: 0;
 }
 
 .github-icon img {
-  width: 18px;
-  height: 18px;
+  width: 30px;
+  height: 30px;
   vertical-align: middle;
 }
 .site-title {
@@ -47,4 +50,6 @@ const goToGithub = () => {
   font-size: 1.8rem;
   margin: 0 auto;
 }
+
+
 </style>

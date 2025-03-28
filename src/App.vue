@@ -14,7 +14,7 @@ isDark.value = true
       <Header />
     </el-header>
     <el-container>
-      <el-aside width="150px">
+      <el-aside width="150px" class="sidebar-with-border">
         <Menu />
       </el-aside>
       <el-main>
@@ -28,6 +28,19 @@ isDark.value = true
 
 
 <style>
+
+
+
+.header{
+  border-bottom: 1px solid #e0e0e0; /* Light gray border at the bottom */
+  padding-bottom: 10px; /* Add some padding to separate content from the line */
+}
+.sidebar-with-border {
+  border: 1px solid #ffffff; /* 흰색 테두리 */
+  border-radius: 8px;
+  margin-top: 10px;
+  padding: 5px;
+}
 
 
 html.dark {
