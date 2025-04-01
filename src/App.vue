@@ -43,7 +43,7 @@ isDark.value = true
 
 .sidebar-with-border {
   border: 1px solid #ffffff; /* 흰색 테두리 */
-  border-radius: 8px;
+  border-radius: 4px;
   margin-top: 10px;
   padding: 5px;
 }
@@ -53,12 +53,7 @@ isDark.value = true
 }
 
 .content-with-border {
-  border: 1px solid #ffffff; /* 흰색 테두리 */
-  border-radius: 8px;
-  margin-top: 10px;
-  margin-left: 10px;
-  margin-right: 10px;
-  padding: 5px;
+  padding: 0px;
 }
 
 html.dark {

@@ -10,8 +10,13 @@
   },
   "dependencies": {
     "@types/grecaptcha": "^3.0.9",
+    "@types/highlight.js": "^10.1.0",
+    "@types/marked": "^6.0.0",
     "@vueuse/core": "^13.0.0",
     "element-plus": "^2.9.7",
+    "highlight.js": "^11.11.1",
+    "marked": "^15.0.7",
+    "marked-highlight": "^2.2.1",
     "vue": "^3.5.13",
     "vue-recaptcha": "^3.0.0-alpha.6",
     "vue-router": "^4.5.0"
