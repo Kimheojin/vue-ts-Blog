@@ -7,6 +7,9 @@ const goHome = () => {
 const goToGithub = () => {
   window.open('https://github.com/Kimheojin', '_blank');
 }
+const goToAboutMe = () => {
+  router.push('/about')
+}
 </script>
 
 <template>
@@ -24,7 +27,9 @@ const goToGithub = () => {
     </div>
 
     <div class="right-section">
-      <!-- 오른쪽 여백을 위한 빈 공간 // GitHub 아이콘과 동일한 너비 -->
+      <div class="about-me" @click="goToAboutMe">
+        About me
+      </div>
     </div>
   </div>
 </template>
@@ -49,7 +54,10 @@ const goToGithub = () => {
 }
 
 .right-section {
-  flex: 0 0 40px; /* GitHub 아이콘과 동일한 공간*/
+  flex: 0 0 auto;
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
 }
 
 .github-icon {
@@ -67,5 +75,11 @@ const goToGithub = () => {
 .site-title {
   cursor: pointer;
   font-size: 1.8rem;
+}
+
+.about-me {
+  cursor: pointer;
+  padding: 5px 10px;
+  font-size: 1rem;
 }
 </style>
