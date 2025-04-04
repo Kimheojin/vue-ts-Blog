@@ -1,85 +1,76 @@
 <script setup lang="ts">
-import router from "../router";
+import { useRouter } from 'vue-router';
+import { ElButton, ElDivider } from 'element-plus';
+
+const router = useRouter();
 
 const goHome = () => {
-  router.push('/')
+  router.push('/');
 }
-const goToGithub = () => {
-  window.open('https://github.com/Kimheojin', '_blank');
-}
+
 const goToAboutMe = () => {
-  router.push('/about')
+  router.push('/about');
 }
 </script>
 
 <template>
   <div class="header-container">
-    <div class="left-section">
-      <div class="github-icon" @click="goToGithub">
-        <img src="/github-logo.png" alt="GitHub" />
-      </div>
-    </div>
+    <el-button
+        class="blog-title"
+        type="text"
+        @click="goHome">
+      허진 블로그
+    </el-button>
 
-    <div class="center-section">
-      <div class="site-title" @click="goHome">
-        허진 블로그
-      </div>
-    </div>
 
-    <div class="right-section">
-      <div class="about-me" @click="goToAboutMe">
-        About me
-      </div>
-    </div>
+
+    <el-button
+        class="about-button"
+        type="text"
+        @click="goToAboutMe">
+      소개
+    </el-button>
   </div>
 </template>
 
 <style scoped>
 .header-container {
   display: flex;
-  align-items: center;
-  position: relative;
-  width: 100%;
-}
-
-.left-section {
-  flex: 0 0 auto;
-  margin-right: 10px;
-}
-
-.center-section {
-  flex: 1;
-  display: flex;
+  flex-direction: column;
   justify-content: center;
-}
-
-.right-section {
-  flex: 0 0 auto;
-  margin-left: 10px;
-  display: flex;
   align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 10px;
 }
 
-.github-icon {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
+:deep(.el-button) {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
-.github-icon img {
-  width: 30px;
-  height: 30px;
-  vertical-align: middle;
+.blog-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #e0e0e0;
+  margin-bottom: 5px;
 }
 
-.site-title {
-  cursor: pointer;
-  font-size: 1.8rem;
+.blog-title:hover {
+  color: #ffffff;
 }
 
-.about-me {
-  cursor: pointer;
-  padding: 5px 10px;
-  font-size: 1rem;
+:deep(.el-divider) {
+  margin: 10px 0;
+  width: 70%;
+  border-color: #444;
+}
+
+.about-button {
+  font-size: 16px;
+  color: #b0b0b0;
+}
+
+.about-button:hover {
+  color: #ffffff;
 }
 </style>
