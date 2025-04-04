@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
-import { ElButton, ElDivider } from 'element-plus';
+import { ElButton } from 'element-plus';
 
 const router = useRouter();
 
@@ -15,58 +15,86 @@ const goToAboutMe = () => {
 
 <template>
   <div class="header-container">
-    <el-button
-        class="blog-title"
-        type="text"
-        @click="goHome">
-      허진 블로그
-    </el-button>
+    <div class="header-content">
+      <div class="logo-container">
+        <img src="/public/HeoJin.png" alt="HeoJin" class="logo-image" />
+      </div>
+      <div class="buttons-container">
+        <el-button
+            class="nav-button blog-title"
+            type="text"
+            @click="goHome">허진블로그
+        </el-button>
 
-
-
-    <el-button
-        class="about-button"
-        type="text"
-        @click="goToAboutMe">
-      소개
-    </el-button>
+        <el-button
+            class="nav-button about-button"
+            type="text"
+            @click="goToAboutMe">허진블로그
+        </el-button>
+      </div>
+    </div>
   </div>
 </template>
 
 <style scoped>
 .header-container {
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 100%;
-  padding: 10px;
+  padding: 20px;
+}
+
+.header-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80%;
+  max-width: 1200px;
+}
+
+.logo-container {
+  margin-bottom: 8px;
+}
+
+.logo-image {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+}
+
+.buttons-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 5px;
 }
 
 :deep(.el-button) {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
+.nav-button {
+  display: block;
+  width: 140px;
+  text-align: center;
+  margin: 0;
+  padding: 10px 0;
+}
+
 .blog-title {
   font-size: 20px;
   font-weight: bold;
   color: #e0e0e0;
-  margin-bottom: 5px;
 }
 
 .blog-title:hover {
   color: #ffffff;
 }
 
-:deep(.el-divider) {
-  margin: 10px 0;
-  width: 70%;
-  border-color: #444;
-}
-
 .about-button {
-  font-size: 16px;
+  font-size: 14px;
   color: #b0b0b0;
 }
 
