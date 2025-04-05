@@ -3,7 +3,9 @@
 </script>
 
 <template>
-  카테고리 바
+
+
+
 </template>
 
 <style scoped>

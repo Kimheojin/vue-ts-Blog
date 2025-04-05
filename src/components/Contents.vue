@@ -6,8 +6,6 @@
 <template>
   <div>
     <router-view></router-view>
-
-    asdf
   </div>
 </template>
 

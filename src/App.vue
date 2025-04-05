@@ -122,7 +122,7 @@ body {
 
 /* Sidebar header section */
 .sidebar-header {
-  margin-bottom: 20px;
+  margin-bottom: 7px;
 }
 
 /* Square header container with rounded corners */
@@ -139,11 +139,18 @@ body {
   border: 1px solid #444;
 }
 
-/* Sidebar menu section */
+/* Sidebar menu section - header-square와 유사한 스타일 적용 */
 .sidebar-menu {
   flex-grow: 1;
   overflow-y: auto;
-  padding-top: 10px;
+  padding: 15px;
+  background-color: #2a2a2a;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: 1px solid #444;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Main content styling */
@@ -172,8 +179,6 @@ body {
     grid-template-columns: 1fr; /* 모바일에서는 한 열로 표시 */
   }
 }
-
-
 
 html.dark body {
   background-color: #2c2c2c;

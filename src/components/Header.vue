@@ -17,7 +17,7 @@ const goToAboutMe = () => {
   <div class="header-container">
     <div class="header-content">
       <div class="logo-container">
-        <img src="/public/HeoJin.png" alt="HeoJin" class="logo-image" />
+        <img src="/HeoJin.png" alt="HeoJin" class="logo-image" />
       </div>
       <div class="buttons-container">
         <el-button
@@ -54,7 +54,7 @@ const goToAboutMe = () => {
 }
 
 .logo-container {
-  margin-bottom: 8px;
+  margin-bottom: 1px;
 }
 
 .logo-image {
@@ -68,7 +68,7 @@ const goToAboutMe = () => {
   flex-direction: column;
   align-items: center;
   width: 100%;
-  gap: 5px;
+  gap: 1px;
 }
 
 :deep(.el-button) {
