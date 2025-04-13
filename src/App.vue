@@ -153,12 +153,14 @@ body {
   flex-direction: column;
 }
 
-/* Main content styling */
+/* Main content 영역 */
 .main-content {
   background-color: #2c2c2c;
   padding: 20px;
   height: 100vh;
   overflow-y: auto;
+  display: flex;
+  justify-content: center;
 }
 
 /* 사이드바가 숨겨졌을 때 콘텐츠 영역 확장 */
@@ -171,6 +173,8 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
+  max-width: 1200px;
+  width: 100%;
 }
 
 /* 반응형 미디어 쿼리 */

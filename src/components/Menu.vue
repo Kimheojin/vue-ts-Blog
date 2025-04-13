@@ -3,9 +3,7 @@
 </script>
 
 <template>
-
-
-
+  카테고리
 </template>
 
 <style scoped>

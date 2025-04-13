@@ -1,5 +1,5 @@
 import type {AxiosError} from "axios";
-import type {ErrorResponse} from "../data/interface/ErrorResponse.ts";
+import type {ErrorResponse} from "../entity/interface/ErrorResponse.ts";
 
 
 
@@ -16,7 +16,7 @@ export default class HttpError{
         return this.code
     }
 
-    public getMessage() {
+    public getMessage(): string {
         return this.message
     }
 }

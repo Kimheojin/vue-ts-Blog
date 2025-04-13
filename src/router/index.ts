@@ -4,8 +4,6 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Menu from "../components/Menu.vue";
 import Aboutme from "../views/Aboutme.vue";
 
-
-
 const routes = [
 
     {
