@@ -4,6 +4,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Menu from "../components/Menu.vue";
 import Aboutme from "../views/Aboutme.vue";
 import LoginPage from "../views/LoginPage.vue";
+import Markdown from "../views/Markdown.vue";
 
 const routes = [
 
@@ -18,6 +19,10 @@ const routes = [
     {
         path: '/login',
         component: LoginPage
+    },
+    {
+        path: '/marktest',
+        component: Markdown
     }
 
 ];

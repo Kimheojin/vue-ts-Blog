@@ -6,10 +6,7 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 const isDark = useDark()
 isDark.value = true
 
-// VueUse 훅으로 창 크기 감지
-
-
-// VueUse breakpoints 설정
+// VueUse breakpoints
 const breakpoints = useBreakpoints({
   mobile: 480,
   tablet: 768,
@@ -22,7 +19,6 @@ const isTabletOrLarger = breakpoints.greater('tablet')
 
 // 줌 레벨 관리
 const zoomLevel = ref(1)
-
 
 // 줌 레벨 업데이트 함수 - visualViewport API 활용
 const updateZoomLevel = () => {
@@ -84,15 +80,10 @@ onUnmounted(() => {
       </div>
     </el-aside>
 
-    <!-- 메인 콘텐츠 영역 -->
-    <el-container class="content-container" :class="{ 'full-width': !showSidebar }">
-
-      <el-main class="main-content">
-        <div class="card-grid">
-          <Contents />
-        </div>
-      </el-main>
-    </el-container>
+    <!-- 메인 콘텐츠 영역 - 단순화 -->
+    <el-main class="main-content" :class="{ 'full-width': !showSidebar }">
+      <Contents />
+    </el-main>
   </el-container>
 </template>
 
@@ -119,7 +110,6 @@ body {
   transition: all 0.3s ease;
 }
 
-
 /* Sidebar header section */
 .sidebar-header {
   margin-bottom: 7px;
@@ -139,7 +129,7 @@ body {
   border: 1px solid #444;
 }
 
-/* Sidebar menu section - header-square와 유사한 스타일 적용 */
+/* Sidebar menu section */
 .sidebar-menu {
   flex-grow: 1;
   overflow-y: auto;
@@ -153,35 +143,20 @@ body {
   flex-direction: column;
 }
 
-/* Main content 영역 */
+/* 메인 콘텐츠 영역 */
 .main-content {
   background-color: #2c2c2c;
-  padding: 20px;
   height: 100vh;
+  padding: 0;
   overflow-y: auto;
   display: flex;
   justify-content: center;
 }
 
 /* 사이드바가 숨겨졌을 때 콘텐츠 영역 확장 */
-.content-container.full-width {
+.full-width {
   width: 100%;
   transition: width 0.3s ease;
-}
-
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
-  max-width: 1200px;
-  width: 100%;
-}
-
-/* 반응형 미디어 쿼리 */
-@media (max-width: 768px) {
-  .card-grid {
-    grid-template-columns: 1fr; /* 모바일에서는 한 열로 표시 */
-  }
 }
 
 html.dark body {
