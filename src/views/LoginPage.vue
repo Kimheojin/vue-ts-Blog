@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {reactive} from 'vue';
+import {reactive, ref} from 'vue';
 import {useRouter} from "vue-router";
 import {ElMessage} from "element-plus";
 import {container} from "tsyringe";
@@ -14,6 +14,8 @@ const state = reactive({
   login: new LoginRequest()
 })
 
+
+const isLoading = ref(false)
 function handleLogin() {
 
   AUTH_REPOSITORY.login(state.login).then(
@@ -22,15 +24,19 @@ function handleLogin() {
         router.push('/about')
       })
       .catch((e: HttpError) =>{
-          ElMessage.error(e.getMessage())}
-      )
+
+          ElMessage.error(e.getMessage() + " // " +  e.getCode())}
+      ).finally(() => {
+
+    isLoading.value = false
+
+  })
 
 }
 
 
 
-</script>
-<template>
+</script><template>
   <div class="login-page">
     <div class="login-container">
       <h2 class="login-title">로그인</h2>
@@ -55,14 +61,13 @@ function handleLogin() {
           />
         </div>
 
-
-
         <div class="form-group">
           <button
               class="login-button"
               @click="handleLogin"
+              :disabled="isLoading"
           >
-            로그인
+            {{ isLoading ? '로그인 중...' : '로그인' }}
           </button>
         </div>
       </div>
