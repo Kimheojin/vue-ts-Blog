@@ -2,15 +2,14 @@ import {inject, singleton} from "tsyringe";
 import AxiosHttpClient, {type HttpRequestConfig} from "../http/AxiosHttpClient.ts";
 import {type ClassConstructor, plainToInstance} from "class-transformer";
 import Paging from "../entity/data/Paging.ts";
-
-
-
+import Null from "../entity/data/Null.ts";
 
 
 @singleton()
 export default class HttpRepository {
     constructor(@inject(AxiosHttpClient) private readonly httpClient: AxiosHttpClient) {}
 
+    // clazz -> 응답 데이터를 변환할 클래스 성성자
     public get<T>(config: HttpRequestConfig, clazz: ClassConstructor<T>): Promise<T> {
         return this.httpClient
             .request({...config, method: 'GET'})
@@ -31,6 +30,25 @@ export default class HttpRepository {
             paging.setItems(items as T[]);
             return paging;
         });
+    }
+
+    public delete<T>(config: HttpRequestConfig, clazz:ClassConstructor<T> | null = null) : Promise<T | unknown> {
+        return this.httpClient
+            .request({
+                ...config, method: 'DELETE'
+            })
+            .then((response) => plainToInstance(clazz !== null ? clazz : (Null as any), response))
+    }
+
+    public post<T>(config: HttpRequestConfig, clazz: ClassConstructor<T> | null = null): Promise<T> {
+        return this.httpClient
+            .request({ ...config, method: 'POST' })
+            .then((response) => {
+                // null 처리 개선
+                return clazz !== null
+                    ? plainToInstance(clazz, response) as T
+                    : response as unknown as T;
+            });
     }
 
 

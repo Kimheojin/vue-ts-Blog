@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
-import { ElButton } from 'element-plus';
+import { useRouter } from "vue-router";
+import { ElButton } from "element-plus";
 
 const router = useRouter();
 
 const goHome = () => {
-  router.push('/');
-}
+  router.push("/");
+};
 
 const goToAboutMe = () => {
-  router.push('/about');
-}
+  router.push("/about");
+};
 </script>
 
 <template>
@@ -20,16 +20,15 @@ const goToAboutMe = () => {
         <img src="/HeoJin.png" alt="HeoJin" class="logo-image" />
       </div>
       <div class="buttons-container">
-        <el-button
-            class="nav-button blog-title"
-            type="text"
-            @click="goHome">허진블로그
+        <el-button class="nav-button blog-title" type="text" @click="goHome"
+          >허진블로그
         </el-button>
 
         <el-button
-            class="nav-button about-button"
-            type="text"
-            @click="goToAboutMe">허진블로그
+          class="nav-button about-button"
+          type="text"
+          @click="goToAboutMe"
+          >허진블로그
         </el-button>
       </div>
     </div>
@@ -72,7 +71,8 @@ const goToAboutMe = () => {
 }
 
 :deep(.el-button) {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
 .nav-button {
