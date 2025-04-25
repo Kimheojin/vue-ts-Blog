@@ -46,7 +46,7 @@ function handleLogin() {
           <input
               v-model="state.login.email"
               type="text"
-              placeholder="아이디"
+              placeholder="Email"
               class="form-input"
           />
         </div>
