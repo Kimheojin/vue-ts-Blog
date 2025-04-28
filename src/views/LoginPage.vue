@@ -33,9 +33,6 @@ function handleLogin() {
   })
 
 }
-
-
-
 </script><template>
   <div class="login-page">
     <div class="login-container">
