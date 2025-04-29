@@ -26,7 +26,7 @@ const routes = [
         component: AdminPage
     },
     {
-        path: '/marktest',
+        path: '/markTest',
         component: Markdown
     }
 
