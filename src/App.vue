@@ -2,6 +2,8 @@
 import { useDark, useBreakpoints } from '@vueuse/core'
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import Contents from "./components/Contents.vue";
+import MenuHeader from "./components/MenuHeader.vue";
+import ContentsHeader from "./components/ContentsHeader.vue";
 
 // 다크 모드 설정
 const isDark = useDark()
@@ -72,7 +74,7 @@ onUnmounted(() => {
         v-if="showSidebar">
       <div class="sidebar-header">
         <div class="header-square">
-          <Header />
+          <MenuHeader />
         </div>
       </div>
 
@@ -81,9 +83,16 @@ onUnmounted(() => {
       </div>
     </el-aside>
 
-    <!-- 메인 콘텐츠 영역 - 단순화 -->
     <el-main class="main-content" :class="{ 'full-width': !showSidebar }">
-      <Contents />
+
+      <el-row>
+        <el-col :span="24" class="header-content-container">
+          <ContentsHeader />
+          <Contents  />
+        </el-col>
+      </el-row>
+
+
     </el-main>
   </el-container>
 </template>
@@ -94,6 +103,7 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
+
 
 .main-container {
   min-height: 100vh;
@@ -160,8 +170,12 @@ body {
   transition: width 0.3s ease;
 }
 
+
+
 html.dark body {
   background-color: #2c2c2c;
   color: #e0e0e0;
 }
+
+
 </style>

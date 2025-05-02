@@ -9,16 +9,19 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     Contents: typeof import('./src/components/Contents.vue')['default']
+    ContentsHeader: typeof import('./src/components/ContentsHeader.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElButton: typeof import('element-plus/es')['ElButton']
+    ElCol: typeof import('element-plus/es')['ElCol']
     ElContainer: typeof import('element-plus/es')['ElContainer']
     ElForm: typeof import('element-plus/es')['ElForm']
     ElFormItem: typeof import('element-plus/es')['ElFormItem']
     ElInput: typeof import('element-plus/es')['ElInput']
     ElMain: typeof import('element-plus/es')['ElMain']
-    Header: typeof import('./src/components/Header.vue')['default']
+    ElRow: typeof import('element-plus/es')['ElRow']
     MarkdownRender: typeof import('./src/components/MarkdownRender.vue')['default']
     Menu: typeof import('./src/components/Menu.vue')['default']
+    MenuHeader: typeof import('./src/components/MenuHeader.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

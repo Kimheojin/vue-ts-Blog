@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 
 import Menu from "../components/Menu.vue";
-import Aboutme from "../views/Aboutme.vue";
+import AboutMe from "../views/Aboutme.vue";
 import LoginPage from "../views/LoginPage.vue";
 import Markdown from "../views/Markdown.vue";
 import AdminPage from "../views/AdminPage.vue";
@@ -15,7 +15,7 @@ const routes = [
     },
     {
         path: '/about',
-        component: Aboutme
+        component: AboutMe
     },
     {
         path: '/login',

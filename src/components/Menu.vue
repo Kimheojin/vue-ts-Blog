@@ -45,9 +45,9 @@ onMounted(async () => {
       <ul v-else class="category-list">
         <li v-for="category in categories"
             :key="category.id"
-            @click="goToCategory(category.id)"
+            @click="goToCategory(category.categoryName)"
             class="category-item">
-          {{ category.categoryName, category.id }}
+          {{ category.categoryName}}
         </li>
       </ul>
     </div>
