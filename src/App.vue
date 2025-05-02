@@ -158,6 +158,7 @@ body {
 .main-content {
   background-color: #2c2c2c;
   height: 100vh;
+  width: 100%; /* 항상 전체 너비 사용 */
   padding: 0;
   overflow-y: auto;
   display: flex;
@@ -175,6 +176,13 @@ body {
 html.dark body {
   background-color: #2c2c2c;
   color: #e0e0e0;
+}
+.header-content-container {
+  width: 100%;
+  height: auto;
+   /* 또는 원하는 고정 너비 (예: 1600px) */
+  margin: 0 auto; /* 가운데 정렬 */
+  padding: 20px;
 }
 
 

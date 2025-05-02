@@ -3,7 +3,9 @@
 </script>
 
 <template>
-<h1>about me</h1>
+
+  <el-row><el-col>about mepppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp</el-col></el-row>
+
 </template>
 
 <style scoped>

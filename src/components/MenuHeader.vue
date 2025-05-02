@@ -27,7 +27,7 @@ const goToAboutMe = () => {
           class="nav-button about-button"
           type="text"
           @click="goToAboutMe"
-          >허진블로그
+          >About me
         </el-button>
       </div>
     </div>
