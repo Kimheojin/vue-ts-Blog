@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useDark, useBreakpoints } from '@vueuse/core'
 import { ref, computed, onMounted, onUnmounted } from 'vue'
+import Contents from "./components/Contents.vue";
 
 // 다크 모드 설정
 const isDark = useDark()

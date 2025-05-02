@@ -23,7 +23,6 @@ const goToAboutMe = () => {
         <el-button class="nav-button blog-title" type="text" @click="goHome"
           >허진블로그
         </el-button>
-
         <el-button
           class="nav-button about-button"
           type="text"

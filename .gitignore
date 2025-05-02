@@ -25,4 +25,6 @@ dist-ssr
 
 # custom
 dist
+.env.production
+.env.development
 

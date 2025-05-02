@@ -1,7 +1,7 @@
 import {inject, singleton} from "tsyringe";
 import HttpRepository from "./HttpRepository.ts";
 import Category from "../entity/data/Category.ts";
-import type Paging from "../entity/data/Paging.ts";
+
 
 @singleton()
 export default class CategoryRepository{
@@ -10,9 +10,14 @@ export default class CategoryRepository{
     ) {
     }
 
-    public async getCategories():Promise<Paging<Category>>{
-        return this.httpRepository.getList({
-            path: '/api/categories'
-        }, Category)
+
+    // 전체 카테고리 조회
+    public async getCategories():Promise<Category[]>{
+        return this.httpRepository.getSimpleList({
+            path: '/api/categoryList'
+        }, Category);
     }
+
+    // 카테고리 추가
+
 }

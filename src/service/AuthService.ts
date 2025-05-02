@@ -8,15 +8,15 @@ export default class AuthService{
     private currentSession: SessionInfo | null = null
 
     constructor() {
-        this.loadSeesion();
+        this.loadSession();
     }
 
-    public saveSession(seesionInfo: SessionInfo) : void {
-        this.currentSession = seesionInfo;
-        localStorage.setItem(this.SESSION_KEY, JSON.stringify(seesionInfo))
+    public saveSession(sessionInfo: SessionInfo) : void {
+        this.currentSession = sessionInfo;
+        localStorage.setItem(this.SESSION_KEY, JSON.stringify(sessionInfo))
     }
 
-    private loadSeesion() : void {
+    private loadSession() : void {
         const sessionData = localStorage.getItem(this.SESSION_KEY)
         if(sessionData) { // 존재 한다면
 

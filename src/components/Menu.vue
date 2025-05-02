@@ -3,13 +3,10 @@ import { useRouter } from "vue-router";
 import { onMounted, ref } from "vue";
 import { container } from "tsyringe";
 import CategoryRepository from "../repository/CategoryRepository.ts";
+import type Category from "../entity/data/Category.ts";
 
 // 타입 정의 추가 (Category 인터페이스가 없어 추가했습니다)
-interface Category {
-  id: string;
-  name: string;
-  // 필요한 다른 속성들 추가
-}
+
 
 const router = useRouter();
 const CATEGORY_REPOSITORY = container.resolve(CategoryRepository);
@@ -18,7 +15,6 @@ const isLoading = ref(true);
 
 const goToLogin = () => {
   router.push("/login");
-  console.log("로그인 클릭됨");
 };
 
 const goToCategory = (categoryId: string) => {
@@ -40,15 +36,18 @@ onMounted(async () => {
 <template>
   <div class="menu-container">
     <div class="categories-section">
-      <div>글 전체보기</div>
+      <el-button>글 전체보기</el-button>
 
       <!-- 로딩 상태 표시 -->
       <div v-if="isLoading">카테고리 로딩 중...</div>
 
       <!-- 카테고리 목록 -->
       <ul v-else class="category-list">
-        <li v-for="category in categories" :key="category.id" @click="goToCategory(category.id)" class="category-item">
-          {{ category.name }}
+        <li v-for="category in categories"
+            :key="category.id"
+            @click="goToCategory(category.id)"
+            class="category-item">
+          {{ category.categoryName, category.id }}
         </li>
       </ul>
     </div>

@@ -32,6 +32,18 @@ export default class HttpRepository {
         });
     }
 
+    public getSimpleList<T>(config: HttpRequestConfig, clazz: ClassConstructor<T>): Promise<T[]> {
+        return this.httpClient.request({ ...config, method: 'GET' }).then((response) => {
+            // categoryResponses가 있으면 그것을 사용, 없으면 빈 배열 반환
+            const itemsArray = response.categoryResponses || [];
+
+            // 배열 변환
+            return Array.isArray(itemsArray)
+                ? plainToInstance(clazz, itemsArray)
+                : [];
+        });
+    }
+
     public delete<T>(config: HttpRequestConfig, clazz:ClassConstructor<T> | null = null) : Promise<T | unknown> {
         return this.httpClient
             .request({

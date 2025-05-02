@@ -24,7 +24,6 @@ function handleLogin() {
         router.push('/about')
       })
       .catch((e: HttpError) =>{
-
           ElMessage.error(e.getMessage() + " // " +  e.getCode())}
       ).finally(() => {
 
