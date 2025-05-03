@@ -3,9 +3,7 @@
 </script>
 
 <template>
-
-  <el-row><el-col>about mepppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp</el-col></el-row>
-
+  <div>abomepppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp</div>
 </template>
 
 <style scoped>

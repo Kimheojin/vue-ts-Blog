@@ -5,10 +5,15 @@
 <template>
 
   <el-row>
-    <el-col>
+    <el-col class="fixed-width">
       <router-view></router-view>
     </el-col>
   </el-row>
 </template>
-<style>
+<style scoped>
+
+.fixed-width {
+  width: 500px; /* 원하는 고정된 가로 크기 */
+  word-wrap: break-word; /* 긴 단어도 잘라서 줄바꿈 */
+}
 </style>

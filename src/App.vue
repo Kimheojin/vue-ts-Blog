@@ -64,7 +64,6 @@ onUnmounted(() => {
   }
 })
 </script>
-
 <template>
   <el-container class="main-container">
     <!-- 사이드바 -->
@@ -83,7 +82,9 @@ onUnmounted(() => {
       </div>
     </el-aside>
 
-    <el-main class="main-content" :class="{ 'full-width': !showSidebar }">
+    <el-main
+        class="main-content"
+             :class="{ 'full-width': !showSidebar }">
 
       <el-row>
         <el-col :span="24" class="header-content-container">
@@ -104,7 +105,6 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
-
 .main-container {
   min-height: 100vh;
   position: relative;
@@ -116,7 +116,7 @@ body {
   color: #e0e0e0;
   padding: 15px;
   border-right: 1px solid #333;
-  display: flex;
+/*  display: flex; */
   flex-direction: column;
   transition: all 0.3s ease;
 }
@@ -157,8 +157,7 @@ body {
 /* 메인 콘텐츠 영역 */
 .main-content {
   background-color: #2c2c2c;
-  height: 100vh;
-  width: 100%; /* 항상 전체 너비 사용 */
+  width: 1300px; /* 항상 전체 너비 사용 */
   padding: 0;
   overflow-y: auto;
   display: flex;
@@ -182,7 +181,7 @@ html.dark body {
   height: auto;
    /* 또는 원하는 고정 너비 (예: 1600px) */
   margin: 0 auto; /* 가운데 정렬 */
-  padding: 20px;
+
 }
 
 

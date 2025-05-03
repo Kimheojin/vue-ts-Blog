@@ -70,10 +70,9 @@ onMounted(async () => {
   /* 로그인 버튼 컨테이너 스타일 */
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+
   padding-bottom: 1px;
 }
-
 .login-button:hover {
   color: #ffffff;
 }
