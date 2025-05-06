@@ -1,67 +1,42 @@
 <script setup lang="ts">
-import { useDark, useBreakpoints } from '@vueuse/core'
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import Contents from "./components/Contents.vue";
 import MenuHeader from "./components/MenuHeader.vue";
 import ContentsHeader from "./components/ContentsHeader.vue";
 
 // 다크 모드 설정
+import { useDark } from '@vueuse/core'
 const isDark = useDark()
 isDark.value = true
 
-// VueUse breakpoints
-const breakpoints = useBreakpoints({
-  mobile: 480,
-  tablet: 768,
-  desktop: 1024,
-  widescreen: 1280
-})
+// 그거 반응형으로
+const currentWidth = ref(window.innerWidth)
 
-// 반응형 화면 크기 확인
-const isTabletOrLarger = breakpoints.greater('tablet')
-
-// 줌 레벨 관리
-const zoomLevel = ref(1)
-
-// 줌 레벨 업데이트 함수 - visualViewport API 활용
-const updateZoomLevel = () => {
-  if (window.visualViewport) {
-    zoomLevel.value = window.visualViewport.scale
-  } else {
-    // 대체 방법
-    zoomLevel.value = window.innerWidth / window.screen.width
-  }
+// 화면 너비 업데이트 함수
+const updateWidth = () => {
+  currentWidth.value = window.innerWidth
 }
 
-// 사이드바 표시 여부 결정 (breakpoints와 zoomLevel 기반)
+// 사이드바 표시 여부 결정 (1000px 기준)
 const showSidebar = computed(() => {
-  // 태블릿 이상 크기이고 줌 레벨이 1.3 미만일 때 표시
-  return isTabletOrLarger.value && zoomLevel.value < 1.3
+  // 가로 너비가 1200px 이상일 때만 사이드바 표시
+  // content 가로 1000 px
+  // 왼쪽 사이드바 250
+  return currentWidth.value > 1250
 })
 
 // 이벤트 리스너 관리
 onMounted(() => {
-  // 초기 줌 레벨 설정
-  updateZoomLevel()
+  // 초기 화면 너비 설정
+  updateWidth()
 
-  // 줌/리사이즈 이벤트 감지
-  window.addEventListener('resize', updateZoomLevel)
-
-  // visualViewport 이벤트
-  if (window.visualViewport) {
-    window.visualViewport.addEventListener('resize', updateZoomLevel)
-    window.visualViewport.addEventListener('scroll', updateZoomLevel)
-  }
+  // 리사이즈 이벤트 감지
+  window.addEventListener('resize', updateWidth)
 })
 
 // 컴포넌트 언마운트 시 이벤트 리스너 제거
 onUnmounted(() => {
-  window.removeEventListener('resize', updateZoomLevel)
-
-  if (window.visualViewport) {
-    window.visualViewport.removeEventListener('resize', updateZoomLevel)
-    window.visualViewport.removeEventListener('scroll', updateZoomLevel)
-  }
+  window.removeEventListener('resize', updateWidth)
 })
 </script>
 <template>
