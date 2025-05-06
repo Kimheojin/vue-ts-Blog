@@ -34,7 +34,7 @@ const goToAboutMe = () => {
   </div>
 </template>
 
-<style scoped>
+<style scoped> /* scoped  app.vue styler 영향 안받음*/
 .header-container {
   display: flex;
   justify-content: center;

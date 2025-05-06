@@ -19,11 +19,10 @@ export default class AuthService{
     private loadSession() : void {
         const sessionData = localStorage.getItem(this.SESSION_KEY)
         if(sessionData) { // 존재 한다면
-
             try {
                 this.currentSession = JSON.parse(sessionData);
             } catch (e) {
-                console.error('Failed to parse session data:', e);
+                console.error('세션 데이터를 불러오는 데 실패했습니다.', e);
                 this.clearSession();
             }
 

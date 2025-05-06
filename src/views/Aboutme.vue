@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <div>abomepppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp</div>
+  <div>d</div>
 </template>
 
 <style scoped>

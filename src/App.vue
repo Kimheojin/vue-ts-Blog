@@ -68,7 +68,7 @@ onUnmounted(() => {
   <el-container class="main-container">
     <!-- 사이드바 -->
     <el-aside
-        width="200px"
+        width="250px"
         class="left-sidebar"
         v-if="showSidebar">
       <div class="sidebar-header">
@@ -137,7 +137,6 @@ body {
 /* Square header container with rounded corners */
 .header-square {
   width: 100%;
-  aspect-ratio: 1 / 1;
   background-color: #2a2a2a;
   border-radius: 12px;
   display: flex;

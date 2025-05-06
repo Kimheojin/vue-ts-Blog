@@ -11,7 +11,6 @@ export default class HttpError{
         this.code = e.response?.data?.code || '500'
         this.message = e.response?.data?.message || '네트워크 상태 확인 필요'
     }
-
     public getCode(): string {
         return this.code
     }
