@@ -99,10 +99,18 @@ onUnmounted(() => {
 </template>
 
 <style>
+/* 나눔바른펜 폰트 import */
+@import url('https://hangeul.pstatic.net/hangeul_static/css/nanum-barun-pen.css');
+
 /* Base styling */
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: 'NanumBarunPen', sans-serif;
+}
+
+/* 굵은 글씨체용 // class 는 여러개 추가 가능 */
+.bold-text {
+  font-family: 'NanumBarunPenBold', sans-serif;
 }
 
 .main-container {
@@ -116,7 +124,7 @@ body {
   color: #e0e0e0;
   padding: 15px;
   border-right: 1px solid #333;
-/*  display: flex; */
+  /*  display: flex; */
   flex-direction: column;
   transition: all 0.3s ease;
 }
@@ -157,7 +165,6 @@ body {
 /* 메인 콘텐츠 영역 */
 .main-content {
   background-color: #2c2c2c;
-  width: 1300px; /* 항상 전체 너비 사용 */
   padding: 0;
   overflow-y: auto;
   display: flex;
@@ -170,8 +177,6 @@ body {
   transition: width 0.3s ease;
 }
 
-
-
 html.dark body {
   background-color: #2c2c2c;
   color: #e0e0e0;
@@ -179,10 +184,7 @@ html.dark body {
 .header-content-container {
   width: 100%;
   height: auto;
-   /* 또는 원하는 고정 너비 (예: 1600px) */
+  /* 또는 원하는 고정 너비 (예: 1600px) */
   margin: 0 auto; /* 가운데 정렬 */
-
 }
-
-
 </style>
