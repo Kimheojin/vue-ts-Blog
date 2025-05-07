@@ -3,7 +3,7 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 
 function goToLogin () {
-  router.push("/login")
+  router.replace("/login")
 };
 </script>
 <template>
@@ -20,9 +20,9 @@ function goToLogin () {
       </p>
 
       <div class="admin-actions">
-        <button class="login-button" @click="goToLogin">
+        <el-button class="login-button" @click="goToLogin">
           로그인
-        </button>
+        </el-button>
       </div>
     </div>
 </div>

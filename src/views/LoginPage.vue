@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {reactive, ref} from 'vue';
+import {reactive} from 'vue';
 import {useRouter} from "vue-router";
 import {ElMessage} from "element-plus";
 import {container} from "tsyringe";
@@ -15,56 +15,57 @@ const state = reactive({
 })
 
 
-const isLoading = ref(false)
 function handleLogin() {
 
   AUTH_REPOSITORY.login(state.login).then(
       () => {
         ElMessage.success('로그인에 성공했습니다.')
-        router.push('/about')
+        router.replace('/admin')
       })
       .catch((e: HttpError) =>{
-          ElMessage.error(e.getMessage() + " // " +  e.getCode())}
+        ElMessage.error(e.getMessage() + " // " +  e.getCode())}
       ).finally(() => {
-
-    isLoading.value = false
 
   })
 
 }
-</script><template>
+</script>
+
+<template>
   <div class="login-page">
     <div class="login-container">
-      <h2 class="login-title">로그인</h2>
+      <h1 class="login-title">로그인</h1>
 
       <div class="login-form">
         <div class="form-group">
-          <input
+
+
+          <el-input
               v-model="state.login.email"
+              placeholder="이메일 입력해 주세요"
               type="text"
-              placeholder="Email"
               class="form-input"
+              clearable
           />
         </div>
 
         <div class="form-group">
-          <input
+          <el-input
               v-model="state.login.password"
               type="password"
-              placeholder="비밀번호"
-              class="form-input"
+              placeholder="비밀번호를 입력해 주세요"
+              show-password
               @keyup.enter="handleLogin"
           />
+
         </div>
 
         <div class="form-group">
-          <button
+          <el-button
               class="login-button"
               @click="handleLogin"
-              :disabled="isLoading"
-          >
-            {{ isLoading ? '로그인 중...' : '로그인' }}
-          </button>
+          >로그인
+          </el-button>
         </div>
       </div>
     </div>
@@ -72,5 +73,24 @@ function handleLogin() {
 </template>
 
 <style scoped>
+.login-title{
+  text-align: center;
+}
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-container {
+  width: 100%;
+  max-width: 400px;
+}
+
+.form-input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
 
 </style>

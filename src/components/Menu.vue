@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useRouter } from "vue-router";
-import { onMounted, ref } from "vue";
-import { container } from "tsyringe";
+import {useRouter} from "vue-router";
+import {onMounted, ref} from "vue";
+import {container} from "tsyringe";
 import CategoryRepository from "../repository/CategoryRepository.ts";
 import type Category from "../entity/data/Category.ts";
 
@@ -23,8 +23,7 @@ const goToCategory = (categoryId: string) => {
 
 onMounted(async () => {
   try {
-    const response = await CATEGORY_REPOSITORY.getCategories();
-    categories.value = response;
+    categories.value = await CATEGORY_REPOSITORY.getCategories();
     isLoading.value = false;
   } catch (error) {
     console.error("카테고리를 불러오는 중 오류가 발생했습니다:", error);
@@ -53,7 +52,7 @@ onMounted(async () => {
     </div>
 
     <div class="login-container">
-      <button class="login-button" @click="goToLogin">관리자 로그인</button>
+      <el-button class="login-button" @click="goToLogin">관리자 로그인</el-button>
     </div>
   </div>
 </template>
@@ -63,7 +62,6 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   height: 100%;
-  justify-content: space-between;
 }
 
 .login-container {
