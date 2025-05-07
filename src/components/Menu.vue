@@ -5,16 +5,14 @@ import {container} from "tsyringe";
 import CategoryRepository from "../repository/CategoryRepository.ts";
 import type Category from "../entity/data/Category.ts";
 
-// 타입 정의 추가 (Category 인터페이스가 없어 추가했습니다)
-
 
 const router = useRouter();
 const CATEGORY_REPOSITORY = container.resolve(CategoryRepository);
-const categories = ref<Category[]>([]); // CAtegory -> Category 오타 수정
+const categories = ref<Category[]>([]);
 const isLoading = ref(true);
 
-const goToLogin = () => {
-  router.push("/login");
+const goToAdmin = () => {
+  router.push("/admin");
 };
 
 const goToCategory = (categoryId: string) => {
@@ -35,42 +33,71 @@ onMounted(async () => {
 <template>
   <div class="menu-container">
     <div class="categories-section">
-      <el-button>글 전체보기</el-button>
+      <el-link type="warning" class="bold-text" :underline="false">글 전체보기</el-link>
 
       <!-- 로딩 상태 표시 -->
-      <div v-if="isLoading">카테고리 로딩 중...</div>
+      <div v-if="isLoading" class="bold-text">카테고리 로딩 중...</div>
 
-      <!-- 카테고리 목록 -->
-      <ul v-else class="category-list">
-        <li v-for="category in categories"
+      <!-- 카테고리 목록 - el-link 사용 -->
+      <div v-else class="category-list">
+        <el-link
+            v-for="category in categories"
             :key="category.id"
             @click="goToCategory(category.categoryName)"
-            class="category-item">
-          {{ category.categoryName}}
-        </li>
-      </ul>
+            class="category-item bold-text"
+            :underline="false"
+        >
+          {{ category.categoryName }}
+        </el-link>
+      </div>
     </div>
 
     <div class="login-container">
-      <el-button class="login-button" @click="goToLogin">관리자 로그인</el-button>
+      <el-link class="login-button bold-text"
+               type="info"
+               :underline="false"
+               @click="goToAdmin">관리자 페이지</el-link>
     </div>
   </div>
 </template>
 
 <style scoped>
+/* 나눔바른펜 폰트 import */
+@import url('https://hangeul.pstatic.net/hangeul_static/css/nanum-barun-pen.css');
+
+/* 굵은 글씨체 적용 */
+.bold-text {
+  font-family: 'NanumBarunPenBold', sans-serif;
+}
+
 .menu-container {
   display: flex;
   flex-direction: column;
   height: 100%;
+  font-family: 'NanumBarunPenBold', sans-serif;
 }
 
 .login-container {
   /* 로그인 버튼 컨테이너 스타일 */
   display: flex;
   justify-content: center;
-  padding-bottom: 1px;
 }
+
 .login-button:hover {
   color: #ffffff;
 }
+
+.category-list {
+  font-family: 'NanumBarunPenBold', sans-serif;
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+}
+
+.category-item {
+  font-family: 'NanumBarunPenBold', sans-serif;
+  display: block;
+  margin-top: 8px;
+}
+
 </style>
