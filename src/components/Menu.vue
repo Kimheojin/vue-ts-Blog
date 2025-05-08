@@ -52,8 +52,8 @@ onMounted(async () => {
       </div>
     </div>
 
-    <div class="login-container">
-      <el-link class="login-button bold-text"
+    <div class="admin-container">
+      <el-link class="admin-button bold-text"
                type="info"
                :underline="false"
                @click="goToAdmin">관리자 페이지</el-link>
@@ -77,13 +77,14 @@ onMounted(async () => {
   font-family: 'NanumBarunPenBold', sans-serif;
 }
 
-.login-container {
-  /* 로그인 버튼 컨테이너 스타일 */
+.admin-container {
+  /* 관리자 페이지 버튼 컨테이너 스타일 */
+  margin-top: 10px;
   display: flex;
   justify-content: center;
 }
 
-.login-button:hover {
+.admin-button:hover {
   color: #ffffff;
 }
 
@@ -91,7 +92,7 @@ onMounted(async () => {
   font-family: 'NanumBarunPenBold', sans-serif;
   display: flex;
   flex-direction: column;
-  margin-top: 10px;
+  margin-top: 2px;
 }
 
 .category-item {

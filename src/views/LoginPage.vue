@@ -48,7 +48,7 @@ function handleLogin() {
 
 <template>
   <div class="login-page">
-    <div class="login-container">
+    <div class="admin-container">
       <h1 class="login-title">로그인</h1>
 
       <div class="login-form">
@@ -74,7 +74,7 @@ function handleLogin() {
 
         <div class="form-group">
           <el-button
-              class="login-button"
+              class="admin-button"
               @click="handleLogin"
           >로그인
           </el-button>
@@ -94,7 +94,7 @@ function handleLogin() {
   align-items: center;
 }
 
-.login-container {
+.admin-container {
   width: 100%;
   max-width: 400px;
 }

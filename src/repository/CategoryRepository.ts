@@ -1,7 +1,7 @@
 import {inject, singleton} from "tsyringe";
 import HttpRepository from "./HttpRepository.ts";
 import Category from "../entity/data/Category.ts";
-import type CategoryRequest from "../entity/request/CategoryRequest.ts";
+// import type CategoryRequest from "../entity/request/CategoryRequest.ts";
 
 
 @singleton()
@@ -20,13 +20,13 @@ export default class CategoryRepository{
         }, Category);
     }
 
-    // 카테고리 추가
+/*    // 카테고리 추가
     public async addCategory(request: CategoryRequest):Promise<Category[]>{
         return this.httpRepository.post<Category[]>({
             path: '/api/category',
             body: request,
             withAuth: true
         });
-    }
+    }*/
 
 }

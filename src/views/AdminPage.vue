@@ -26,7 +26,7 @@ function checkAuth() {
 
 function goToLogin () {
   router.replace("/login")
-};
+}
 </script>
 <template>
   <div class="admin-page">
@@ -35,16 +35,19 @@ function goToLogin () {
 
       <div class="admin-content">
         <p class="admin-message">
-          관리자 페이지에 오신 것을 환영합니다.
-        </p>
-        <p class="admin-description">
-          이 페이지에서 블로그 관리 작업을 수행할 수 있습니다.
+          카테고리는 하위 항목 없는 구조<br>
+          about me 관리 페이지 따로 만들어야 하나?
         </p>
 
         <div class="admin-actions">
-          <el-button class="logout-button" @click="AUTH_SERVICE.logout(); goToLogin();">
+          <el-button @click="AUTH_SERVICE.logout(); goToLogin();">
             로그아웃
           </el-button>
+
+          <el-button>카테고리 관리</el-button>
+          <el-button>Post 작성</el-button>
+          <el-button>Post 삭제</el-button>
+
         </div>
       </div>
     </div>

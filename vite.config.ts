@@ -13,7 +13,7 @@ export default defineConfig({
     Components({
       resolvers: [ElementPlusResolver()],
     }),vue()],
-    server: { // 포트 1000번으로 열기
-      port: 1000
-    }
+  server: { // 포트 1000번으로 열기
+    port: 1000
+  }
 })

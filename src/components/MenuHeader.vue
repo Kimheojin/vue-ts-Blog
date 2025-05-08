@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
-import { ElButton } from "element-plus";
 
 const router = useRouter();
 
@@ -20,27 +19,20 @@ const goToAboutMe = () => {
         <img src="/HeoJin.png" alt="HeoJin" class="logo-image" />
       </div>
       <div class="buttons-container">
-        <el-button class="nav-button blog-title" type="text" @click="goHome"
-          >허진블로그
-        </el-button>
-        <el-button
-          class="nav-button about-button"
-          type="text"
-          @click="goToAboutMe"
-          >About me
-        </el-button>
+        <el-link class="nav-link blog-title" :underline="false" @click="goHome">허진블로그</el-link>
+        <el-link class="nav-link about-link" :underline="false" @click="goToAboutMe">About me</el-link>
       </div>
     </div>
   </div>
 </template>
 
-<style scoped> /* scoped  app.vue styler 영향 안받음*/
+<style scoped>
 .header-container {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
-  padding: 20px;
+  padding: 10px;
 }
 
 .header-content {
@@ -48,7 +40,6 @@ const goToAboutMe = () => {
   flex-direction: column;
   align-items: center;
   width: 80%;
-  max-width: 1200px;
 }
 
 .logo-container {
@@ -60,26 +51,14 @@ const goToAboutMe = () => {
   height: 80px;
   border-radius: 8px;
 }
-
-.buttons-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  gap: 1px;
-}
-
-:deep(.el-button) {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-}
-
-.nav-button {
+.nav-link {
   display: block;
   width: 140px;
   text-align: center;
-  margin: 0;
-  padding: 10px 0;
+  padding: 3px 0;
+  cursor: pointer;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+  Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
 .blog-title {
@@ -92,12 +71,12 @@ const goToAboutMe = () => {
   color: #ffffff;
 }
 
-.about-button {
+.about-link {
   font-size: 14px;
   color: #b0b0b0;
 }
 
-.about-button:hover {
+.about-link:hover {
   color: #ffffff;
 }
 </style>

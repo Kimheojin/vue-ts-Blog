@@ -1,8 +1,5 @@
 import type {AxiosError} from "axios";
 import type {ErrorResponse} from "../entity/interface/ErrorResponse.ts";
-
-
-
 export default class HttpError{
     private readonly code: string
     private readonly message: string

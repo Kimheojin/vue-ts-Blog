@@ -1,11 +1,11 @@
 <script setup lang="ts">
 
 </script>
-  <template>
-    <el-row>
-      <el-col class="fixed-width"><div class="centered-text">컨텐츠 헤더 테스트</div></el-col>
-    </el-row>
-  </template>
+<template>
+  <el-row>
+    <el-col class="fixed-width"><div class="centered-text">컨텐츠 헤더 테스트</div></el-col>
+  </el-row>
+</template>
 <style scoped>
 
 .fixed-width {
@@ -15,8 +15,10 @@
 }
 
 .centered-text {
-  font-size: 30px;
+  margin-top: 30px;
+  font-size: 33px;
   text-align: center; /* 텍스트를 가로 중앙 정렬 */
+  margin-bottom: 30px;
 }
 
 </style>

@@ -33,6 +33,7 @@ export default class AuthService{
         return this.currentSession?.sessionId || null;
     }
     public logout(): void {
+
         this.clearSession();
     }
     private clearSession(): void {
