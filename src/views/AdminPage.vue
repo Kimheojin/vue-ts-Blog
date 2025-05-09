@@ -45,6 +45,9 @@ function goToLogin () {
           </el-button>
 
           <el-button>카테고리 관리</el-button>
+          <el-button>카테고리 삭제</el-button>
+
+          <el-button>Post 수정</el-button>
           <el-button>Post 작성</el-button>
           <el-button>Post 삭제</el-button>
 
