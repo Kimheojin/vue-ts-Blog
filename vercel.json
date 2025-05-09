@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "${BACK_SPRING_URL}/:path*"
+      "destination": "http://heojineee.ddnsking.com:1400/:path*"
     }
   ],
   "headers": [
