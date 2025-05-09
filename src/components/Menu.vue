@@ -60,7 +60,6 @@ onMounted(async () => {
     </div>
   </div>
 </template>
-
 <style scoped>
 /* 나눔바른펜 폰트 import */
 @import url('https://hangeul.pstatic.net/hangeul_static/css/nanum-barun-pen.css');
