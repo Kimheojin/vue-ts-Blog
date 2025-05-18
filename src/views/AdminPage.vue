@@ -4,9 +4,11 @@ import { onMounted } from 'vue';
 import { ElMessage } from "element-plus";
 import { container } from "tsyringe";
 import AuthService from "../service/AuthService.ts";
+import AuthRepository from "../repository/AuthRepository.ts";
 
 const router = useRouter();
 const AUTH_SERVICE = container.resolve(AuthService)
+const AUTH_REPOSITORY = container.resolve(AuthRepository)
 
 // 마운트 시 세션 확인
 onMounted(() => {
@@ -40,13 +42,12 @@ function goToLogin () {
         </p>
 
         <div class="admin-actions">
-          <el-button @click="AUTH_SERVICE.logout(); goToLogin();">
+          <el-button @click="AUTH_REPOSITORY.logout();">
             로그아웃
           </el-button>
 
           <el-button>카테고리 관리</el-button>
           <el-button>카테고리 삭제</el-button>
-
           <el-button>Post 수정</el-button>
           <el-button>Post 작성</el-button>
           <el-button>Post 삭제</el-button>
