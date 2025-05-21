@@ -5,6 +5,7 @@ import { ElMessage } from "element-plus";
 import { container } from "tsyringe";
 import AuthService from "../service/AuthService.ts";
 import AuthRepository from "../repository/AuthRepository.ts";
+import type HttpError from "../http/HttpError.ts";
 
 const router = useRouter();
 const AUTH_SERVICE = container.resolve(AuthService)
@@ -26,8 +27,17 @@ function checkAuth() {
   }
 }
 
-function goToLogin () {
-  router.replace("/login")
+function handleLogout () {
+
+  checkAuth()
+  AUTH_REPOSITORY.logout()
+      .then(() => {
+        ElMessage.success('로그아웃 되었습니다.');
+        router.replace('/login');
+      })
+      .catch((e: HttpError) => {
+        ElMessage.error('로그아웃 중 오류가 발생했습니다: ' + e.getMessage());
+      });
 }
 </script>
 <template>
@@ -42,7 +52,7 @@ function goToLogin () {
         </p>
 
         <div class="admin-actions">
-          <el-button @click="AUTH_REPOSITORY.logout();">
+          <el-button @click="handleLogout">
             로그아웃
           </el-button>
 

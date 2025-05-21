@@ -1,5 +1,4 @@
 export default class LogoutResponse {
-    public statusCode: string = '';
-    public Message: number = 0;
-
+    public statusCode: number = 0;
+    public message: string = '';
 }

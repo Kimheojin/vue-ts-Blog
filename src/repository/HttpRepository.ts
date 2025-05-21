@@ -2,7 +2,7 @@ import {inject, singleton} from "tsyringe";
 import AxiosHttpClient, {type HttpRequestConfig} from "../http/AxiosHttpClient.ts";
 import {type ClassConstructor, plainToInstance} from "class-transformer";
 import Paging from "../entity/data/Paging.ts";
-import Null from "../entity/data/Null.ts";
+
 
 
 @singleton()
@@ -44,12 +44,15 @@ export default class HttpRepository {
         });
     }
 
-    public delete<T>(config: HttpRequestConfig, clazz:ClassConstructor<T> | null = null) : Promise<T | unknown> {
+
+    public delete<T>(config: HttpRequestConfig, clazz: ClassConstructor<T> | null = null): Promise<T> {
         return this.httpClient
-            .request({
-                ...config, method: 'DELETE'
-            })
-            .then((response) => plainToInstance(clazz !== null ? clazz : (Null as any), response))
+            .request({ ...config, method: 'DELETE' })
+            .then((response) => {
+                return clazz !== null
+                    ? plainToInstance(clazz, response) as T
+                    : response as unknown as T;
+            });
     }
 
     public post<T>(config: HttpRequestConfig, clazz: ClassConstructor<T> | null = null): Promise<T> {
