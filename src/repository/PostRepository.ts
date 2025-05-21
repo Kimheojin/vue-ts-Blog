@@ -2,8 +2,9 @@ import {inject, singleton} from "tsyringe";
 import HttpRepository from "./HttpRepository.ts";
 import type PostRequest from "../entity/request/PostRequest.ts";
 import PostResponse from "../entity/response/PostResponse.ts";
-import type PostPageResponse from "../entity/response/PostPageResponse.ts";
+import PostPageResponse from "../entity/response/PostPageResponse.ts";
 import type PostItem from "../entity/data/PostItem.ts";
+
 
 
 @singleton()
@@ -33,5 +34,18 @@ export default class PostRepository{
             withAuth: false
         }, PostPageResponse)
     }
+    
+    // 카테고리 활요 포스트 목록 조회
+    public async getCategoryPagePosts(categoryName: string, page: number = 0, size: number = 10): Promise<PostPageResponse<PostItem>> {
+        return this.httpRepository.get<PostPageResponse<PostItem>>({
+            path: '/api/posts/categoryPaged',
+            params: {
+                categoryName,
+                page,
+                size
+            },
+            withAuth: false
 
+            }, PostPageResponse)
+    }
 }
