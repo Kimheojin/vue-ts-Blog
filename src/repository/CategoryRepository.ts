@@ -22,10 +22,9 @@ export default class CategoryRepository{
     }
 
     // 카테고리 추가
-    public async addCategory(request: CategoryRequest): Promise<CategoryListResponse> {
+    public async addCategory(categoryName: string): Promise<CategoryListResponse> {
         return this.httpRepository.post<CategoryListResponse>({
             path: '/api/category',
-            body: request,
             withAuth: true
         }, CategoryListResponse);
     }
