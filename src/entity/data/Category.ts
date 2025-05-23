@@ -1,4 +1,4 @@
 export default class Category{
-    public id: string = ""
+    public categoryId: string = ""
     public categoryName: string = ""
 }

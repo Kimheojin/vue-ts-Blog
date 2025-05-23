@@ -16,7 +16,7 @@ export default class PostRepository{
 
     // 포스트 작성
     public async createPost(request: PostRequest): Promise<PostResponse>{
-        return this.httpRepository.post<PostResponse>({
+        return await this.httpRepository.post<PostResponse>({
             path: '/api/post',
             body: request,
             withAuth: true
@@ -35,7 +35,7 @@ export default class PostRepository{
         }, PostPageResponse)
     }
     
-    // 카테고리 활요 포스트 목록 조회
+    // 카테고리 활용 포스트 목록 조회
     public async getCategoryPagePosts(categoryName: string, page: number = 0, size: number = 10): Promise<PostPageResponse<PostItem>> {
         return this.httpRepository.get<PostPageResponse<PostItem>>({
             path: '/api/posts/categoryPaged',

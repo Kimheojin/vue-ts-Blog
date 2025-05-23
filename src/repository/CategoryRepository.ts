@@ -1,9 +1,9 @@
 import {inject, singleton} from "tsyringe";
 import HttpRepository from "./HttpRepository.ts";
 import Category from "../entity/data/Category.ts";
-import type CategoryRequest from "../entity/request/CategoryRequest.ts";
 import CategoryListResponse from "../entity/response/CategoryListResponse.ts";
 import type CategoryDeleteRequest from "../entity/request/CategoryDeleteRequest.ts";
+import type CategoryRequest from "../entity/request/CategoryRequest.ts";
 
 @singleton()
 export default class CategoryRepository{
@@ -14,27 +14,29 @@ export default class CategoryRepository{
 
 
     // 전체 카테고리 조회
-    public async getCategories():Promise<Category[]>{
-        return this.httpRepository.getSimpleList({
+    public async getCategories(): Promise<Category[]> {
+        const response = await this.httpRepository.get({
             path: '/api/categoryList',
             withAuth: false
-        }, Category);
+        }, CategoryListResponse);
+
+        return response.categoryResponse || [];
     }
 
     // 카테고리 추가
-    public async addCategory(categoryName: string): Promise<CategoryListResponse> {
+    public async addCategory(request: CategoryRequest): Promise<CategoryListResponse> {
         return this.httpRepository.post<CategoryListResponse>({
             path: '/api/category',
+            body: request,
             withAuth: true
         }, CategoryListResponse);
     }
 
     // 카테고리 삭제
     public async deleteCategory(request: CategoryDeleteRequest): Promise<CategoryListResponse> {
-        return this.httpRepository.post<CategoryListResponse>({
+        return this.httpRepository.delete<CategoryListResponse>({
             path: '/api/category',
             body: request,
-            method: 'DELETE',
             withAuth: true
         }, CategoryListResponse);
     }

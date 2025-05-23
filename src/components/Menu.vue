@@ -42,7 +42,7 @@ onMounted(async () => {
       <div v-else class="category-list">
         <el-link
             v-for="category in categories"
-            :key="category.id"
+            :key="category.categoryId"
             @click="goToCategory(category.categoryName)"
             class="category-item bold-text"
             :underline="false"
