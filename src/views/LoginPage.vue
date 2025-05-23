@@ -21,28 +21,53 @@ onMounted(() => {
   checkSession();
 })
 
-// 세션 ID 존재 여부 확인 함수
-function checkSession() {
-  const sessionId = AUTH_SERVICE.getSessionId();
 
-  // 세션 ID가 존재하면 관리자 페이지로 리다이렉트
+function checkSession() {
+  const sessionId = AUTH_SERVICE.getSessionId(); // 쿠키에서 JSESSIONID 확인
+
+  // 세션 쿠키가 존재하면 관리자 페이지로 리다이렉트
   if (sessionId) {
+    console.log('기존 세션 발견:', sessionId);
     ElMessage.info('이미 로그인되어 있습니다.');
     router.replace('/admin');
+  } else {
+    console.log('세션 없음 - 로그인 페이지 유지');
   }
 }
 
-function handleLogin() {
-  AUTH_REPOSITORY.login(state.login).then(
-      () => {
-        ElMessage.success('로그인에 성공했습니다.')
-        router.replace('/admin')
-      })
-      .catch((e: HttpError) =>{
-        ElMessage.error(e.getMessage() + " // " +  e.getCode())}
-      ).finally(() => {
 
-  })
+
+
+function handleLogin() {
+  // 입력값 검증
+  if (!state.login.email.trim()) {
+    ElMessage.warning('이메일을 입력해주세요.');
+    return;
+  }
+
+  if (!state.login.password.trim()) {
+    ElMessage.warning('비밀번호를 입력해주세요.');
+    return;
+  }
+
+  console.log('로그인 시도:', state.login.email);
+
+  AUTH_REPOSITORY.login(state.login)
+      .then((response) => {
+        console.log('로그인 응답:', response);
+        ElMessage.success('로그인에 성공했습니다.');
+
+        // 로그인 후 쿠키 확인
+        setTimeout(() => {
+          const newSessionId = AUTH_SERVICE.getSessionId();
+          console.log('로그인 후 세션 ID:', newSessionId);
+          router.replace('/admin');
+        }, 100); // 쿠키 설정 시간을 위한 약간의 대기
+      })
+      .catch((e: HttpError) => {
+        console.error('로그인 실패:', e);
+        ElMessage.error('로그인 실패: ' + e.getMessage());
+      })
 }
 </script>
 

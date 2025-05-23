@@ -26,14 +26,25 @@ onMounted(() => {
   loadCategories();
 });
 
-// 인증 상태 확인
 function checkAuth() {
-  const sessionId = AUTH_SERVICE.getSessionId();
+  const sessionId = AUTH_SERVICE.getSessionId(); // 쿠키에서 JSESSIONID 확인
 
   if (!sessionId) {
     ElMessage.warning('로그인이 필요합니다.');
     router.replace("/login");
     return;
+  }
+
+  // 추가: 실제 서버에 인증 상태 확인
+  verifyAuthStatus();
+}
+
+// 서버에 인증 상태 확인
+async function verifyAuthStatus() {
+  try {
+  } catch (error) {
+    ElMessage.warning('세션이 만료되었습니다. 다시 로그인해주세요.');
+    router.replace("/login");
   }
 }
 

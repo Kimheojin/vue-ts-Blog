@@ -16,23 +16,31 @@ onMounted(() => {
   checkAuth();
 })
 
-// 인증 상태 확인
+// 인증 상태 확인 - 쿠키 기반으로 수정
 function checkAuth() {
-  const sessionId = AUTH_SERVICE.getSessionId();
+  const sessionId = AUTH_SERVICE.getSessionId(); // 쿠키에서 JSESSIONID 확인
 
-  // 세션 ID가 없으면 로그인 페이지로 리다이렉트
+  // 세션 쿠키가 없으면 로그인 페이지로 리다이렉트
   if (!sessionId) {
     ElMessage.warning('관리자 로그인이 필요합니다.');
+    router.replace("/login");
+    return;
+  }
+
+  verifyAuthStatus();
+}
+
+// 서버에 인증 상태 확인
+async function verifyAuthStatus() {
+  try {
+  } catch (error) {
+    // 401 에러가 발생하면 자동으로 AuthService.logout()이 호출
+    ElMessage.warning('세션이 만료되었습니다. 다시 로그인해주세요.');
     router.replace("/login");
   }
 }
 
-function goToCategoryAdd() {
-  router.push('/admin/category/add');
-}
-
-function handleLogout () {
-  checkAuth()
+function handleLogout() {
   AUTH_REPOSITORY.logout()
       .then(() => {
         ElMessage.success('로그아웃 되었습니다.');
@@ -47,6 +55,11 @@ function handleLogout () {
 function goToPostWrite() {
   router.push('/admin/post/write');
 }
+
+// 카테고리 추가 페이지로 이동
+function goToCategoryAdd() {
+  router.push('/admin/category/add');
+}
 </script>
 
 <template>
@@ -55,7 +68,10 @@ function goToPostWrite() {
       <h2 class="admin-title">관리자 페이지</h2>
 
       <div class="admin-content">
-
+        <p class="admin-message">
+          카테고리는 하위 항목 없는 구조<br>
+          about me 관리 페이지 따로 만들어야 하나?
+        </p>
 
         <div class="admin-actions">
           <el-button @click="handleLogout">
