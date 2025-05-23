@@ -19,7 +19,6 @@ export default class PostRepository{
         return await this.httpRepository.post<PostResponse>({
             path: '/api/post',
             body: request,
-            withAuth: true
         }, PostResponse)
     }
 
@@ -31,7 +30,6 @@ export default class PostRepository{
                 page,
                 size
             },
-            withAuth: false
         }, PostPageResponse)
     }
     
@@ -44,8 +42,6 @@ export default class PostRepository{
                 page,
                 size
             },
-            withAuth: false
-
             }, PostPageResponse)
     }
 
@@ -56,7 +52,6 @@ export default class PostRepository{
             params: {
                 postId
             },
-            withAuth: false
         }, PostItem)
     }
 }

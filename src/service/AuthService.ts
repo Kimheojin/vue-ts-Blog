@@ -1,43 +1,32 @@
 import {singleton} from "tsyringe";
-import type {SessionInfo} from "../entity/interface/SessionInfo.ts";
-
 
 @singleton()
 export default class AuthService{
-    private readonly SESSION_KEY = 'session'
-    private currentSession: SessionInfo | null = null
 
     constructor() {
-        this.loadSession();
+
     }
 
-    public saveSession(sessionInfo: SessionInfo) : void {
-        this.currentSession = sessionInfo;
-        localStorage.setItem(this.SESSION_KEY, JSON.stringify(sessionInfo))
+    public saveSession() : void {
+        console.log('로그인 성공 - 세션 쿠키가 설정되었습니다.');
     }
 
-    private loadSession() : void {
-        const sessionData = localStorage.getItem(this.SESSION_KEY)
-        if(sessionData) { // 존재 한다면
-            try {
-                this.currentSession = JSON.parse(sessionData);
-            } catch (e) {
-                console.error('세션 데이터를 불러오는 데 실패했습니다.', e);
-                this.clearSession();
-            }
 
-        }
-    }
     // 현재 세션 ID 가져오기
     public getSessionId(): string | null {
-        return this.currentSession?.sessionId || null;
+        // 쿠키에서 JSESSIONID 확인
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            const [name, value] = cookie.trim().split('=');
+            if (name === 'JSESSIONID') {
+                return value;
+            }
+        }
+        return null;
     }
     public logout(): void {
 
-        this.clearSession();
+        console.log('로그아웃 처리됨');
     }
-    private clearSession(): void {
-        this.currentSession = null;
-        localStorage.removeItem(this.SESSION_KEY);
-    }
+
 }

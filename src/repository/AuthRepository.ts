@@ -17,16 +17,12 @@ export default class AuthRepository {
     public async login(request: LoginRequest): Promise<LoginResponse> {
         const response = await this.httpRepository.post<LoginResponse>({
             path: '/api/login',
-            body: request,
-            withAuth: false // true 가 디폴트
+            body: request
         }, LoginResponse);
 
-        // 로그인 성공 시 세션 정보 저장
-        if (response && response.sessionId) {
-            this.authService.saveSession({
-                sessionId: response.sessionId,
-                userId: response.userId
-            });
+        // 로그인 성공 시 (실제로는 브라우저가 쿠키를 자동 저장)
+        if (response) {
+            this.authService.saveSession();
         }
 
         return response;
@@ -34,13 +30,12 @@ export default class AuthRepository {
 
     public async logout(): Promise<LogoutResponse> {
         const response = await this.httpRepository.post({
-            path: '/api/logout',
-            withAuth: true // true 가 디폴트
+            path: '/api/logout'
+
         }, LogoutResponse);
 
-        // 로그인 성공 시 세션 정보 저장
         if (response) {
-            this.authService.logout()
+            this.authService.logout();
         }
 
         return response;

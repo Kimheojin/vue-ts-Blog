@@ -17,7 +17,6 @@ export default class CategoryRepository{
     public async getCategories(): Promise<Category[]> {
         const response = await this.httpRepository.get({
             path: '/api/categoryList',
-            withAuth: false
         }, CategoryListResponse);
 
         return response.categoryResponse || [];
@@ -28,7 +27,6 @@ export default class CategoryRepository{
         return this.httpRepository.post<CategoryListResponse>({
             path: '/api/category',
             body: request,
-            withAuth: true
         }, CategoryListResponse);
     }
 
@@ -37,7 +35,7 @@ export default class CategoryRepository{
         return this.httpRepository.delete<CategoryListResponse>({
             path: '/api/category',
             body: request,
-            withAuth: true
+
         }, CategoryListResponse);
     }
 }
