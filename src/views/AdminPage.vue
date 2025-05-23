@@ -27,8 +27,11 @@ function checkAuth() {
   }
 }
 
-function handleLogout () {
+function goToCategoryAdd() {
+  router.push('/admin/category/add');
+}
 
+function handleLogout () {
   checkAuth()
   AUTH_REPOSITORY.logout()
       .then(() => {
@@ -39,27 +42,30 @@ function handleLogout () {
         ElMessage.error('로그아웃 중 오류가 발생했습니다: ' + e.getMessage());
       });
 }
+
+// 글 작성 페이지로 이동
+function goToPostWrite() {
+  router.push('/admin/post/write');
+}
 </script>
+
 <template>
   <div class="admin-page">
     <div class="admin-container">
       <h2 class="admin-title">관리자 페이지</h2>
 
       <div class="admin-content">
-        <p class="admin-message">
-          카테고리는 하위 항목 없는 구조<br>
-          about me 관리 페이지 따로 만들어야 하나?
-        </p>
+
 
         <div class="admin-actions">
           <el-button @click="handleLogout">
             로그아웃
           </el-button>
 
-          <el-button>카테고리 관리</el-button>
+          <el-button type="success" @click="goToCategoryAdd">카테고리 추가</el-button>
           <el-button>카테고리 삭제</el-button>
           <el-button>Post 수정</el-button>
-          <el-button>Post 작성</el-button>
+          <el-button type="primary" @click="goToPostWrite">Post 작성</el-button>
           <el-button>Post 삭제</el-button>
 
         </div>
@@ -67,3 +73,27 @@ function handleLogout () {
     </div>
   </div>
 </template>
+
+<style scoped>
+.admin-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.admin-container {
+  width: 100%;
+  max-width: 1000px;
+  text-align: center;
+}
+
+.admin-title {
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: #e0e0e0;
+}
+
+.admin-actions .el-button {
+  min-width: 120px;
+}
+</style>
