@@ -3,7 +3,7 @@ import HttpRepository from "./HttpRepository.ts";
 import type PostRequest from "../entity/request/PostRequest.ts";
 import PostResponse from "../entity/response/PostResponse.ts";
 import PostPageResponse from "../entity/response/PostPageResponse.ts";
-import type PostItem from "../entity/data/PostItem.ts";
+import PostItem from "../entity/data/PostItem.ts";
 
 
 
@@ -47,5 +47,16 @@ export default class PostRepository{
             withAuth: false
 
             }, PostPageResponse)
+    }
+
+    // 단일 포스트 조회
+    public async getSinglePost(postId: number): Promise<PostItem> {
+        return await this.httpRepository.get<PostItem>({
+            path: '/api/posts',
+            params: {
+                postId
+            },
+            withAuth: false
+        }, PostItem)
     }
 }
