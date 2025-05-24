@@ -1,45 +1,22 @@
 <script setup lang="ts">
-import {reactive, onMounted} from 'vue';
+import {reactive} from 'vue';
 import {useRouter} from "vue-router";
 import {ElMessage} from "element-plus";
 import {container} from "tsyringe";
 import AuthRepository from "../repository/AuthRepository.ts";
 import LoginRequest from "../entity/user/LoginRequest.ts";
 import type HttpError from "../http/HttpError.ts";
-import AuthService from "../service/AuthService.ts";
+
 
 const router = useRouter()
 const AUTH_REPOSITORY = container.resolve(AuthRepository)
-const AUTH_SERVICE = container.resolve(AuthService)
+
 
 const state = reactive({
   login: new LoginRequest()
 })
 
-// 컴포넌트 마운트 시 세션 확인
-onMounted(() => {
-  checkSession();
-})
-
-
-function checkSession() {
-  const sessionId = AUTH_SERVICE.getSessionId(); // 쿠키에서 JSESSIONID 확인
-
-  // 세션 쿠키가 존재하면 관리자 페이지로 리다이렉트
-  if (sessionId) {
-    console.log('기존 세션 발견:', sessionId);
-    ElMessage.info('이미 로그인되어 있습니다.');
-    router.replace('/admin');
-  } else {
-    console.log('세션 없음 - 로그인 페이지 유지');
-  }
-}
-
-
-
-
-function handleLogin() {
-  // 입력값 검증
+async function handleLogin() {
   if (!state.login.email.trim()) {
     ElMessage.warning('이메일을 입력해주세요.');
     return;
@@ -50,24 +27,13 @@ function handleLogin() {
     return;
   }
 
-  console.log('로그인 시도:', state.login.email);
-
-  AUTH_REPOSITORY.login(state.login)
-      .then((response) => {
-        console.log('로그인 응답:', response);
-        ElMessage.success('로그인에 성공했습니다.');
-
-        // 로그인 후 쿠키 확인
-        setTimeout(() => {
-          const newSessionId = AUTH_SERVICE.getSessionId();
-          console.log('로그인 후 세션 ID:', newSessionId);
-          router.replace('/admin');
-        }, 100); // 쿠키 설정 시간을 위한 약간의 대기
-      })
-      .catch((e: HttpError) => {
-        console.error('로그인 실패:', e);
-        ElMessage.error('로그인 실패: ' + e.getMessage());
-      })
+  try {
+    await AUTH_REPOSITORY.login(state.login);
+    ElMessage.success('로그인에 성공했습니다.');
+    router.replace('/admin');
+  } catch (e: HttpError) {
+    ElMessage.error('로그인 실패: ' + e.getMessage());
+  }
 }
 </script>
 

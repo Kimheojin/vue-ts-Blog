@@ -13,6 +13,13 @@ export type HttpRequestConfig = {
     withAuth?: boolean  // withAuth로 변경 (withCredentials 제거)
 }
 
+let routerInstance: any = null;
+
+export function setRouterInstance(router: any) {
+    routerInstance = router;
+}
+
+
 @singleton()
 export default class AxiosHttpClient {
     private readonly client: AxiosInstance = axios.create({
@@ -42,11 +49,13 @@ export default class AxiosHttpClient {
                 return response.data
             })
             .catch((e: AxiosError<ErrorResponse>) => {
-                // 401 Unauthorized 오류가 발생하면 세션이 만료된 것으로 간주
+                // 401 Unauthorized 오류가 발생하면 로그아웃 처리
                 if (e.response?.status === 401) {
-                    this.authService.logout(); // 세션 정보 삭제
+                    this.authService.logout();
+                    console.log('401 오류 발생 - 세션 만료');
                 }
                 return Promise.reject(new HttpError(e))
             })
     }
+
 }

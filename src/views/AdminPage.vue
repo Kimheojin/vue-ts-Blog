@@ -5,7 +5,7 @@ import { ElMessage } from "element-plus";
 import { container } from "tsyringe";
 import AuthService from "../service/AuthService.ts";
 import AuthRepository from "../repository/AuthRepository.ts";
-import type HttpError from "../http/HttpError.ts";
+import HttpError from "../http/HttpError.ts";
 
 const router = useRouter();
 const AUTH_SERVICE = container.resolve(AuthService)
@@ -16,41 +16,43 @@ onMounted(() => {
   checkAuth();
 })
 
-// 인증 상태 확인 - 쿠키 기반으로 수정
-function checkAuth() {
-  const sessionId = AUTH_SERVICE.getSessionId(); // 쿠키에서 JSESSIONID 확인
 
-  // 세션 쿠키가 없으면 로그인 페이지로 리다이렉트
-  if (!sessionId) {
-    ElMessage.warning('관리자 로그인이 필요합니다.');
-    router.replace("/login");
-    return;
-  }
-
-  verifyAuthStatus();
-}
-
-// 서버에 인증 상태 확인
-async function verifyAuthStatus() {
+// 관리자 페이지 진입 시에만 빠른 인증 확인
+async function checkAuthOnEntry() {
   try {
+    const isAuthenticated = await AUTH_SERVICE.quickAuthCheck();
+
+    if (!isAuthenticated) {
+      ElMessage.warning('관리자 로그인이 필요합니다.');
+      router.replace("/login");
+      return;
+    }
+
+    // 인증 확인 완료
+    isCheckingAuth.value = false;
+
   } catch (error) {
-    // 401 에러가 발생하면 자동으로 AuthService.logout()이 호출
-    ElMessage.warning('세션이 만료되었습니다. 다시 로그인해주세요.');
+    ElMessage.warning('인증 확인 중 오류가 발생했습니다.');
     router.replace("/login");
   }
 }
 
-function handleLogout() {
-  AUTH_REPOSITORY.logout()
-      .then(() => {
-        ElMessage.success('로그아웃 되었습니다.');
-        router.replace('/login');
-      })
-      .catch((e: HttpError) => {
-        ElMessage.error('로그아웃 중 오류가 발생했습니다: ' + e.getMessage());
-      });
+async function handleLogout() {
+  try {
+    await AUTH_REPOSITORY.logout();
+    ElMessage.success('로그아웃 되었습니다.');
+    router.replace('/login');
+  } catch (e: HttpError) {
+    // 401 에러는 이미 AuthService.logout()이 호출되므로
+    // 여기서는 메시지만 표시하고 로그인 페이지로 이동
+    if (e.getCode() === '401') {
+      ElMessage.warning('세션이 만료되었습니다.');
+      router.replace('/login');
+    } else {
+      ElMessage.error('로그아웃 중 오류가 발생했습니다: ' + e.getMessage());
+    }
+  }
 }
-
 // 글 작성 페이지로 이동
 function goToPostWrite() {
   router.push('/admin/post/write');
