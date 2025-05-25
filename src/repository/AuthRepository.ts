@@ -36,8 +36,6 @@ export default class AuthRepository {
     // 인증 상태 확인
     public async checkAuthentication(): Promise<boolean> {
         try {
-
-
             const response = await this.httpRepository.get({
                 path: '/api/auth/check'
             }, AuthCheckResponse);
@@ -49,4 +47,5 @@ export default class AuthRepository {
             return false;
         }
     }
+
 }

@@ -21,7 +21,7 @@ onMounted(() => {
 // HTTPOnly 쿠키 사용 시 서버 API로 인증 상태 확인
 async function checkAuth() {
   try {
-    const isAuthenticated = await AUTH_SERVICE.quikAuthCheck();
+    const isAuthenticated = await AUTH_SERVICE.quickAuthCheck();
 
     if (!isAuthenticated) {
       ElMessage.warning('관리자 로그인이 필요합니다.');
