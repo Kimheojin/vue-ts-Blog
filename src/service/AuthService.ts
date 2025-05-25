@@ -1,9 +1,10 @@
-import {singleton} from "tsyringe";
+import {inject, singleton} from "tsyringe";
+import AuthRepository from "../repository/AuthRepository.ts";
 
 @singleton()
 export default class AuthService{
 
-    constructor() {
+    constructor(@inject(AuthRepository) private readonly authRepository: AuthRepository) {
 
     }
 
@@ -12,25 +13,16 @@ export default class AuthService{
     }
 
     public logout(): void {
-
         console.log('로그아웃 처리됨');
     }
 
+    // AuthRepository를 통해 인증 상태 확인
+    public async isAuthenticated(): Promise<boolean> {
+        return await this.authRepository.checkAuthentication();
+    }
 
     // 서버 인증 확인(관리 페이지 진입시 사용)
     public async quickAuthCheck(): Promise<boolean> {
-        try {
-            const response = await fetch('/api/auth/check', {
-                method: 'GET',
-                credentials: 'include',
-                headers: { 'Content-Type': 'application/json' }
-            });
-
-            return response.ok;
-        } catch (error) {
-            console.error('인증 확인 중 오류:', error);
-            return false;
-        }
+        return this.isAuthenticated();
     }
-
 }

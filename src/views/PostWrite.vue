@@ -22,32 +22,32 @@ const state = reactive({
 const categories = ref<Category[]>([]);
 const isLoading = ref(false);
 const isSubmitting = ref(false);
+const isCheckingAuth = ref(true);
 
 // 컴포넌트 마운트 시 인증 확인 및 카테고리 로드
 onMounted(() => {
   checkAuth();
-  loadCategories();
 });
 
-// 인증 상태 확인
-function checkAuth() {
-  const sessionId = AUTH_SERVICE.getSessionId(); // 쿠키에서 JSESSIONID 확인
-
-  if (!sessionId) {
-    ElMessage.warning('로그인이 필요합니다.');
-    router.replace("/login");
-    return;
-  }
-
-  // 추가: 실제 서버에 인증 상태 확인
-  verifyAuthStatus();
-}
-async function verifyAuthStatus() {
+// HTTPOnly 쿠키 사용 시 서버 API로 인증 상태 확인
+async function checkAuth() {
   try {
+    const isAuthenticated = await AUTH_SERVICE.isAuthenticated();
 
+    if (!isAuthenticated) {
+      ElMessage.warning('로그인이 필요합니다.');
+      router.replace("/login");
+      return;
+    }
+
+    // 인증 확인 후 카테고리 로드
+    await loadCategories();
   } catch (error) {
+    console.error('인증 확인 중 오류:', error);
     ElMessage.warning('세션이 만료되었습니다. 다시 로그인해주세요.');
     router.replace("/login");
+  } finally {
+    isCheckingAuth.value = false;
   }
 }
 
@@ -110,79 +110,86 @@ function handleReset() {
 <template>
   <div class="post-write-page">
     <div class="post-write-container">
-      <h2 class="page-title bold-text">글 작성</h2>
+      <!-- 인증 확인 중 로딩 표시 -->
+      <div v-if="isCheckingAuth" class="loading-text">
+        인증 확인 중...
+      </div>
 
-      <el-form class="post-form" label-position="top">
-        <!-- 제목 입력 -->
-        <el-form-item label="제목" class="bold-text">
-          <el-input
-              v-model="state.post.title"
-              placeholder="제목을 입력해주세요"
-              maxlength="100"
-              show-word-limit
-              clearable
-          />
-        </el-form-item>
+      <div v-else>
+        <h2 class="page-title bold-text">글 작성</h2>
 
-        <!-- 카테고리 선택 -->
-        <el-form-item label="카테고리" class="bold-text">
-          <el-select
-              v-model="state.post.categoryName"
-              placeholder="카테고리를 선택해주세요"
-              style="width: 100%"
-              :loading="isLoading"
-          >
-            <el-option
-                v-for="category in categories"
-                :key="category.categoryId"
-                :label="category.categoryName"
-                :value="category.categoryName"
+        <el-form class="post-form" label-position="top">
+          <!-- 제목 입력 -->
+          <el-form-item label="제목" class="bold-text">
+            <el-input
+                v-model="state.post.title"
+                placeholder="제목을 입력해주세요"
+                maxlength="100"
+                show-word-limit
+                clearable
             />
-          </el-select>
-        </el-form-item>
+          </el-form-item>
 
-        <!-- 내용 입력 -->
-        <el-form-item label="내용" class="bold-text">
-          <el-input
-              v-model="state.post.content"
-              type="textarea"
-              placeholder="내용을 입력해주세요"
-              :rows="15"
-              maxlength="10000"
-              show-word-limit
-          />
-        </el-form-item>
-
-        <!-- 버튼 그룹 -->
-        <el-form-item>
-          <div class="button-group">
-            <el-button
-                type="primary"
-                @click="handleSubmit"
-                :loading="isSubmitting"
-                class="bold-text"
+          <!-- 카테고리 선택 -->
+          <el-form-item label="카테고리" class="bold-text">
+            <el-select
+                v-model="state.post.categoryName"
+                placeholder="카테고리를 선택해주세요"
+                style="width: 100%"
+                :loading="isLoading"
             >
-              {{ isSubmitting ? '작성 중...' : '글 작성' }}
-            </el-button>
+              <el-option
+                  v-for="category in categories"
+                  :key="category.categoryId"
+                  :label="category.categoryName"
+                  :value="category.categoryName"
+              />
+            </el-select>
+          </el-form-item>
 
-            <el-button
-                @click="handleReset"
-                :disabled="isSubmitting"
-                class="bold-text"
-            >
-              초기화
-            </el-button>
+          <!-- 내용 입력 -->
+          <el-form-item label="내용" class="bold-text">
+            <el-input
+                v-model="state.post.content"
+                type="textarea"
+                placeholder="내용을 입력해주세요"
+                :rows="15"
+                maxlength="10000"
+                show-word-limit
+            />
+          </el-form-item>
 
-            <el-button
-                @click="handleCancel"
-                :disabled="isSubmitting"
-                class="bold-text"
-            >
-              취소
-            </el-button>
-          </div>
-        </el-form-item>
-      </el-form>
+          <!-- 버튼 그룹 -->
+          <el-form-item>
+            <div class="button-group">
+              <el-button
+                  type="primary"
+                  @click="handleSubmit"
+                  :loading="isSubmitting"
+                  class="bold-text"
+              >
+                {{ isSubmitting ? '작성 중...' : '글 작성' }}
+              </el-button>
+
+              <el-button
+                  @click="handleReset"
+                  :disabled="isSubmitting"
+                  class="bold-text"
+              >
+                초기화
+              </el-button>
+
+              <el-button
+                  @click="handleCancel"
+                  :disabled="isSubmitting"
+                  class="bold-text"
+              >
+                취소
+              </el-button>
+            </div>
+          </el-form-item>
+        </el-form>
+      </div>
     </div>
   </div>
 </template>
