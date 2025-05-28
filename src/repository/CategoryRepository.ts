@@ -19,7 +19,7 @@ export default class CategoryRepository{
             path: '/api/categoryList',
         }, CategoryListResponse);
 
-        return response.categoryResponse || [];
+        return response.categoryResponses || [];
     }
 
     // 카테고리 추가
