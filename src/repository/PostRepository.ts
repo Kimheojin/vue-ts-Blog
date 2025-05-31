@@ -5,8 +5,6 @@ import PostResponse from "../entity/response/PostResponse.ts";
 import PostPageResponse from "../entity/response/PostPageResponse.ts";
 import PostItem from "../entity/data/PostItem.ts";
 
-
-
 @singleton()
 export default class PostRepository{
     constructor(

@@ -21,11 +21,11 @@ onMounted(() => {
 // HTTPOnly 쿠키 사용 시 서버 API로 인증 상태 확인
 async function checkAuth() {
   try {
-    const isAuthenticated = await AUTH_SERVICE.quickAuthCheck();
+    const isAuthenticated = await AUTH_SERVICE.isAuthenticated();
 
     if (!isAuthenticated) {
       ElMessage.warning('관리자 로그인이 필요합니다.');
-      await router.replace("/login");
+      await router.replace("/admin/login");
       return;
     }
 
@@ -35,7 +35,7 @@ async function checkAuth() {
   } catch (error) {
     console.error('인증 확인 중 오류:', error);
     ElMessage.warning('인증 확인 중 오류가 발생했습니다.');
-    await router.replace("/login");
+    await router.replace("/amdin/login");
   }
 }
 
@@ -43,14 +43,14 @@ async function handleLogout() {
   try {
     await AUTH_REPOSITORY.logout();
     ElMessage.success('로그아웃 되었습니다.');
-    await router.replace('/login');
+    await router.replace('/amdin/login');
   } catch (error) {
     const httpError = error as HttpError;
     // 401 에러는 이미 AuthService.logout()이 호출되므로
     // 여기서는 메시지만 표시하고 로그인 페이지로 이동
     if (httpError.getCode() === '401') {
       ElMessage.warning('세션이 만료되었습니다.');
-      await router.replace('/login');
+      await router.replace('/amdin/login');
     } else {
       ElMessage.error('로그아웃 중 오류가 발생했습니다: ' + httpError.getMessage());
     }

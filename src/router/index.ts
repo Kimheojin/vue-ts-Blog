@@ -7,6 +7,7 @@ import LoginPage from "../views/LoginPage.vue";
 import AdminPage from "../views/AdminPage.vue";
 import PostWrite from "../views/PostWrite.vue";
 import CategoryAdd from "../components/CategoryAdd.vue";
+import CategoryPosts from "../views/CategoryPosts.vue";
 
 const routes = [
 
@@ -19,7 +20,7 @@ const routes = [
         component: AboutMe
     },
     {
-        path: '/login',
+        path: '/admin/login',
         component: LoginPage
     },
     {
@@ -33,6 +34,10 @@ const routes = [
     {
         path: '/admin/category/add',
         component: CategoryAdd
+    },
+    {
+        path: '/category/:categoryName',
+        component: CategoryPosts
     }
 
 ];

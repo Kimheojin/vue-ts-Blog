@@ -5,7 +5,6 @@ import {container} from "tsyringe";
 import CategoryRepository from "../repository/CategoryRepository.ts";
 import type Category from "../entity/data/Category.ts";
 
-
 const router = useRouter();
 const CATEGORY_REPOSITORY = container.resolve(CategoryRepository);
 const categories = ref<Category[]>([]);
@@ -15,8 +14,8 @@ const goToAdmin = () => {
   router.push("/admin");
 };
 
-const goToCategory = (categoryId: string) => {
-  router.push(`/category/${categoryId}`); // 템플릿 리터럴 수정
+const goToCategory = (categoryName: string) => {
+  router.push(`/category/${categoryName}`);
 };
 
 onMounted(async () => {
@@ -99,5 +98,4 @@ onMounted(async () => {
   display: block;
   margin-top: 8px;
 }
-
 </style>
