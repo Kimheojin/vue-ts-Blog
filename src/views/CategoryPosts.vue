@@ -3,7 +3,7 @@ import { ref, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { container } from 'tsyringe';
 import { ElMessage } from 'element-plus';
-import PostRepository from '../repository/PostRepository.ts';
+import PostRepository from '../repository/post/PostRepository.ts';
 import type PostItem from '../entity/data/PostItem.ts';
 import type PostPageResponse from '../entity/response/PostPageResponse.ts';
 

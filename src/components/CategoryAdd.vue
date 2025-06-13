@@ -3,7 +3,7 @@ import { reactive, onMounted, ref } from 'vue';
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import { container } from "tsyringe";
-import CategoryRepository from "../repository/CategoryRepository.ts";
+import CategoryRepository from "../repository/category/CategoryRepository.ts";
 import AuthService from "../service/AuthService.ts";
 import CategoryRequest from "../entity/request/CategoryRequest.ts";
 import type Category from "../entity/data/Category.ts";

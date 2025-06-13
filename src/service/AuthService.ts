@@ -1,5 +1,5 @@
 import {inject, singleton} from "tsyringe";
-import AuthRepository from "../repository/AuthRepository.ts";
+import AuthRepository from "../repository/auth/AuthRepository.ts";
 
 @singleton()
 export default class AuthService{

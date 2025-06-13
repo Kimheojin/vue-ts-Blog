@@ -4,7 +4,7 @@ import { onMounted, ref } from 'vue';
 import { ElMessage } from "element-plus";
 import { container } from "tsyringe";
 import AuthService from "../service/AuthService.ts";
-import AuthRepository from "../repository/AuthRepository.ts";
+import AuthRepository from "../repository/auth/AuthRepository.ts";
 import HttpError from "../http/HttpError.ts";
 
 const router = useRouter();

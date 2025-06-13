@@ -1,9 +1,9 @@
 import {inject, singleton} from "tsyringe";
-import HttpRepository from "./HttpRepository.ts";
-import type LoginRequest from "../entity/user/LoginRequest.ts";
-import LoginResponse from "../entity/user/LoginResponse.ts";
-import LogoutResponse from "../entity/user/LogoutResponse.ts";
-import AuthCheckResponse from "../entity/response/AuthCheckResponse.ts";
+import HttpRepository from "../HttpRepository.ts";
+import type LoginRequest from "../../entity/user/LoginRequest.ts";
+import LoginResponse from "../../entity/user/LoginResponse.ts";
+import LogoutResponse from "../../entity/user/LogoutResponse.ts";
+import AuthCheckResponse from "../../entity/response/AuthCheckResponse.ts";
 
 @singleton()
 export default class AuthRepository {
@@ -12,6 +12,7 @@ export default class AuthRepository {
     ) {
     }
 
+    // 로그인 관련
     public async login(request: LoginRequest): Promise<LoginResponse> {
 
         const response = await this.httpRepository.post<LoginResponse>({
@@ -22,6 +23,7 @@ export default class AuthRepository {
         return response;
     }
 
+    // 로그아웃
     public async logout(): Promise<LogoutResponse> {
 
 

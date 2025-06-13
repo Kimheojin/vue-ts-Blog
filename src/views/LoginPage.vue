@@ -3,7 +3,7 @@ import {reactive, ref, onMounted} from 'vue';
 import {useRouter} from "vue-router";
 import {ElMessage} from "element-plus";
 import {container} from "tsyringe";
-import AuthRepository from "../repository/AuthRepository.ts";
+import AuthRepository from "../repository/auth/AuthRepository.ts";
 import AuthService from "../service/AuthService.ts";
 import LoginRequest from "../entity/user/LoginRequest.ts";
 import type HttpError from "../http/HttpError.ts";

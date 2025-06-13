@@ -1,9 +1,9 @@
 import {inject, singleton} from "tsyringe";
-import HttpRepository from "./HttpRepository.ts";
-import type PostRequest from "../entity/request/PostRequest.ts";
-import PostResponse from "../entity/response/PostResponse.ts";
-import PostPageResponse from "../entity/response/PostPageResponse.ts";
-import PostItem from "../entity/data/PostItem.ts";
+import HttpRepository from "../HttpRepository.ts";
+import type PostRequest from "../../entity/request/PostRequest.ts";
+import PostResponse from "../../entity/response/PostResponse.ts";
+import PostPageResponse from "../../entity/response/PostPageResponse.ts";
+import PostItem from "../../entity/data/PostItem.ts";
 
 @singleton()
 export default class PostRepository{
