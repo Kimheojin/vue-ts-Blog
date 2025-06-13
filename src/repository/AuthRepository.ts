@@ -15,7 +15,7 @@ export default class AuthRepository {
     public async login(request: LoginRequest): Promise<LoginResponse> {
 
         const response = await this.httpRepository.post<LoginResponse>({
-            path: '/api/login',
+            path: '/api/auth/login',
             body: request
         }, LoginResponse);
 
@@ -37,7 +37,7 @@ export default class AuthRepository {
     public async checkAuthentication(): Promise<boolean> {
         try {
             const response = await this.httpRepository.get({
-                path: '/api/auth/check'
+                path: '/api/auth/session'
             }, AuthCheckResponse);
 
 

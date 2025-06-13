@@ -118,7 +118,6 @@ function formatDate(dateString: string): string {
   width: 100%;
   max-width: 1000px;
   margin: 0 auto;
-  padding: 20px;
 }
 
 .page-title {
@@ -150,7 +149,6 @@ function formatDate(dateString: string): string {
 .post-item {
   background-color: #3a3a3a;
   border-radius: 8px;
-  padding: 20px;
   border: 1px solid #444;
 }
 

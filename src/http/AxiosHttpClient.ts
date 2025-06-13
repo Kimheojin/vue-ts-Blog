@@ -32,7 +32,7 @@ export default class AxiosHttpClient {
                 // withCredentials를 각 요청마다 명시적으로 설정
                 config.withCredentials = true;
 
-                console.log('🚀 요청 전송:', {
+                console.log('요청 전송:', {
                     url: `${config.baseURL}${config.url}`,
                     method: config.method?.toUpperCase(),
                     withCredentials: config.withCredentials,
@@ -40,12 +40,12 @@ export default class AxiosHttpClient {
                     params: config.params
                 });
 
-                console.log('🍪 요청 시점 쿠키:', document.cookie);
+                console.log('요청 시점 쿠키:', document.cookie);
 
                 return config;
             },
             (error) => {
-                console.error('❌ 요청 인터셉터 오류:', error);
+                console.error('요청 인터셉터 오류:', error);
                 return Promise.reject(error);
             }
         );
@@ -53,7 +53,7 @@ export default class AxiosHttpClient {
         // 응답 인터셉터
         this.client.interceptors.response.use(
             (response) => {
-                console.log('✅ 응답 수신:', {
+                console.log('응답 수신:', {
                     url: response.config.url,
                     status: response.status,
                     statusText: response.statusText,
@@ -63,7 +63,7 @@ export default class AxiosHttpClient {
                 return response;
             },
             (error) => {
-                console.error('❌ 응답 오류:', {
+                console.error('응답 오류:', {
                     url: error.config?.url,
                     status: error.response?.status,
                     statusText: error.response?.statusText,
@@ -73,8 +73,8 @@ export default class AxiosHttpClient {
 
                 // 401 오류 특별 처리
                 if (error.response?.status === 401) {
-                    console.log('🔒 401 Unauthorized - 쿠키 확인 필요');
-                    console.log('🍪 401 오류 시 쿠키:', document.cookie);
+                    console.log('401 Unauthorized - 쿠키 확인 필요');
+                    console.log('401 오류 시 쿠키:', document.cookie);
                 }
 
                 return Promise.reject(error);

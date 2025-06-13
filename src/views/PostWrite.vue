@@ -36,16 +36,15 @@ async function checkAuth() {
 
     if (!isAuthenticated) {
       ElMessage.warning('로그인이 필요합니다.');
-      router.replace("/login");
+      router.replace("/admin/login");
       return;
     }
 
     // 인증 확인 후 카테고리 로드
     await loadCategories();
   } catch (error) {
-    console.error('인증 확인 중 오류:', error);
     ElMessage.warning('세션이 만료되었습니다. 다시 로그인해주세요.');
-    router.replace("/login");
+    router.replace("/amdin/login");
   } finally {
     isCheckingAuth.value = false;
   }
@@ -57,7 +56,6 @@ async function loadCategories() {
   try {
     categories.value = await CATEGORY_REPOSITORY.getCategories();
   } catch (error) {
-    console.error("카테고리를 불러오는 중 오류가 발생했습니다:", error);
     ElMessage.error('카테고리를 불러오는데 실패했습니다.');
   } finally {
     isLoading.value = false;
