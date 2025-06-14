@@ -34,5 +34,16 @@ export default class HttpRepository {
             });
     }
 
+    // put 추가
+    public put<T>(config: HttpRequestConfig, clazz: ClassConstructor<T> | null = null): Promise<T> {
+        return this.httpClient
+            .request({ ...config, method: 'PUT' })
+            .then((response) => {
+                return clazz !== null
+                    ? plainToInstance(clazz, response) as T
+                    : response as unknown as T;
+            });
+    }
+
 
 }

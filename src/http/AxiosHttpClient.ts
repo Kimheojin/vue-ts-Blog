@@ -5,7 +5,7 @@ import HttpError from "./HttpError.ts";
 import type {ErrorResponse} from "../entity/interface/ErrorResponse.ts";
 
 export type HttpRequestConfig = {
-    method?: 'GET' | 'POST' | 'PATCH' | 'DELETE'
+    method?: 'GET' | 'POST' | 'PUT' |'PATCH' | 'DELETE'
     path: string
     params?: any
     body?: any
@@ -96,7 +96,7 @@ export default class AxiosHttpClient {
             }
         }
 
-        console.log('🔧 최종 요청 설정:', requestConfig);
+        console.log('최종 요청 설정:', requestConfig);
 
         return this.client
             .request<T>(requestConfig)
@@ -104,7 +104,7 @@ export default class AxiosHttpClient {
                 return response.data
             })
             .catch((e: AxiosError<ErrorResponse>) => {
-                console.error('🚨 AxiosHttpClient 오류 처리:', e.response?.status, e.response?.data);
+                console.error('AxiosHttpClient 오류 처리:', e.response?.status, e.response?.data);
                 return Promise.reject(new HttpError(e))
             })
     }
