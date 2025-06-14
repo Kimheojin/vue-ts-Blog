@@ -3,7 +3,7 @@ import {useRouter} from "vue-router";
 import {onMounted, ref} from "vue";
 import {container} from "tsyringe";
 import CategoryRepository from "../repository/category/CategoryRepository.ts";
-import type Category from "../entity/data/Category.ts";
+import type Category from "../entity/category/data/Category.ts";
 
 const router = useRouter();
 const CATEGORY_REPOSITORY = container.resolve(CategoryRepository);

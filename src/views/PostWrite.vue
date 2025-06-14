@@ -7,7 +7,7 @@ import PostRepository from "../repository/post/PostRepository.ts";
 import CategoryRepository from "../repository/category/CategoryRepository.ts";
 import AuthService from "../service/AuthService.ts";
 import PostRequest from "../entity/request/PostRequest.ts";
-import type Category from "../entity/data/Category.ts";
+import type Category from "../entity/category/data/Category.ts";
 import type HttpError from "../http/HttpError.ts";
 
 const router = useRouter();
