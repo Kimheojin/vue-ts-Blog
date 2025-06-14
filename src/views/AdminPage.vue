@@ -101,7 +101,7 @@ function goToCategoryDelete() {
 
             <el-button type="success" @click="goToCategoryAdd">카테고리 추가</el-button>
             <el-button type="success" @click="goToCategoryDelete">카테고리 삭제</el-button>
-            <el-button type="success" @click="goToCategoryModify">Post 수정</el-button>
+            <el-button type="success" @click="goToCategoryModify">카테고리 수정</el-button>
             <el-button type="primary" @click="goToPostWrite">Post 작성</el-button>
             <el-button>Post 삭제</el-button>
           </div>
