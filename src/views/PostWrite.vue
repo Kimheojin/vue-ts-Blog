@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import { reactive, onMounted, ref } from 'vue';
-import { useRouter } from "vue-router";
-import { ElMessage } from "element-plus";
-import { container } from "tsyringe";
-import PostRepository from "../repository/post/PostRepository.ts";
+import {onMounted, reactive, ref} from 'vue';
+import {useRouter} from "vue-router";
+import {ElMessage} from "element-plus";
+import {container} from "tsyringe";
 import CategoryRepository from "../repository/category/CategoryRepository.ts";
 import AuthService from "../service/AuthService.ts";
-import PostRequest from "../entity/request/PostRequest.ts";
+import PostRequest from "../entity/post/request/PostRequest.ts";
 import type Category from "../entity/category/data/Category.ts";
 import type HttpError from "../http/HttpError.ts";
+import PostAdminRepository from "../repository/post/PostAdminRepository.ts";
 
 const router = useRouter();
-const POST_REPOSITORY = container.resolve(PostRepository);
+const POST_ADMIN_REPOSITORY = container.resolve(PostAdminRepository);
 const CATEGORY_REPOSITORY = container.resolve(CategoryRepository);
 const AUTH_SERVICE = container.resolve(AuthService);
 
@@ -83,7 +83,7 @@ async function handleSubmit() {
   isSubmitting.value = true;
 
   try {
-    await POST_REPOSITORY.createPost(state.post);
+    await POST_ADMIN_REPOSITORY.createPost(state.post);
     ElMessage.success('글이 성공적으로 작성되었습니다.');
     router.replace('/'); // 메인 페이지로 이동
   } catch (error) {

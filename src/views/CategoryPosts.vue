@@ -4,8 +4,8 @@ import { useRoute } from 'vue-router';
 import { container } from 'tsyringe';
 import { ElMessage } from 'element-plus';
 import PostRepository from '../repository/post/PostRepository.ts';
-import type PostItem from '../entity/data/PostItem.ts';
-import type PostPageResponse from '../entity/response/PostPageResponse.ts';
+import type PostItem from '../entity/post/data/PostItem.ts';
+import type PostPageResponse from '../entity/post/response/PostPageResponse.ts';
 
 const route = useRoute();
 const POST_REPOSITORY = container.resolve(PostRepository);

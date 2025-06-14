@@ -4,5 +4,6 @@ export default class PostItem{
     public memberName: string = ''
     public content: string = ''
     public categoryName: string= ''
+    public status: string= ''
     public regDate: string = ''
 }

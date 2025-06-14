@@ -1,9 +1,9 @@
 import {inject, singleton} from "tsyringe";
 import HttpRepository from "../HttpRepository.ts";
-import type LoginRequest from "../../entity/user/LoginRequest.ts";
-import LoginResponse from "../../entity/user/LoginResponse.ts";
-import LogoutResponse from "../../entity/user/LogoutResponse.ts";
-import AuthCheckResponse from "../../entity/response/AuthCheckResponse.ts";
+import type LoginRequest from "../../entity/auth/request/LoginRequest.ts";
+import LoginResponse from "../../entity/auth/response/LoginResponse.ts";
+import LogoutResponse from "../../entity/auth/response/LogoutResponse.ts";
+import AuthCheckResponse from "../../entity/auth/response/AuthCheckResponse.ts";
 
 @singleton()
 export default class AuthRepository {

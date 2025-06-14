@@ -48,7 +48,7 @@ async function handleLogout() {
     const httpError = error as HttpError;
     // 401 에러는 이미 AuthService.logout()이 호출되므로
     // 여기서는 메시지만 표시하고 로그인 페이지로 이동
-    if (httpError.getCode() === '401') {
+    if (httpError.getCode() === 401) {
       ElMessage.warning('세션이 만료되었습니다.');
       await router.replace('/amdin/login');
     } else {

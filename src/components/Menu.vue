@@ -3,11 +3,11 @@ import {useRouter} from "vue-router";
 import {onMounted, ref} from "vue";
 import {container} from "tsyringe";
 import CategoryRepository from "../repository/category/CategoryRepository.ts";
-import type Category from "../entity/category/data/Category.ts";
+import type CategoryWithCount from "../entity/category/data/CategoryWithCount.ts";
 
 const router = useRouter();
 const CATEGORY_REPOSITORY = container.resolve(CategoryRepository);
-const categories = ref<Category[]>([]);
+const categories = ref<CategoryWithCount[]>([]);
 const isLoading = ref(true);
 
 const goToAdmin = () => {
@@ -20,7 +20,7 @@ const goToCategory = (categoryName: string) => {
 
 onMounted(async () => {
   try {
-    categories.value = await CATEGORY_REPOSITORY.getCategories();
+    categories.value = await CATEGORY_REPOSITORY.getCategoriesAndPostCount();
     isLoading.value = false;
   } catch (error) {
     console.error("카테고리를 불러오는 중 오류가 발생했습니다:", error);
@@ -46,7 +46,8 @@ onMounted(async () => {
             class="category-item bold-text"
             :underline="false"
         >
-          {{ category.categoryName }}
+          <span class="category-name">{{ category.categoryName }}</span>
+          <span class="post-count">({{ category.postCount }})</span>
         </el-link>
       </div>
     </div>
@@ -59,6 +60,7 @@ onMounted(async () => {
     </div>
   </div>
 </template>
+
 <style scoped>
 /* 나눔바른펜 폰트 import */
 @import url('https://hangeul.pstatic.net/hangeul_static/css/nanum-barun-pen.css');
@@ -95,7 +97,19 @@ onMounted(async () => {
 
 .category-item {
   font-family: 'NanumBarunPenBold', sans-serif;
-  display: block;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-top: 8px;
+}
+
+.category-name {
+  flex: 1;
+}
+
+.post-count {
+  color: #909399;
+  font-size: 0.9em;
+  margin-left: 8px;
 }
 </style>
