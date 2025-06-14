@@ -3,7 +3,9 @@
 </script>
 
 <template>
-  <div>About me 페이지</div>
+
+  카테고리 삭제
+
 </template>
 
 <style scoped>

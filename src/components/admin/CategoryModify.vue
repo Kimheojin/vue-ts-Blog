@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <div>About me 페이지</div>
+  카테고리 변경
 </template>
 
 <style scoped>

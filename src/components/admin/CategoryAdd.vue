@@ -3,14 +3,16 @@ import { reactive, onMounted, ref } from 'vue';
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import { container } from "tsyringe";
-import CategoryRepository from "../repository/category/CategoryRepository.ts";
-import AuthService from "../service/AuthService.ts";
-import CategoryRequest from "../entity/request/CategoryRequest.ts";
-import type Category from "../entity/data/Category.ts";
-import type HttpError from "../http/HttpError.ts";
+import CategoryRepository from "../../repository/category/CategoryRepository.ts";
+import AuthService from "../../service/AuthService.ts";
+import CategoryRequest from "../../entity/request/CategoryRequest.ts";
+import type Category from "../../entity/data/Category.ts";
+import type HttpError from "../../http/HttpError.ts";
+import CategoryAdminRepository from "../../repository/category/CategoryAdminRepository.ts";
 
 const router = useRouter()
 const CATEGORY_REPOSITORY = container.resolve(CategoryRepository)
+const CATEGORY_ADMIN_REPOSITRY = container.resolve(CategoryAdminRepository)
 const AUTH_SERVICE = container.resolve(AuthService)
 
 const state = reactive({
@@ -81,7 +83,7 @@ async function handleSubmit() {
   isSubmitting.value = true;
 
   try {
-    await CATEGORY_REPOSITORY.addCategory(state.category);
+    await CATEGORY_ADMIN_REPOSITRY.addCategory(state.category);
     ElMessage.success('카테고리가 성공적으로 추가되었습니다.');
 
     // 폼 초기화 및 카테고리 목록 새로고침

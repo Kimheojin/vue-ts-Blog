@@ -3,7 +3,6 @@ import HttpRepository from "../HttpRepository.ts";
 import Category from "../../entity/data/Category.ts";
 import CategoryListResponse from "../../entity/response/CategoryListResponse.ts";
 import type CategoryDeleteRequest from "../../entity/request/CategoryDeleteRequest.ts";
-import type CategoryRequest from "../../entity/request/CategoryRequest.ts";
 
 @singleton()
 export default class CategoryRepository{
@@ -31,13 +30,7 @@ export default class CategoryRepository{
         return response.categoryResponses || [];
     }
 
-    // 카테고리 추가
-    public async addCategory(request: CategoryRequest): Promise<CategoryListResponse> {
-        return this.httpRepository.post<CategoryListResponse>({
-            path: '/api/admin/categories',
-            body: request,
-        }, CategoryListResponse);
-    }
+
 
     // 카테고리 삭제
     public async deleteCategory(request: CategoryDeleteRequest): Promise<CategoryListResponse> {

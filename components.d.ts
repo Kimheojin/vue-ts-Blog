@@ -8,7 +8,10 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    CategoryAdd: typeof import('./src/components/CategoryAdd.vue')['default']
+    CategorModify: typeof import('./src/components/admin/CategoryModify.vue')['default']
+    CategoryAdd: typeof import('./src/components/admin/CategoryAdd.vue')['default']
+    CategoryDelete: typeof import('./src/components/admin/CategoryDelete.vue')['default']
+    CategoryModify: typeof import('./src/components/admin/CategoryModify.vue')['default']
     Contents: typeof import('./src/components/Contents.vue')['default']
     ContentsHeader: typeof import('./src/components/ContentsHeader.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
