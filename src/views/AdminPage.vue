@@ -68,7 +68,9 @@ function goToPostDelete() {
 function goToPostModify() {
   router.push('/admin/post/modify');
 }
-
+function goToCommentManage() {
+  router.push('admin/comment');
+}
 
 
 // 카테고리 추가 페이지로 이동
@@ -114,6 +116,7 @@ function goToCategoryDelete() {
             <el-button type="primary" @click="goToPostWrite">Post 작성</el-button>
             <el-button type="primary" @click="goToPostDelete">Post 삭제</el-button>
             <el-button type="primary" @click="goToPostModify">Post 수정</el-button>
+            <el-button type="success" @click="goToCommentManage">Comment 수정</el-button>
           </div>
         </div>
       </div>

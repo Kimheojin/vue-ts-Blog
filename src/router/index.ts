@@ -5,13 +5,14 @@ import Menu from "../components/Menu.vue";
 import AboutMe from "../views/Aboutme.vue";
 import LoginPage from "../views/LoginPage.vue";
 import AdminPage from "../views/AdminPage.vue";
-import PostWrite from "../views/adminPage/PostWrite.vue";
-import CategoryAdd from "../components/admin/CategoryAdd.vue";
+import PostWrite from "../views/admin/PostWrite.vue";
+import CategoryAdd from "../views/admin/CategoryAdd.vue";
 import CategoryPosts from "../views/CategoryPosts.vue";
-import CategoryDelete from "../components/admin/CategoryDelete.vue";
-import CategoryModify from "../components/admin/CategoryModify.vue";
-import PostDelete from "../views/adminPage/PostDelete.vue";
-import PostModify from "../views/adminPage/PostModify.vue";
+import CategoryDelete from "../views/admin/CategoryDelete.vue";
+import CategoryModify from "../views/admin/CategoryModify.vue";
+import PostDelete from "../views/admin/PostDelete.vue";
+import PostModify from "../views/admin/PostModify.vue";
+import CommentAdmin from "../views/admin/CommentAdmin.vue";
 
 const routes = [
 
@@ -58,7 +59,11 @@ const routes = [
     {
         path: '/category/:categoryName',
         component: CategoryPosts
-    }
+    },
+    {
+        path: '/admin/comment',
+        component: CommentAdmin
+    },
 
 ];
 
