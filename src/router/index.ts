@@ -13,7 +13,7 @@ import CategoryModify from "../views/admin/CategoryModify.vue";
 import PostDelete from "../views/admin/PostDelete.vue";
 import PostModify from "../views/admin/PostModify.vue";
 import CommentAdmin from "../views/admin/CommentAdmin.vue";
-import Allposts from "../components/Allposts.vue";
+import Allposts from "../components/post/Allposts.vue";
 import PostDetail from "../components/PostDetail.vue";
 
 const routes = [

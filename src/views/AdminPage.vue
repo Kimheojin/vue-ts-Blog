@@ -1,63 +1,37 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
-import { onMounted, ref } from 'vue';
+import { onMounted } from 'vue';
 import { ElMessage } from "element-plus";
 import { container } from "tsyringe";
-import AuthService from "../service/AuthService.ts";
+import { useAdminAuth } from "../composables/useAdminAuth.ts";
 import AuthRepository from "../repository/auth/AuthRepository.ts";
 import HttpError from "../http/HttpError.ts";
 
 const router = useRouter();
-const AUTH_SERVICE = container.resolve(AuthService)
 const AUTH_REPOSITORY = container.resolve(AuthRepository)
 
-const isCheckingAuth = ref(true);
+const { isCheckingAuth, checkAuth } = useAdminAuth();
 
-// 마운트 시 세션 확인
-onMounted(() => {
-  checkAuth();
-})
-
-// HTTPOnly 쿠키 사용 시 서버 API로 인증 상태 확인
-async function checkAuth() {
-  try {
-    const isAuthenticated = await AUTH_SERVICE.isAuthenticated();
-
-    if (!isAuthenticated) {
-      ElMessage.warning('관리자 로그인이 필요합니다.');
-      await router.replace("/admin/login");
-      return;
-    }
-
-    // 인증 확인 완료
-    isCheckingAuth.value = false;
-
-  } catch (error) {
-    console.error('인증 확인 중 오류:', error);
-    ElMessage.warning('인증 확인 중 오류가 발생했습니다.');
-    await router.replace("/amdin/login");
-  }
-}
+onMounted(async () => {
+  await checkAuth();
+});
 
 async function handleLogout() {
   try {
     await AUTH_REPOSITORY.logout();
     ElMessage.success('로그아웃 되었습니다.');
-    await router.replace('/amdin/login');
+    await router.replace('/admin/login');
   } catch (error) {
     const httpError = error as HttpError;
-    // 401 에러는 이미 AuthService.logout()이 호출되므로
-    // 여기서는 메시지만 표시하고 로그인 페이지로 이동
     if (httpError.getCode() === 401) {
       ElMessage.warning('세션이 만료되었습니다.');
-      await router.replace('/amdin/login');
+      await router.replace('/admin/login');
     } else {
       ElMessage.error('로그아웃 중 오류가 발생했습니다: ' + httpError.getMessage());
     }
   }
 }
 
-// 글 작성 페이지로 이동
 function goToPostWrite() {
   router.push('/admin/post/write');
 }
@@ -69,20 +43,16 @@ function goToPostModify() {
   router.push('/admin/post/modify');
 }
 function goToCommentManage() {
-  router.push('admin/comment');
+  router.push('/admin/comment');
 }
 
-
-// 카테고리 추가 페이지로 이동
 function goToCategoryAdd() {
   router.push('/admin/category/add');
 }
-// 카테고리 수정 페이지
 function goToCategoryModify() {
   router.push('/admin/category/modify');
 }
 
-// 카테고리 삭제 페이지로 이동
 function goToCategoryDelete() {
   router.push('/admin/category/delete');
 }
@@ -91,7 +61,6 @@ function goToCategoryDelete() {
 <template>
   <div class="admin-page">
     <div class="admin-container">
-      <!-- 인증 확인 중 로딩 표시 -->
       <div v-if="isCheckingAuth" class="loading-text">
         인증 확인 중...
       </div>

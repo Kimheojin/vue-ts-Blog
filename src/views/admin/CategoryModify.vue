@@ -1,49 +1,34 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import { useRouter } from "vue-router";
-import { ElMessage } from "element-plus";
-import { container } from "tsyringe";
+import {onMounted, ref} from 'vue';
+import {useRouter} from "vue-router";
+import {ElMessage} from "element-plus";
+import {container} from "tsyringe";
 import CategoryRepository from "../../repository/category/CategoryRepository.ts";
-import AuthService from "../../service/AuthService.ts";
 import CategoryModifyRequest from "../../entity/category/request/CategoryModifyRequest.ts";
 import type Category from "../../entity/category/data/Category.ts";
 import CategoryAdminRepository from "../../repository/category/CategoryAdminRepository.ts";
+import {useAdminAuth} from "../../composables/useAdminAuth.ts";
 
 const router = useRouter()
 const CATEGORY_REPOSITORY = container.resolve(CategoryRepository)
 const CATEGORY_ADMIN_REPOSITORY = container.resolve(CategoryAdminRepository)
-const AUTH_SERVICE = container.resolve(AuthService)
+
 
 const categories = ref<Category[]>([]);
 const isLoading = ref(false);
 const isModifying = ref(false);
-const isCheckingAuth = ref(true);
 const selectedCategory = ref<Category | null>(null);
 const newCategoryName = ref('');
+const { isCheckingAuth, checkAuth } = useAdminAuth();
 
-onMounted(() => {
-  checkAuth();
+
+onMounted(async () => {
+  const isAuth = await checkAuth();
+  if (isAuth) {
+    await loadCategories();
+  }
 });
 
-async function checkAuth() {
-  try {
-    const isAuthenticated = await AUTH_SERVICE.isAuthenticated();
-
-    if (!isAuthenticated) {
-      ElMessage.warning('로그인이 필요합니다.');
-      router.replace("/admin/login");
-      return;
-    }
-
-    await loadCategories();
-  } catch (error) {
-    console.error('인증 확인 중 오류:', error);
-    ElMessage.warning('세션이 만료되었습니다. 다시 로그인해주세요.');
-    router.replace("/admin/login");
-  } finally {
-    isCheckingAuth.value = false;
-  }
-}
 
 async function loadCategories() {
   isLoading.value = true;

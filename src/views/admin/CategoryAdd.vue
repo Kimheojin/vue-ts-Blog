@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { reactive, onMounted, ref } from 'vue';
 import { useRouter } from "vue-router";
-import { ElMessage } from "element-plus";
+import { useAdminAuth } from "../../composables/useAdminAuth.ts";
 import { container } from "tsyringe";
+import {ElMessage} from "element-plus";
 import CategoryRepository from "../../repository/category/CategoryRepository.ts";
-import AuthService from "../../service/AuthService.ts";
 import CategoryRequest from "../../entity/category/request/CategoryRequest.ts";
 import type Category from "../../entity/category/data/Category.ts";
 import type HttpError from "../../http/HttpError.ts";
@@ -13,7 +13,10 @@ import CategoryAdminRepository from "../../repository/category/CategoryAdminRepo
 const router = useRouter()
 const CATEGORY_REPOSITORY = container.resolve(CategoryRepository)
 const CATEGORY_ADMIN_REPOSITRY = container.resolve(CategoryAdminRepository)
-const AUTH_SERVICE = container.resolve(AuthService)
+
+
+
+const { isCheckingAuth, checkAuth } = useAdminAuth();
 
 const state = reactive({
   category: new CategoryRequest()
@@ -22,33 +25,13 @@ const state = reactive({
 const existingCategories = ref<Category[]>([]);
 const isLoading = ref(false);
 const isSubmitting = ref(false);
-const isCheckingAuth = ref(true);
 
-onMounted(() => {
-  checkAuth();
-});
-
-// HTTPOnly 쿠키 사용 시 서버 API로 인증 상태 확인
-async function checkAuth() {
-  try {
-    const isAuthenticated = await AUTH_SERVICE.isAuthenticated();
-
-    if (!isAuthenticated) {
-      ElMessage.warning('로그인이 필요합니다.');
-      router.replace("/admin/login");
-      return;
-    }
-
-    // 인증 확인 후 카테고리 로드
+onMounted(async () => {
+  const isAuth = await checkAuth();
+  if (isAuth) {
     await loadCategories();
-  } catch (error) {
-    console.error('인증 확인 중 오류:', error);
-    ElMessage.warning('세션이 만료되었습니다. 다시 로그인해주세요.');
-    router.replace("/admin/login");
-  } finally {
-    isCheckingAuth.value = false;
   }
-}
+});
 
 // 기존 카테고리 목록 로드
 async function loadCategories() {

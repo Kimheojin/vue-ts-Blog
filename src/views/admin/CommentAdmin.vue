@@ -1,17 +1,20 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { container } from 'tsyringe';
-import { ElMessage } from 'element-plus';
-import CommentRepository from '../../repository/comment/CommentRepository.ts';
+import {onMounted, ref} from 'vue';
+import {container} from 'tsyringe';
+import {ElMessage} from 'element-plus';
 import CommentWriteRequest from '../../entity/comment/request/CommentWirteRequest.ts';
 import CommentDeleteRequest from '../../entity/comment/request/CommentDeleteRequest.ts';
 import type Comment from '../../entity/comment/data/Comment.ts';
+import CommentAdminRepository from "../../repository/comment/CommentAdminRepository.ts";
+import CommentRepository from "../../repository/comment/CommentRepository.ts";
 
 // Props 정의
 const props = defineProps<{
+  // 상위 -> 하위
   postId: number;
 }>();
 
+const COMMENT_ADMIN_REPOSITORY = container.resolve(CommentAdminRepository);
 const COMMENT_REPOSITORY = container.resolve(CommentRepository);
 
 // 댓글 관련 상태
@@ -39,7 +42,7 @@ onMounted(async () => {
 async function loadComments() {
   isLoading.value = true;
   try {
-    comments.value = await COMMENT_REPOSITORY.getCommentByPostId(props.postId);
+    comments.value = await COMMENT_ADMIN_REPOSITORY.getAdminCommentByPostId(props.postId);
   } catch (error) {
     console.error('댓글을 불러오는 중 오류:', error);
     ElMessage.error('댓글을 불러오는데 실패했습니다.');
@@ -82,7 +85,7 @@ async function submitComment() {
   }
 }
 
-// 답글 폼 토글
+// 답글 폼
 function toggleReplyForm(commentId: number) {
   showReplyForm.value[commentId] = !showReplyForm.value[commentId];
 
@@ -135,7 +138,7 @@ function toggleDeleteForm(commentId: number) {
   }
 }
 
-// 댓글 삭제
+// 댓글 관리자 삭제
 async function deleteComment(comment: Comment) {
   const deleteData = deleteForm.value[comment.id];
 
@@ -157,7 +160,7 @@ async function deleteComment(comment: Comment) {
     deleteRequest.postId = props.postId;
     deleteRequest.parentId = comment.parentId;
 
-    await COMMENT_REPOSITORY.addCategory(deleteRequest);
+    await COMMENT_ADMIN_REPOSITORY.deleteAdminComment(deleteRequest);
     ElMessage.success('댓글이 삭제되었습니다.');
 
     // 삭제 폼 숨기기

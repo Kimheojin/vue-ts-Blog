@@ -5,24 +5,22 @@ import { ElMessage } from "element-plus";
 import { container } from "tsyringe";
 import PostAdminRepository from "../../repository/post/PostAdminRepository.ts";
 import CategoryRepository from "../../repository/category/CategoryRepository.ts";
-import AuthService from "../../service/AuthService.ts";
 import ModifyPostRequest from "../../entity/post/request/ModifyPostRequest.ts";
 import type PostItem from "../../entity/post/data/PostItem.ts";
 import type Category from "../../entity/category/data/Category.ts";
 import type PostPageResponse from "../../entity/post/response/PostPageResponse.ts";
 import type HttpError from "../../http/HttpError.ts";
+import {useAdminAuth} from "../../composables/useAdminAuth.ts";
 
 const router = useRouter();
 const POST_ADMIN_REPOSITORY = container.resolve(PostAdminRepository);
 const CATEGORY_REPOSITORY = container.resolve(CategoryRepository);
-const AUTH_SERVICE = container.resolve(AuthService);
 
 const posts = ref<PostItem[]>([]);
 const categories = ref<Category[]>([]);
 const selectedPost = ref<PostItem | null>(null);
 const isLoading = ref(false);
 const isModifying = ref(false);
-const isCheckingAuth = ref(true);
 const currentPage = ref(0);
 const totalPages = ref(0);
 const totalElements = ref(0);
@@ -31,29 +29,15 @@ const state = reactive({
   post: new ModifyPostRequest()
 });
 
-onMounted(() => {
-  checkAuth();
-});
+const { isCheckingAuth, checkAuth } = useAdminAuth();
 
-async function checkAuth() {
-  try {
-    const isAuthenticated = await AUTH_SERVICE.isAuthenticated();
 
-    if (!isAuthenticated) {
-      ElMessage.warning('로그인이 필요합니다.');
-      router.replace("/admin/login");
-      return;
-    }
-
+onMounted(async () => {
+  const isAuth = await checkAuth();
+  if (isAuth) {
     await Promise.all([loadPosts(), loadCategories()]);
-  } catch (error) {
-    console.error('인증 확인 중 오류:', error);
-    ElMessage.warning('세션이 만료되었습니다. 다시 로그인해주세요.');
-    router.replace("/admin/login");
-  } finally {
-    isCheckingAuth.value = false;
   }
-}
+});
 
 async function loadPosts(page: number = 0) {
   isLoading.value = true;

@@ -25,7 +25,7 @@ export default class CommentAdminRepository {
 
     // 댓글 삭제(관리자)
 
-    public async addCategory(request: CommentDeleteRequest): Promise<CategoryListResponse> {
+    public async deleteAdminComment(request: CommentDeleteRequest): Promise<CategoryListResponse> {
         return this.httpRepository.post<CategoryListResponse>({
             path: '/api/admin/comments',
             body: request,

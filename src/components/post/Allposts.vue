@@ -3,9 +3,9 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { container } from 'tsyringe';
 import { ElMessage } from 'element-plus';
-import PostRepository from '../repository/post/PostRepository.ts';
-import type PostItem from '../entity/post/data/PostItem.ts';
-import type PostPageResponse from '../entity/post/response/PostPageResponse.ts';
+import PostRepository from '../../repository/post/PostRepository.ts';
+import type PostItem from '../../entity/post/data/PostItem.ts';
+import type PostPageResponse from '../../entity/post/response/PostPageResponse.ts';
 
 const router = useRouter();
 const POST_REPOSITORY = container.resolve(PostRepository);

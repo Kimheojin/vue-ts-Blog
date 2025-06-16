@@ -8,7 +8,6 @@ export default class AuthService{
 
     }
 
-
     // AuthRepository를 통해 인증 상태 확인
     public async isAuthenticated(): Promise<boolean> {
         return await this.authRepository.checkAuthentication();
