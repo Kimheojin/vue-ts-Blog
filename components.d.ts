@@ -9,10 +9,6 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     Allposts: typeof import('./src/components/post/Allposts.vue')['default']
-    CategorModify: typeof import('./src/views/admin/CategoryModify.vue')['default']
-    CategoryAdd: typeof import('./src/views/admin/CategoryAdd.vue')['default']
-    CategoryDelete: typeof import('./src/views/admin/CategoryDelete.vue')['default']
-    CategoryModify: typeof import('./src/views/admin/CategoryModify.vue')['default']
     CategoryPosts: typeof import('./src/components/CategoryPosts.vue')['default']
     Contents: typeof import('./src/components/Contents.vue')['default']
     ContentsHeader: typeof import('./src/components/ContentsHeader.vue')['default']
@@ -33,7 +29,6 @@ declare module 'vue' {
     Menu: typeof import('./src/components/Menu.vue')['default']
     MenuHeader: typeof import('./src/components/MenuHeader.vue')['default']
     PostComments: typeof import('./src/components/PostComments.vue')['default']
-    PostDatail: typeof import('./src/components/PostDetail.vue')['default']
     PostDetail: typeof import('./src/components/PostDetail.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
