@@ -3,12 +3,12 @@ import {onMounted, reactive, ref} from 'vue';
 import {useRouter} from "vue-router";
 import {ElMessage} from "element-plus";
 import {container} from "tsyringe";
-import CategoryRepository from "../repository/category/CategoryRepository.ts";
-import AuthService from "../service/AuthService.ts";
-import PostRequest from "../entity/post/request/PostRequest.ts";
-import type Category from "../entity/category/data/Category.ts";
-import type HttpError from "../http/HttpError.ts";
-import PostAdminRepository from "../repository/post/PostAdminRepository.ts";
+import CategoryRepository from "../../repository/category/CategoryRepository.ts";
+import AuthService from "../../service/AuthService.ts";
+import PostRequest from "../../entity/post/request/PostRequest.ts";
+import type Category from "../../entity/category/data/Category.ts";
+import type HttpError from "../../http/HttpError.ts";
+import PostAdminRepository from "../../repository/post/PostAdminRepository.ts";
 
 const router = useRouter();
 const POST_ADMIN_REPOSITORY = container.resolve(PostAdminRepository);
@@ -29,7 +29,6 @@ onMounted(() => {
   checkAuth();
 });
 
-// HTTPOnly 쿠키 사용 시 서버 API로 인증 상태 확인
 async function checkAuth() {
   try {
     const isAuthenticated = await AUTH_SERVICE.isAuthenticated();
@@ -40,17 +39,16 @@ async function checkAuth() {
       return;
     }
 
-    // 인증 확인 후 카테고리 로드
     await loadCategories();
   } catch (error) {
+    console.error('인증 확인 중 오류:', error);
     ElMessage.warning('세션이 만료되었습니다. 다시 로그인해주세요.');
-    router.replace("/amdin/login");
+    router.replace("/admin/login");
   } finally {
     isCheckingAuth.value = false;
   }
 }
 
-// 카테고리 목록 로드
 async function loadCategories() {
   isLoading.value = true;
   try {
@@ -62,9 +60,7 @@ async function loadCategories() {
   }
 }
 
-// 글 작성 처리
 async function handleSubmit() {
-  // 입력값 검증
   if (!state.post.title.trim()) {
     ElMessage.warning('제목을 입력해주세요.');
     return;
@@ -85,7 +81,7 @@ async function handleSubmit() {
   try {
     await POST_ADMIN_REPOSITORY.createPost(state.post);
     ElMessage.success('글이 성공적으로 작성되었습니다.');
-    router.replace('/'); // 메인 페이지로 이동
+    router.replace('/admin');
   } catch (error) {
     const httpError = error as HttpError;
     ElMessage.error('글 작성에 실패했습니다: ' + httpError.getMessage());
@@ -94,12 +90,10 @@ async function handleSubmit() {
   }
 }
 
-// 취소 버튼 처리
 function handleCancel() {
   router.back();
 }
 
-// 폼 초기화
 function handleReset() {
   state.post = new PostRequest();
 }
@@ -108,7 +102,6 @@ function handleReset() {
 <template>
   <div class="post-write-page">
     <div class="post-write-container">
-      <!-- 인증 확인 중 로딩 표시 -->
       <div v-if="isCheckingAuth" class="loading-text">
         인증 확인 중...
       </div>
@@ -117,18 +110,14 @@ function handleReset() {
         <h2 class="page-title bold-text">글 작성</h2>
 
         <el-form class="post-form" label-position="top">
-          <!-- 제목 입력 -->
           <el-form-item label="제목" class="bold-text">
             <el-input
                 v-model="state.post.title"
                 placeholder="제목을 입력해주세요"
-                maxlength="100"
-                show-word-limit
                 clearable
             />
           </el-form-item>
 
-          <!-- 카테고리 선택 -->
           <el-form-item label="카테고리" class="bold-text">
             <el-select
                 v-model="state.post.categoryName"
@@ -145,19 +134,26 @@ function handleReset() {
             </el-select>
           </el-form-item>
 
-          <!-- 내용 입력 -->
+          <el-form-item label="발행 상태" class="bold-text">
+            <el-select v-model="state.post.postStatus" style="width: 100%">
+
+<!--              <el-option label="임시저장" value="DRAFT" />-->
+              <el-option label="발행" value="PUBLISHED" />
+              <el-option label="임시저장" value="DRAFT" />
+              <el-option label="비공개" value="PRIVATE" />
+              <el-option label="예약된" value="SCHEDULED" />
+            </el-select>
+          </el-form-item>
+
           <el-form-item label="내용" class="bold-text">
             <el-input
                 v-model="state.post.content"
                 type="textarea"
                 placeholder="내용을 입력해주세요"
-                :rows="15"
-                maxlength="10000"
-                show-word-limit
+                :rows="20"
             />
           </el-form-item>
 
-          <!-- 버튼 그룹 -->
           <el-form-item>
             <div class="button-group">
               <el-button

@@ -5,11 +5,13 @@ import Menu from "../components/Menu.vue";
 import AboutMe from "../views/Aboutme.vue";
 import LoginPage from "../views/LoginPage.vue";
 import AdminPage from "../views/AdminPage.vue";
-import PostWrite from "../views/PostWrite.vue";
+import PostWrite from "../views/adminPage/PostWrite.vue";
 import CategoryAdd from "../components/admin/CategoryAdd.vue";
 import CategoryPosts from "../views/CategoryPosts.vue";
 import CategoryDelete from "../components/admin/CategoryDelete.vue";
 import CategoryModify from "../components/admin/CategoryModify.vue";
+import PostDelete from "../views/adminPage/PostDelete.vue";
+import PostModify from "../views/adminPage/PostModify.vue";
 
 const routes = [
 
@@ -32,6 +34,14 @@ const routes = [
     {
         path: '/admin/post/write',
         component: PostWrite
+    },
+    {
+        path: '/admin/post/delete',
+        component: PostDelete
+    },
+    {
+        path: '/admin/post/modify',
+        component: PostModify
     },
     {
         path: '/admin/category/add',

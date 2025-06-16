@@ -62,6 +62,15 @@ function goToPostWrite() {
   router.push('/admin/post/write');
 }
 
+function goToPostDelete() {
+  router.push('/admin/post/delete');
+}
+function goToPostModify() {
+  router.push('/admin/post/modify');
+}
+
+
+
 // 카테고리 추가 페이지로 이동
 function goToCategoryAdd() {
   router.push('/admin/category/add');
@@ -103,7 +112,8 @@ function goToCategoryDelete() {
             <el-button type="success" @click="goToCategoryDelete">카테고리 삭제</el-button>
             <el-button type="success" @click="goToCategoryModify">카테고리 수정</el-button>
             <el-button type="primary" @click="goToPostWrite">Post 작성</el-button>
-            <el-button>Post 삭제</el-button>
+            <el-button type="primary" @click="goToPostDelete">Post 삭제</el-button>
+            <el-button type="primary" @click="goToPostModify">Post 수정</el-button>
           </div>
         </div>
       </div>
