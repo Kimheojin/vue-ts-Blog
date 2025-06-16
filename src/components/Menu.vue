@@ -89,7 +89,7 @@ onMounted(async () => {
 }
 
 .admin-button:hover {
-  color: #ffffff;
+  color: #59ff40;
 }
 
 .category-list {
