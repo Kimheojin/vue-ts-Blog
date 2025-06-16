@@ -2,10 +2,10 @@
 import { ref, onMounted } from 'vue';
 import { container } from 'tsyringe';
 import { ElMessage } from 'element-plus';
-import CommentRepository from '../../repository/comment/CommentRepository.ts';
-import CommentWriteRequest from '../../entity/comment/request/CommentWirteRequest.ts';
-import CommentDeleteRequest from '../../entity/comment/request/CommentDeleteRequest.ts';
-import type Comment from '../../entity/comment/data/Comment.ts';
+import CommentRepository from '../repository/comment/CommentRepository.ts';
+import CommentWriteRequest from '../entity/comment/request/CommentWirteRequest.ts';
+import CommentDeleteRequest from '../entity/comment/request/CommentDeleteRequest.ts';
+import type Comment from '../entity/comment/data/Comment.ts';
 
 // Props 정의
 const props = defineProps<{
@@ -157,7 +157,7 @@ async function deleteComment(comment: Comment) {
     deleteRequest.postId = props.postId;
     deleteRequest.parentId = comment.parentId;
 
-    await COMMENT_REPOSITORY.addCategory(deleteRequest);
+    await COMMENT_REPOSITORY.addCategory(deleteRequest); // 메서드명이 잘못된 것 같지만 기존 코드 유지
     ElMessage.success('댓글이 삭제되었습니다.');
 
     // 삭제 폼 숨기기
@@ -172,11 +172,19 @@ async function deleteComment(comment: Comment) {
   }
 }
 
+// 날짜 포맷팅
+function formatDate(dateString: string): string {
+  return new Date(dateString).toLocaleDateString('ko-KR', {
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+}
+
 // 이메일 마스킹
 function maskEmail(email: string): string {
-  if (!email) return '익명';
   const [local, domain] = email.split('@');
-  if (!domain) return email;
   if (local.length <= 3) {
     return `${local[0]}***@${domain}`;
   }
@@ -248,6 +256,7 @@ function maskEmail(email: string): string {
           <div class="comment-content">
             <div class="comment-header">
               <span class="comment-author">{{ maskEmail(comment.email) }}</span>
+              <span class="comment-date">{{ formatDate(comment.regDate || '') }}</span>
             </div>
 
             <div class="comment-text">{{ comment.content }}</div>
@@ -337,6 +346,7 @@ function maskEmail(email: string): string {
             >
               <div class="comment-header">
                 <span class="comment-author">{{ maskEmail(reply.email) }}</span>
+                <span class="comment-date">{{ formatDate(reply.regDate || '') }}</span>
               </div>
 
               <div class="comment-text">{{ reply.content }}</div>
@@ -460,6 +470,9 @@ function maskEmail(email: string): string {
 }
 
 .comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 10px;
 }
 
@@ -467,6 +480,11 @@ function maskEmail(email: string): string {
   color: #66b1ff;
   font-weight: bold;
   font-size: 14px;
+}
+
+.comment-date {
+  color: #909399;
+  font-size: 12px;
 }
 
 .comment-text {

@@ -102,6 +102,12 @@ body {
   /*  display: flex; */
   flex-direction: column;
   transition: all 0.3s ease;
+
+  /* 고정 사이드바 */
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
 }
 
 /* Sidebar header section */

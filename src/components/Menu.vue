@@ -18,6 +18,10 @@ const goToCategory = (categoryName: string) => {
   router.push(`/category/${categoryName}`);
 };
 
+const goToAllPosts = () => {
+  router.push("/posts");
+};
+
 onMounted(async () => {
   try {
     categories.value = await CATEGORY_REPOSITORY.getCategoriesAndPostCount();
@@ -32,7 +36,7 @@ onMounted(async () => {
 <template>
   <div class="menu-container">
     <div class="categories-section">
-      <el-link type="warning" class="bold-text" :underline="false">글 전체보기</el-link>
+      <el-link type="warning" class="bold-text" :underline="false" @click="goToAllPosts">글 전체보기</el-link>
 
       <!-- 로딩 상태 표시 -->
       <div v-if="isLoading" class="bold-text">카테고리 로딩 중...</div>
