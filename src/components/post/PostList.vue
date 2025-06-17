@@ -52,7 +52,7 @@ function handlePageChange(page: number) {
       </h2>
 
       <div v-if="props.showAllPostsButton" class="navigation-buttons">
-        <el-button @click="goToAllPosts" type="info">전체 글 보기</el-button>
+        <el-button @click="goToAllPosts" type="success" text bg>글 전체 보기</el-button>
       </div>
     </div>
 
@@ -61,8 +61,6 @@ function handlePageChange(page: number) {
     </div>
 
     <div v-else>
-
-
       <div class="posts-list">
         <div
             v-for="post in props.posts"
@@ -72,16 +70,14 @@ function handlePageChange(page: number) {
         >
           <div class="post-header">
             <span class="post-title">{{ post.title }}</span>
-            <el-tag
+            <el-link
                 v-if="!props.showAllPostsButton"
-                size = "large"
-                class="category-tag"
+                class="category-link bold-text"
                 type="warning"
-                effect="plain"
                 @click.stop="goToCategory(post.categoryName)"
             >
               {{ post.categoryName }}
-            </el-tag>
+            </el-link>
           </div>
 
           <div class="post-content-preview">
@@ -175,7 +171,7 @@ function handlePageChange(page: number) {
   margin-bottom: 32px;
 }
 
-.category-tag {
+.category-link {
   margin-left: auto;
 }
 </style>

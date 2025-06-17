@@ -36,10 +36,10 @@ onMounted(async () => {
 <template>
   <div class="menu-container">
     <div class="categories-section">
-      <el-link type="warning" class="bold-text" :underline="false" @click="goToAllPosts">글 전체보기</el-link>
+      <el-link type="warning" class="regular-text" :underline="false" @click="goToAllPosts">글 전체보기</el-link>
 
       <!-- 로딩 상태 표시 -->
-      <div v-if="isLoading" class="bold-text">카테고리 로딩 중...</div>
+      <div v-if="isLoading" class="regular-text">카테고리 로딩 중...</div>
 
       <!-- 카테고리 목록 - el-link 사용 -->
       <div v-else class="category-list">
@@ -47,7 +47,7 @@ onMounted(async () => {
             v-for="category in categories"
             :key="category.categoryId"
             @click="goToCategory(category.categoryName)"
-            class="category-item bold-text"
+            class="category-item regular-text"
             :underline="false"
         >
           <span class="category-name">{{ category.categoryName }}</span>
@@ -57,7 +57,7 @@ onMounted(async () => {
     </div>
 
     <div class="admin-container">
-      <el-link class="admin-button bold-text"
+      <el-link class="admin-button regular-text"
                type="info"
                :underline="false"
                @click="goToAdmin">관리자 페이지
@@ -70,21 +70,23 @@ onMounted(async () => {
 /* 나눔바른펜 폰트 import */
 @import url('https://hangeul.pstatic.net/hangeul_static/css/nanum-barun-pen.css');
 
-/* 굵은 글씨체 적용 */
-.bold-text {
-  font-family: 'NanumBarunPenBold', sans-serif;
+/* 일반 글씨체 적용 + bold 체 */
+.regular-text {
+  font-family: 'NanumBarunPen', sans-serif;
+  font-size: 16px;
+  font-weight: bold;
 }
 
 .menu-container {
   display: flex;
   flex-direction: column;
   height: 100%;
-  font-family: 'NanumBarunPenBold', sans-serif;
+  font-family: 'NanumBarunPen', sans-serif;
 }
 
 .admin-container {
   /* 관리자 페이지 버튼 컨테이너 스타일 */
-  margin-top: 10px;
+  margin-top: 14px;
   display: flex;
   justify-content: center;
 }
@@ -94,14 +96,14 @@ onMounted(async () => {
 }
 
 .category-list {
-  font-family: 'NanumBarunPenBold', sans-serif;
+  font-family: 'NanumBarunPen', sans-serif;
   display: flex;
   flex-direction: column;
-  margin-top: 2px;
+  margin-top: 6px;
 }
 
 .category-item {
-  font-family: 'NanumBarunPenBold', sans-serif;
+  font-family: 'NanumBarunPen', sans-serif;
   display: flex;
   justify-content: space-between;
   align-items: center;

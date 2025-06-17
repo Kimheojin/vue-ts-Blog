@@ -12,8 +12,10 @@ const headerTitle = computed(() => {
   } else if (route.path.startsWith('/category/')) {
     const categoryName = route.path.split('/category/')[1];
     return `${categoryName}`;
+  } else if (route.path.startsWith('/admin')){
+    return '관리자 페이지';
   }
-  return '경로 따른 헤더 머시기';
+    return '경로 따른 헤더 머시기';
 });
 </script>
 
@@ -37,5 +39,6 @@ const headerTitle = computed(() => {
   font-size: 40px;
   text-align: center; /* 텍스트를 가로 중앙 정렬 */
   margin-bottom: 50px;
+  font-weight: bold;
 }
 </style>
