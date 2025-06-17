@@ -39,6 +39,9 @@ function goToPostWrite() {
 function goToPostDelete() {
   router.push('/admin/post/delete');
 }
+function goToAdminPosts() {
+  router.push('/admin/post/delete');
+}
 function goToPostModify() {
   router.push('/admin/post/modify');
 }
@@ -86,6 +89,7 @@ function goToCategoryDelete() {
             <el-button type="primary" @click="goToPostDelete">Post 삭제</el-button>
             <el-button type="primary" @click="goToPostModify">Post 수정</el-button>
             <el-button type="success" @click="goToCommentManage">Comment 수정</el-button>
+            <el-button type="success" @click="goToAdminPosts">관리자 post 보기</el-button>
           </div>
         </div>
       </div>

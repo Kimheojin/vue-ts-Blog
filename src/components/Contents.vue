@@ -10,7 +10,7 @@
 </template>
 <style scoped>
 .fixed-width {
-  width: 1000px; /* 원하는 고정된 가로 크기 */
+  width: 860px; /* 원하는 고정된 가로 크기 */
   word-wrap: break-word; /* 긴 단어도 잘라서 줄바꿈 */
 }
 </style>

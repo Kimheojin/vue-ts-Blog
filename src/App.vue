@@ -43,7 +43,7 @@ onUnmounted(() => {
   <el-container class="main-container">
     <!-- 사이드바 -->
     <el-aside
-        width="250px"
+        width="225px"
         class="left-sidebar"
         v-if="showSidebar">
       <div class="sidebar-header">

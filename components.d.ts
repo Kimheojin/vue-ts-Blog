@@ -9,7 +9,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     Allposts: typeof import('./src/components/post/Allposts.vue')['default']
-    CategoryPosts: typeof import('./src/components/CategoryPosts.vue')['default']
+    CategoryPosts: typeof import('./src/components/post/CategoryPosts.vue')['default']
     Contents: typeof import('./src/components/Contents.vue')['default']
     ContentsHeader: typeof import('./src/components/ContentsHeader.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
@@ -30,6 +30,7 @@ declare module 'vue' {
     MenuHeader: typeof import('./src/components/MenuHeader.vue')['default']
     PostComments: typeof import('./src/components/PostComments.vue')['default']
     PostDetail: typeof import('./src/components/PostDetail.vue')['default']
+    PostList: typeof import('./src/components/post/PostList.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }
