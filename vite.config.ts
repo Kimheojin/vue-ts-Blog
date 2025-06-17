@@ -14,6 +14,7 @@ export default defineConfig({
     }),
     vue()
   ],
+  // dev 테스트용 프록시 서버
   server: {
     port: 1000,
     proxy: {
@@ -26,6 +27,7 @@ export default defineConfig({
         },
         configure: (proxy) => {
           proxy.on('proxyRes', (proxyRes: any, req: any) => {
+            // 이거 컴파일 단계에서 제외해야하할듯
             console.log('=== PROXY RESPONSE ===')
             console.log('Original set-cookie:', proxyRes.headers['set-cookie'])
 

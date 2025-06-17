@@ -234,7 +234,7 @@ function goToCategory(categoryName: string) {
 }
 
 .category-tag:hover {
-  background-color: #409eff !important;
+  background-color: #116b01 !important;
   color: white !important;
 }
 
@@ -281,7 +281,7 @@ function goToCategory(categoryName: string) {
 }
 
 :deep(.el-pagination .el-pager li.is-active) {
-  background-color: #409eff;
+  background-color: #116b01;
   color: #ffffff;
 }
 

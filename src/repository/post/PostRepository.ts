@@ -10,7 +10,7 @@ export default class PostRepository{
     ) {}
 
     // 페이징된 포스트 목록 조회
-    public async getPagePosts(page: number= 0, size: number= 10): Promise<PostPageResponse<PostItem>>{
+    public async getPagePosts(page: number= 0, size: number= 5): Promise<PostPageResponse<PostItem>>{
         return this.httpRepository.get<PostPageResponse<PostItem>>({
             path: '/api/posts',
             params: {
@@ -21,7 +21,7 @@ export default class PostRepository{
     }
     
     // 카테고리 활용 포스트 목록 조회
-    public async getCategoryPagePosts(categoryName: string, page: number = 0, size: number = 10): Promise<PostPageResponse<PostItem>> {
+    public async getCategoryPagePosts(categoryName: string, page: number = 0, size: number = 5): Promise<PostPageResponse<PostItem>> {
         return this.httpRepository.get<PostPageResponse<PostItem>>({
             path: '/api/posts/category',
             params: {

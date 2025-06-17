@@ -16,7 +16,7 @@ export default class PostAdminRepository{
 
     // 전체 포스트 조회(모든 상태)
 
-    public async getAdminPagePosts(page: number= 0, size: number= 10): Promise<PostPageResponse<PostItem>>{
+    public async getAdminPagePosts(page: number= 0, size: number= 5): Promise<PostPageResponse<PostItem>>{
         return this.httpRepository.get<PostPageResponse<PostItem>>({
             path: '/api/admin/posts',
             params: {
@@ -28,7 +28,7 @@ export default class PostAdminRepository{
     
     // 카테고리 별 포스트 조회(모든 상태)
 
-    public async getAdminCategoryPagePosts(categoryName: string, page: number = 0, size: number = 10): Promise<PostPageResponse<PostItem>> {
+    public async getAdminCategoryPagePosts(categoryName: string, page: number = 0, size: number = 5): Promise<PostPageResponse<PostItem>> {
         return this.httpRepository.get<PostPageResponse<PostItem>>({
             path: '/api/admin/posts/category',
             params: {
@@ -52,7 +52,7 @@ export default class PostAdminRepository{
     
     // 상태 별 포스트 조회
 
-    public async getAdminStatusPagePosts(Status: string, page: number = 0, size: number = 10): Promise<PostPageResponse<PostItem>> {
+    public async getAdminStatusPagePosts(Status: string, page: number = 0, size: number = 5): Promise<PostPageResponse<PostItem>> {
         return this.httpRepository.get<PostPageResponse<PostItem>>({
             path: '/api/admin/statusPosts',
             params: {
