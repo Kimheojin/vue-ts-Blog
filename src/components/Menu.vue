@@ -60,7 +60,8 @@ onMounted(async () => {
       <el-link class="admin-button bold-text"
                type="info"
                :underline="false"
-               @click="goToAdmin">관리자 페이지</el-link>
+               @click="goToAdmin">관리자 페이지
+      </el-link>
     </div>
   </div>
 </template>

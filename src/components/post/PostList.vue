@@ -71,23 +71,26 @@ function handlePageChange(page: number) {
             @click="goToPost(post.postId)"
         >
           <div class="post-header">
-            <h3 class="post-title">{{ post.title }}</h3>
+            <span class="post-title">{{ post.title }}</span>
             <el-tag
+                v-if="!props.showAllPostsButton"
+                size = "large"
                 class="category-tag"
-                type="info"
+                type="warning"
+                effect="plain"
                 @click.stop="goToCategory(post.categoryName)"
             >
               {{ post.categoryName }}
             </el-tag>
           </div>
 
-          <div class="post-meta">
-            <span class="post-author">{{ post.memberName }}</span>
-            <span class="post-date">{{ formatDate(post.regDate) }}</span>
-          </div>
-
           <div class="post-content-preview">
             {{ post.content.substring(0, 200) }}{{ post.content.length > 200 ? '...' : '' }}
+          </div>
+
+          <div class="post-meta">
+            <span class="post-author">작성자 : {{ post.memberName }}</span>
+            <span class="post-date"> | 작성 날짜 : {{ formatDate(post.regDate) }}</span>
           </div>
         </div>
       </div>
@@ -118,6 +121,13 @@ function handlePageChange(page: number) {
   justify-content: center;
   margin: 40px 0;
 }
+/* 페이지 번호 버튼 크기 조정 */
+.pagination-container :deep(.el-pager li) {
+  min-width: 40px; /* 버튼 최소 너비 */
+  height: 40px; /* 버튼 높이 */
+  line-height: 40px; /* 텍스트 세로 중앙 정렬 */
+  font-size: 20px; /* 페이지 번호 크기 */
+}
 
 /* 호버 시 색상 */
 .pagination-container :deep(.el-pager li:hover) {
@@ -138,6 +148,34 @@ function handlePageChange(page: number) {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 0px;
+}
+.posts-info{
+  font-size: 32px;
+}
+
+.post-header {
+  display: flex;
+  align-items: center;
+}
+
+.post-title {
+  font-size: 30px;
+  font-weight: bold;
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+.post-content-preview{
+  font-size: 20px;
+  margin-bottom: 4px;
+}
+.post-meta{
+  font-size: 16px;
+  margin-top: 12px;
+  margin-bottom: 32px;
+}
+
+.category-tag {
+  margin-left: auto;
 }
 </style>

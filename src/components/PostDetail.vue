@@ -50,7 +50,7 @@ async function loadPost() {
   } catch (error) {
     console.error('게시글을 불러오는 중 오류:', error);
     ElMessage.error('게시글을 불러오는데 실패했습니다.');
-    router.push('/');
+    router.replace('/');
   } finally {
     isLoading.value = false;
   }
@@ -88,14 +88,18 @@ function goToAllPosts() {
 
       <div v-else-if="isPostLoaded" class="post-content">
         <div class="navigation-buttons">
-          <el-button @click="goBack" type="info">← 이전으로</el-button>
-          <el-button @click="goToAllPosts" type="primary">전체 글 보기</el-button>
+          <el-button @click="goBack" type="info">이전으로</el-button>
+          <el-button @click="goToAllPosts" type="info">전체 글 보기</el-button>
         </div>
 
         <div class="post-header">
           <h1 class="post-title">{{ post.title }}</h1>
           <div class="post-meta">
-            <el-tag class="category-tag" type="primary" @click="goToCategory(post.categoryName)">
+            <el-tag class="category-tag"
+                    size = 'large'
+                    type="warning"
+                    effect="plain"
+                    @click="goToCategory(post.categoryName)">
               {{ post.categoryName }}
             </el-tag>
             <span class="post-author">{{ post.memberName }}</span>
