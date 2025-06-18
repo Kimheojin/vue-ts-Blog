@@ -51,8 +51,9 @@ onMounted(async () => {
             :underline="false"
         >
           <span class="category-name">{{ category.categoryName }}</span>
-          <span class="post-count">({{ category.postCount }})</span>
+          <span class="post-count" >({{ category.postCount }})</span>
         </el-link>
+
       </div>
     </div>
 

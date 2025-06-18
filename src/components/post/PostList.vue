@@ -66,8 +66,10 @@ function handlePageChange(page: number) {
             v-for="post in props.posts"
             :key="post.postId"
             class="post-item"
-            @click="goToPost(post.postId)"
         >
+
+          <div class = "post-hover"
+              @click="goToPost(post.postId)">
           <div class="post-header">
             <span class="post-title">{{ post.title }}</span>
             <el-link
@@ -83,12 +85,14 @@ function handlePageChange(page: number) {
           <div class="post-content-preview">
             {{ post.content.substring(0, 200) }}{{ post.content.length > 200 ? '...' : '' }}
           </div>
+          </div>
 
           <div class="post-meta">
-            <span class="post-author">작성자 : {{ post.memberName }}</span>
-            <span class="post-date"> | 작성 날짜 : {{ formatDate(post.regDate) }}</span>
+            <span class="post-author opacity-blur">작성자 : {{ post.memberName }}</span>
+            <span class="post-date opacity-blur">  |  작성 날짜 : {{ formatDate(post.regDate) }}</span>
           </div>
         </div>
+      </div>
       </div>
 
       <div class="pagination-container" v-if="props.totalPages > 1">
@@ -100,7 +104,6 @@ function handlePageChange(page: number) {
         />
       </div>
     </div>
-  </div>
 </template>
 
 <style scoped>
@@ -144,7 +147,6 @@ function handlePageChange(page: number) {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0px;
 }
 .posts-info{
   font-size: 32px;
@@ -161,6 +163,12 @@ function handlePageChange(page: number) {
   margin-top: 16px;
   margin-bottom: 16px;
 }
+.post-hover:hover {
+  color: rgba(234, 190, 16, 0.8);
+  transition: all 0.1ms ease;
+  cursor: pointer
+}
+
 .post-content-preview{
   font-size: 20px;
   margin-bottom: 4px;
@@ -173,5 +181,10 @@ function handlePageChange(page: number) {
 
 .category-link {
   margin-left: auto;
+}
+
+
+.opacity-blur {
+  opacity: 0.6;
 }
 </style>
