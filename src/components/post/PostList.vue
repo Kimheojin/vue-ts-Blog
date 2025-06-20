@@ -69,22 +69,22 @@ function handlePageChange(page: number) {
         >
 
           <div class = "post-hover"
-              @click="goToPost(post.postId)">
-          <div class="post-header">
-            <span class="post-title">{{ post.title }}</span>
-            <el-link
-                v-if="!props.showAllPostsButton"
-                class="category-link bold-text"
-                type="warning"
-                @click.stop="goToCategory(post.categoryName)"
-            >
-              {{ post.categoryName }}
-            </el-link>
-          </div>
+               @click="goToPost(post.postId)">
+            <div class="post-header">
+              <span class="post-title">{{ post.title }}</span>
+              <el-link
+                  v-if="!props.showAllPostsButton"
+                  class="category-link bold-text"
+                  type="warning"
+                  @click.stop="goToCategory(post.categoryName)"
+              >
+                {{ post.categoryName }}
+              </el-link>
+            </div>
 
-          <div class="post-content-preview">
-            {{ post.content.substring(0, 200) }}{{ post.content.length > 200 ? '...' : '' }}
-          </div>
+            <div class="post-content-preview">
+              {{ post.content.substring(0, 200) }}{{ post.content.length > 200 ? '...' : '' }}
+            </div>
           </div>
 
           <div class="post-meta">
@@ -93,18 +93,18 @@ function handlePageChange(page: number) {
           </div>
         </div>
       </div>
-      </div>
-
-      <div class="pagination-container" v-if="props.totalPages > 1">
-        <el-pagination
-            v-model:current-page="props.currentPage"
-            :total="props.totalElements"
-            :page-size="5"
-            layout="prev, pager, next"
-            @current-change="handlePageChange"
-        />
-      </div>
     </div>
+
+    <div class="pagination-container" v-if="props.totalPages > 1">
+      <el-pagination
+          v-model:current-page="props.currentPage"
+          :total="props.totalElements"
+          :page-size="5"
+          layout="prev, pager, next"
+          @current-change="handlePageChange"
+      />
+    </div>
+  </div>
 </template>
 
 <style scoped>
@@ -164,10 +164,18 @@ function handlePageChange(page: number) {
   margin-top: 16px;
   margin-bottom: 16px;
 }
+
+/* 기존 post-hover 스타일 */
 .post-hover:hover {
   color: rgba(234, 190, 16, 0.8);
   transition: all 0.1ms ease;
-  cursor: pointer
+  cursor: pointer;
+}
+
+/* 카테고리 링크에 호버할 때 부모의 호버 효과 제거 */
+.post-hover:has(.category-link:hover) {
+  color: initial;
+  cursor: default;
 }
 
 .post-content-preview{
@@ -183,7 +191,6 @@ function handlePageChange(page: number) {
 .category-link {
   margin-left: auto;
 }
-
 
 .opacity-blur {
   opacity: 0.6;
