@@ -50,7 +50,7 @@ async function loadPost() {
   } catch (error) {
     console.error('게시글을 불러오는 중 오류:', error);
     ElMessage.error('게시글을 불러오는데 실패했습니다.');
-    router.push('/');
+    router.replace('/');
   } finally {
     isLoading.value = false;
   }
@@ -73,10 +73,6 @@ function goToCategory(categoryName: string) {
 function goBack() {
   router.back();
 }
-
-function goToAllPosts() {
-  router.push('/posts');
-}
 </script>
 
 <template>
@@ -87,15 +83,14 @@ function goToAllPosts() {
       </div>
 
       <div v-else-if="isPostLoaded" class="post-content">
-        <div class="navigation-buttons">
-          <el-button @click="goBack" type="info">← 이전으로</el-button>
-          <el-button @click="goToAllPosts" type="primary">전체 글 보기</el-button>
-        </div>
-
         <div class="post-header">
-          <h1 class="post-title">{{ post.title }}</h1>
+          <div class="post-title">{{ post.title }}</div>
           <div class="post-meta">
-            <el-tag class="category-tag" type="primary" @click="goToCategory(post.categoryName)">
+            <el-tag class="category-tag"
+                    size = 'large'
+                    type="warning"
+                    effect="plain"
+                    @click="goToCategory(post.categoryName)">
               {{ post.categoryName }}
             </el-tag>
             <span class="post-author">{{ post.memberName }}</span>
@@ -109,12 +104,11 @@ function goToAllPosts() {
         </div>
 
         <div class="bottom-navigation">
-          <el-button @click="goBack" type="info">← 이전으로</el-button>
-          <el-button @click="goToCategory(post.categoryName)" type="success">
-            {{ post.categoryName }} 카테고리 더보기
+          <el-button @click="goBack" type='warning' text bg >이전으로</el-button>
+          <el-button @click="goToCategory(post.categoryName)" type='warning' text bg>
+            {{ post.categoryName }} 카테고리 더 보기
           </el-button>
         </div>
-
         <PostComments :post-id="post.postId" />
       </div>
 
@@ -139,9 +133,7 @@ function goToAllPosts() {
   font-family: 'NanumBarunPen', sans-serif;
 }
 
-.post-detail-container {
-  padding: 20px;
-}
+
 
 .loading-text, .error-text {
   text-align: center;
@@ -164,12 +156,12 @@ function goToAllPosts() {
 }
 
 .post-title {
-  font-family: 'NanumBarunPenBold', sans-serif;
   font-size: 32px;
   color: #ffffff;
   margin: 0 0 20px 0;
   line-height: 1.4;
   word-break: keep-all;
+  font-weight: bold;
 }
 
 .post-meta {

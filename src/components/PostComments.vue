@@ -403,8 +403,8 @@ function maskEmail(email: string): string {
 }
 
 .comments-section {
-  margin-top: 40px;
-  padding-top: 30px;
+  margin-top: 20px;
+  padding-top: 10px;
   border-top: 2px solid #444;
   font-family: 'NanumBarunPen', sans-serif;
 }
@@ -417,7 +417,7 @@ function maskEmail(email: string): string {
 
 .comment-form {
   background-color: #2a2a2a;
-  padding: 20px;
+  padding: 15px;
   border-radius: 12px;
   margin-bottom: 30px;
   border: 1px solid #444;

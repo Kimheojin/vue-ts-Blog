@@ -75,7 +75,7 @@ async function handleLogin() {
 <template>
   <div class="login-page">
     <div class="admin-container">
-      <h1 class="login-title">로그인</h1>
+      <div class="login-title">로그인</div>
 
       <div class="login-form">
         <div class="form-group">

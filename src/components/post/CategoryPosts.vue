@@ -1,16 +1,18 @@
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch, computed } from 'vue';
+import { useRoute } from 'vue-router';
 import { container } from 'tsyringe';
 import { ElMessage } from 'element-plus';
 import PostRepository from '../../repository/post/PostRepository.ts';
-
+import PostList from './PostList.vue';
 import type PostItem from '../../entity/post/data/PostItem.ts';
 import type PostPageResponse from '../../entity/post/response/PostPageResponse.ts';
-import PostList from "./PostList.vue";
 
+const route = useRoute();
 const POST_REPOSITORY = container.resolve(PostRepository);
 
+const categoryName = ref<string>('');
 const posts = ref<PostItem[]>([]);
 const isLoading = ref(true);
 const currentPage = ref(1);
@@ -18,14 +20,26 @@ const totalPages = ref(0);
 const totalElements = ref(0);
 const pageSize = ref(5);
 
+const title = computed(() => `${categoryName.value} 카테고리`);
+
 onMounted(async () => {
+  categoryName.value = route.params.categoryName as string;
   await loadPosts();
+});
+
+// 라우트 파라미터 변경 감지
+watch(() => route.params.categoryName, async (newCategoryName) => {
+  if (newCategoryName) {
+    categoryName.value = newCategoryName as string;
+    await loadPosts(0);
+  }
 });
 
 async function loadPosts(page: number = 0) {
   isLoading.value = true;
   try {
-    const response: PostPageResponse<PostItem> = await POST_REPOSITORY.getPagePosts(
+    const response: PostPageResponse<PostItem> = await POST_REPOSITORY.getCategoryPagePosts(
+        categoryName.value,
         page,
         pageSize.value
     );
@@ -48,15 +62,16 @@ async function handlePageChange(page: number) {
 </script>
 
 <template>
-  <div class="all-posts-page">
+  <div class="category-posts-page">
     <PostList
         :posts="posts"
         :is-loading="isLoading"
         :current-page="currentPage"
         :total-pages="totalPages"
         :total-elements="totalElements"
-        title="전체 게시글"
-        empty-message="게시글이 없습니다."
+        :title="title"
+        empty-message="이 카테고리에는 게시글이 없습니다."
+        :show-all-posts-button="true"
         @page-change="handlePageChange"
     />
   </div>

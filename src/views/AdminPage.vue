@@ -39,6 +39,9 @@ function goToPostWrite() {
 function goToPostDelete() {
   router.push('/admin/post/delete');
 }
+function goToAdminPosts() {
+  router.push('/admin/post/delete');
+}
 function goToPostModify() {
   router.push('/admin/post/modify');
 }
@@ -66,7 +69,6 @@ function goToCategoryDelete() {
       </div>
 
       <div v-else>
-        <h2 class="admin-title">관리자 페이지</h2>
 
         <div class="admin-content">
           <p class="admin-message">
@@ -82,10 +84,11 @@ function goToCategoryDelete() {
             <el-button type="success" @click="goToCategoryAdd">카테고리 추가</el-button>
             <el-button type="success" @click="goToCategoryDelete">카테고리 삭제</el-button>
             <el-button type="success" @click="goToCategoryModify">카테고리 수정</el-button>
-            <el-button type="primary" @click="goToPostWrite">Post 작성</el-button>
-            <el-button type="primary" @click="goToPostDelete">Post 삭제</el-button>
-            <el-button type="primary" @click="goToPostModify">Post 수정</el-button>
+            <el-button type="success" @click="goToPostWrite">Post 작성</el-button>
+            <el-button type="success" @click="goToPostDelete">Post 삭제</el-button>
+            <el-button type="success" @click="goToPostModify">Post 수정</el-button>
             <el-button type="success" @click="goToCommentManage">Comment 수정</el-button>
+            <el-button type="success" @click="goToAdminPosts">관리자 post 보기</el-button>
           </div>
         </div>
       </div>
@@ -102,14 +105,7 @@ function goToCategoryDelete() {
 
 .admin-container {
   width: 100%;
-  max-width: 1000px;
   text-align: center;
-}
-
-.admin-title {
-  font-size: 28px;
-  margin-bottom: 20px;
-  color: #e0e0e0;
 }
 
 .admin-actions .el-button {
@@ -120,6 +116,6 @@ function goToCategoryDelete() {
   text-align: center;
   color: #e0e0e0;
   font-size: 16px;
-  margin: 20px 0;
+
 }
 </style>

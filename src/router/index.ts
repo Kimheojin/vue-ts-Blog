@@ -7,7 +7,7 @@ import LoginPage from "../views/LoginPage.vue";
 import AdminPage from "../views/AdminPage.vue";
 import PostWrite from "../views/admin/PostWrite.vue";
 import CategoryAdd from "../views/admin/CategoryAdd.vue";
-import CategoryPosts from "../components/CategoryPosts.vue";
+import CategoryPosts from "../components/post/CategoryPosts.vue";
 import CategoryDelete from "../views/admin/CategoryDelete.vue";
 import CategoryModify from "../views/admin/CategoryModify.vue";
 import PostDelete from "../views/admin/PostDelete.vue";
