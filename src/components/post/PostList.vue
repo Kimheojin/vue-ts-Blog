@@ -99,6 +99,7 @@ function handlePageChange(page: number) {
         <el-pagination
             v-model:current-page="props.currentPage"
             :total="props.totalElements"
+            :page-size="5"
             layout="prev, pager, next"
             @current-change="handlePageChange"
         />
