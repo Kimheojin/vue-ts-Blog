@@ -1,178 +1,152 @@
 <script setup lang="ts">
 import {onMounted, ref} from 'vue';
 import {container} from 'tsyringe';
-import {ElMessage} from 'element-plus';
-import CommentWriteRequest from '../../entity/comment/request/CommentWirteRequest.ts';
+import {ElMessage, ElMessageBox} from 'element-plus';
 import CommentDeleteRequest from '../../entity/comment/request/CommentDeleteRequest.ts';
 import type Comment from '../../entity/comment/data/Comment.ts';
+import type PostItem from '../../entity/post/data/PostItem.ts';
+import type PostPageResponse from '../../entity/post/response/PostPageResponse.ts';
 import CommentAdminRepository from "../../repository/comment/CommentAdminRepository.ts";
-import CommentRepository from "../../repository/comment/CommentRepository.ts";
+import PostAdminRepository from "../../repository/post/PostAdminRepository.ts";
+import {useAdminAuth} from "../../composables/useAdminAuth.ts";
+import {useRouter} from "vue-router";
 
-// Props 정의
-const props = defineProps<{
-  // 상위 -> 하위
-  postId: number;
-}>();
+const router = useRouter();
+const { isCheckingAuth, checkAuth } = useAdminAuth();
 
 const COMMENT_ADMIN_REPOSITORY = container.resolve(CommentAdminRepository);
-const COMMENT_REPOSITORY = container.resolve(CommentRepository);
+const POST_ADMIN_REPOSITORY = container.resolve(PostAdminRepository);
+
+// 게시물 관련 상태
+const posts = ref<PostItem[]>([]);
+const selectedPost = ref<PostItem | null>(null);
+const isLoadingPosts = ref(false);
+const currentPage = ref(0);
+const totalPages = ref(0);
+const totalElements = ref(0);
 
 // 댓글 관련 상태
 const comments = ref<Comment[]>([]);
-const isLoading = ref(true);
-
-// 댓글 작성 폼 상태
-const commentForm = ref(new CommentWriteRequest());
-const isSubmitting = ref(false);
-
-// 답글 작성 관련 상태
-const replyForms = ref<{ [commentId: number]: CommentWriteRequest }>({});
-const showReplyForm = ref<{ [commentId: number]: boolean }>({});
-
-// 댓글 삭제 관련 상태
-const deleteForm = ref<{ [commentId: number]: { email: string; password: string } }>({});
-const showDeleteForm = ref<{ [commentId: number]: boolean }>({});
+const isLoadingComments = ref(false);
+const isDeleting = ref(false);
 
 onMounted(async () => {
-  commentForm.value.postId = props.postId;
-  await loadComments();
+  const isAuth = await checkAuth();
+  if (isAuth) {
+    await loadPosts();
+  }
 });
+
+// 게시물 목록 불러오기
+async function loadPosts(page: number = 0) {
+  isLoadingPosts.value = true;
+  try {
+    const response: PostPageResponse<PostItem> = await POST_ADMIN_REPOSITORY.getAdminPagePosts(page, 10);
+    posts.value = response.content;
+    currentPage.value = response.pageNumber;
+    totalPages.value = response.totalPages;
+    totalElements.value = response.totalElements;
+  } catch (error) {
+    console.error('게시물을 불러오는 중 오류:', error);
+    ElMessage.error('게시물을 불러오는데 실패했습니다.');
+  } finally {
+    isLoadingPosts.value = false;
+  }
+}
+
+// 게시물 선택 시 댓글 불러오기
+async function selectPost(post: PostItem) {
+  selectedPost.value = post;
+  await loadComments();
+}
 
 // 댓글 목록 불러오기
 async function loadComments() {
-  isLoading.value = true;
+  if (!selectedPost.value) return;
+
+  isLoadingComments.value = true;
   try {
-    comments.value = await COMMENT_ADMIN_REPOSITORY.getAdminCommentByPostId(props.postId);
+    const allComments = await COMMENT_ADMIN_REPOSITORY.getAdminCommentByPostId(selectedPost.value.postId);
+    comments.value = sortComments(allComments);
   } catch (error) {
     console.error('댓글을 불러오는 중 오류:', error);
     ElMessage.error('댓글을 불러오는데 실패했습니다.');
   } finally {
-    isLoading.value = false;
+    isLoadingComments.value = false;
   }
 }
 
-// 댓글 작성
-async function submitComment() {
-  if (!commentForm.value.content.trim()) {
-    ElMessage.warning('댓글 내용을 입력해주세요.');
-    return;
-  }
-  if (!commentForm.value.email.trim()) {
-    ElMessage.warning('이메일을 입력해주세요.');
-    return;
-  }
-  if (!commentForm.value.password.trim()) {
-    ElMessage.warning('비밀번호를 입력해주세요.');
-    return;
-  }
+// 댓글 정렬 함수
+function sortComments(commentList: Comment[]): Comment[] {
+  const parentComments = commentList
+      .filter(comment => comment.parentId === null)
+      .sort((a, b) => new Date(a.regDate).getTime() - new Date(b.regDate).getTime());
 
-  isSubmitting.value = true;
-  try {
-    await COMMENT_REPOSITORY.postComment(commentForm.value);
-    ElMessage.success('댓글이 작성되었습니다.');
+  const result: Comment[] = [];
 
-    // 폼 초기화
-    commentForm.value = new CommentWriteRequest();
-    commentForm.value.postId = props.postId;
+  parentComments.forEach(parent => {
+    result.push(parent);
 
-    // 댓글 목록 새로고침
-    await loadComments();
-  } catch (error) {
-    console.error('댓글 작성 중 오류:', error);
-    ElMessage.error('댓글 작성에 실패했습니다.');
-  } finally {
-    isSubmitting.value = false;
-  }
+    const replies = commentList
+        .filter(comment => comment.parentId === parent.id)
+        .sort((a, b) => new Date(a.regDate).getTime() - new Date(b.regDate).getTime());
+
+    result.push(...replies);
+  });
+
+  return result;
 }
 
-// 답글 폼
-function toggleReplyForm(commentId: number) {
-  showReplyForm.value[commentId] = !showReplyForm.value[commentId];
-
-  if (showReplyForm.value[commentId] && !replyForms.value[commentId]) {
-    replyForms.value[commentId] = new CommentWriteRequest();
-    replyForms.value[commentId].postId = props.postId;
-    replyForms.value[commentId].parentId = commentId;
-  }
-}
-
-// 답글 작성
-async function submitReply(commentId: number) {
-  const replyForm = replyForms.value[commentId];
-
-  if (!replyForm.content.trim()) {
-    ElMessage.warning('답글 내용을 입력해주세요.');
-    return;
-  }
-  if (!replyForm.email.trim()) {
-    ElMessage.warning('이메일을 입력해주세요.');
-    return;
-  }
-  if (!replyForm.password.trim()) {
-    ElMessage.warning('비밀번호를 입력해주세요.');
-    return;
-  }
-
-  try {
-    await COMMENT_REPOSITORY.postComment(replyForm);
-    ElMessage.success('답글이 작성되었습니다.');
-
-    // 답글 폼 숨기기 및 초기화
-    showReplyForm.value[commentId] = false;
-    delete replyForms.value[commentId];
-
-    // 댓글 목록 새로고침
-    await loadComments();
-  } catch (error) {
-    console.error('답글 작성 중 오류:', error);
-    ElMessage.error('답글 작성에 실패했습니다.');
-  }
-}
-
-// 삭제 폼 토글
-function toggleDeleteForm(commentId: number) {
-  showDeleteForm.value[commentId] = !showDeleteForm.value[commentId];
-
-  if (showDeleteForm.value[commentId] && !deleteForm.value[commentId]) {
-    deleteForm.value[commentId] = { email: '', password: '' };
-  }
-}
-
-// 댓글 관리자 삭제
+// 관리자 댓글 삭제
 async function deleteComment(comment: Comment) {
-  const deleteData = deleteForm.value[comment.id];
-
-  if (!deleteData.email.trim()) {
-    ElMessage.warning('이메일을 입력해주세요.');
-    return;
-  }
-  if (!deleteData.password.trim()) {
-    ElMessage.warning('비밀번호를 입력해주세요.');
-    return;
-  }
-
   try {
+    const contentPreview = comment.content.length > 50
+        ? comment.content.substring(0, 50) + '...'
+        : comment.content;
+
+    await ElMessageBox.confirm(
+        `댓글을 삭제하시겠습니까?\n\n"${contentPreview}"`,
+        '댓글 삭제',
+        {
+          confirmButtonText: '삭제',
+          cancelButtonText: '취소',
+          type: 'warning',
+        }
+    );
+
+    isDeleting.value = true;
+
     const deleteRequest = new CommentDeleteRequest();
     deleteRequest.commentId = comment.id;
     deleteRequest.content = comment.content;
-    deleteRequest.email = deleteData.email;
-    deleteRequest.password = deleteData.password;
-    deleteRequest.postId = props.postId;
+    deleteRequest.email = comment.email;
+    deleteRequest.password = '';
+    deleteRequest.postId = selectedPost.value!.postId;
     deleteRequest.parentId = comment.parentId;
 
     await COMMENT_ADMIN_REPOSITORY.deleteAdminComment(deleteRequest);
     ElMessage.success('댓글이 삭제되었습니다.');
 
-    // 삭제 폼 숨기기
-    showDeleteForm.value[comment.id] = false;
-    delete deleteForm.value[comment.id];
-
-    // 댓글 목록 새로고침
     await loadComments();
-  } catch (error) {
-    console.error('댓글 삭제 중 오류:', error);
-    ElMessage.error('댓글 삭제에 실패했습니다.');
+  } catch (error: any) {
+    if (error !== 'cancel') {
+      console.error('댓글 삭제 중 오류:', error);
+      ElMessage.error('댓글 삭제에 실패했습니다.');
+    }
+  } finally {
+    isDeleting.value = false;
   }
+}
+
+// 페이지 변경
+async function handlePageChange(page: number) {
+  await loadPosts(page - 1);
+}
+
+// 게시물 목록으로 돌아가기
+function backToPostList() {
+  selectedPost.value = null;
+  comments.value = [];
 }
 
 // 이메일 마스킹
@@ -185,198 +159,171 @@ function maskEmail(email: string): string {
   }
   return `${local.substring(0, 3)}***@${domain}`;
 }
+
+// 날짜 포맷팅
+function formatDate(dateString: string): string {
+  if (!dateString) return '';
+  try {
+    return new Date(dateString).toLocaleDateString('ko-KR', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  } catch (error) {
+    return dateString;
+  }
+}
+
+// 댓글 타입 구분
+function isReply(comment: Comment): boolean {
+  return comment.parentId !== null && comment.parentId !== 0;
+}
+
+// 상태 텍스트
+function getStatusText(status: string): string {
+  return status === 'PUBLISHED' ? '발행' : '임시저장';
+}
+
+function goBack() {
+  router.back();
+}
 </script>
 
 <template>
-  <div class="comments-section">
-    <h3 class="comments-title bold-text">댓글 {{ comments.length }}개</h3>
-
-    <!-- 댓글 작성 폼 -->
-    <div class="comment-form">
-      <div class="form-row">
-        <el-input
-            v-model="commentForm.email"
-            placeholder="이메일"
-            class="form-input"
-            type="email"
-        />
-        <el-input
-            v-model="commentForm.password"
-            placeholder="비밀번호"
-            class="form-input"
-            type="password"
-            show-password
-        />
+  <div class="comment-admin-page">
+    <div class="comment-admin-container">
+      <div v-if="isCheckingAuth" class="loading-text">
+        인증 확인 중...
       </div>
 
-      <el-input
-          v-model="commentForm.content"
-          type="textarea"
-          placeholder="댓글을 입력하세요..."
-          :rows="4"
-          class="comment-textarea"
-      />
-
-      <div class="form-actions">
-        <el-button
-            type="primary"
-            @click="submitComment"
-            :loading="isSubmitting"
-        >
-          댓글 작성
-        </el-button>
-      </div>
-    </div>
-
-    <!-- 댓글 목록 -->
-    <div class="comments-list">
-      <!-- 로딩 상태 -->
-      <div v-if="isLoading" class="loading-text">
-        댓글을 불러오는 중...
-      </div>
-
-      <!-- 댓글이 없는 경우 -->
-      <div v-else-if="comments.length === 0" class="empty-text">
-        첫 번째 댓글을 작성해보세요!
-      </div>
-
-      <!-- 댓글 목록 -->
       <div v-else>
-        <div
-            v-for="comment in comments"
-            :key="comment.id"
-            class="comment-item"
-        >
-          <!-- 댓글 내용 -->
-          <div class="comment-content">
-            <div class="comment-header">
-              <span class="comment-author">{{ maskEmail(comment.email) }}</span>
-            </div>
-
-            <div class="comment-text">{{ comment.content }}</div>
-
-            <div class="comment-actions">
-              <el-button
-                  size="small"
-                  text
-                  @click="toggleReplyForm(comment.id)"
-              >
-                답글
-              </el-button>
-              <el-button
-                  size="small"
-                  text
-                  type="danger"
-                  @click="toggleDeleteForm(comment.id)"
-              >
-                삭제
-              </el-button>
+        <!-- 게시물 목록 화면 -->
+        <div v-if="!selectedPost">
+          <div class="page-header">
+            <h2 class="page-title bold-text">댓글 관리 - 게시물 선택</h2>
+            <div class="header-actions">
+              <span class="posts-count">총 {{ totalElements }}개의 게시물</span>
+              <el-button @click="goBack" class="bold-text">돌아가기</el-button>
             </div>
           </div>
 
-          <!-- 답글 작성 폼 -->
-          <div v-if="showReplyForm[comment.id]" class="reply-form">
-            <div class="form-row">
-              <el-input
-                  v-model="replyForms[comment.id].email"
-                  placeholder="이메일"
-                  class="form-input-small"
-                  type="email"
-              />
-              <el-input
-                  v-model="replyForms[comment.id].password"
-                  placeholder="비밀번호"
-                  class="form-input-small"
-                  type="password"
-                  show-password
-              />
+          <!-- 게시물 목록 -->
+          <div class="posts-section">
+            <div v-if="isLoadingPosts" class="loading-text">
+              게시물을 불러오는 중...
             </div>
 
-            <el-input
-                v-model="replyForms[comment.id].content"
-                type="textarea"
-                placeholder="답글을 입력하세요..."
-                :rows="3"
-                class="reply-textarea"
-            />
-
-            <div class="reply-actions">
-              <el-button size="small" @click="showReplyForm[comment.id] = false">취소</el-button>
-              <el-button size="small" type="primary" @click="submitReply(comment.id)">답글 작성</el-button>
-            </div>
-          </div>
-
-          <!-- 삭제 폼 -->
-          <div v-if="showDeleteForm[comment.id]" class="delete-form">
-            <p class="delete-warning">댓글을 삭제하려면 작성 시 사용한 이메일과 비밀번호를 입력하세요.</p>
-            <div class="form-row">
-              <el-input
-                  v-model="deleteForm[comment.id].email"
-                  placeholder="이메일"
-                  class="form-input-small"
-                  type="email"
-              />
-              <el-input
-                  v-model="deleteForm[comment.id].password"
-                  placeholder="비밀번호"
-                  class="form-input-small"
-                  type="password"
-                  show-password
-              />
+            <div v-else-if="posts.length === 0" class="empty-text">
+              게시물이 없습니다.
             </div>
 
-            <div class="delete-actions">
-              <el-button size="small" @click="showDeleteForm[comment.id] = false">취소</el-button>
-              <el-button size="small" type="danger" @click="deleteComment(comment)">삭제</el-button>
-            </div>
-          </div>
-
-          <!-- 답글 목록 -->
-          <div v-if="comment.replies && comment.replies.length > 0" class="replies-list">
-            <div
-                v-for="reply in comment.replies"
-                :key="reply.id"
-                class="reply-item"
-            >
-              <div class="comment-header">
-                <span class="comment-author">{{ maskEmail(reply.email) }}</span>
-              </div>
-
-              <div class="comment-text">{{ reply.content }}</div>
-
-              <div class="comment-actions">
-                <el-button
-                    size="small"
-                    text
-                    type="danger"
-                    @click="toggleDeleteForm(reply.id)"
+            <div v-else>
+              <div class="posts-list">
+                <div
+                    v-for="post in posts"
+                    :key="`post-${post.postId}`"
+                    class="post-item"
+                    @click="selectPost(post)"
                 >
-                  삭제
-                </el-button>
+                  <div class="post-header">
+                    <h3 class="post-title">{{ post.title }}</h3>
+                    <div class="post-meta">
+                      <span class="post-status">{{ getStatusText(post.status) }}</span>
+                      <span class="post-date">{{ formatDate(post.regDate) }}</span>
+                    </div>
+                  </div>
+
+                  <div class="post-info">
+                    <span class="post-author">{{ post.memberName }}</span>
+                    <span class="post-category">{{ post.categoryName }}</span>
+                  </div>
+
+                  <div class="post-content-preview">
+                    {{ post.content.substring(0, 100) }}{{ post.content.length > 100 ? '...' : '' }}
+                  </div>
+                </div>
               </div>
 
-              <!-- 답글 삭제 폼 -->
-              <div v-if="showDeleteForm[reply.id]" class="delete-form">
-                <p class="delete-warning">답글을 삭제하려면 작성 시 사용한 이메일과 비밀번호를 입력하세요.</p>
-                <div class="form-row">
-                  <el-input
-                      v-model="deleteForm[reply.id].email"
-                      placeholder="이메일"
-                      class="form-input-small"
-                      type="email"
-                  />
-                  <el-input
-                      v-model="deleteForm[reply.id].password"
-                      placeholder="비밀번호"
-                      class="form-input-small"
-                      type="password"
-                      show-password
-                  />
+              <!-- 페이지네이션 -->
+              <div class="pagination-container" v-if="totalPages > 1">
+                <el-pagination
+                    v-model:current-page="currentPage"
+                    :page-size="10"
+                    :total="totalElements"
+                    layout="prev, pager, next"
+                    @current-change="handlePageChange"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 댓글 관리 화면 -->
+        <div v-else>
+          <div class="page-header">
+            <h2 class="page-title bold-text">댓글 관리</h2>
+            <div class="header-actions">
+              <span class="comments-count">총 {{ comments.length }}개의 댓글</span>
+              <el-button @click="backToPostList" class="bold-text">게시물 목록</el-button>
+            </div>
+          </div>
+
+          <!-- 선택된 게시물 정보 -->
+          <div class="selected-post-info">
+            <h3 class="selected-post-title">{{ selectedPost.title }}</h3>
+            <div class="selected-post-meta">
+              <span>{{ selectedPost.memberName }}</span>
+              <span>{{ selectedPost.categoryName }}</span>
+              <span>{{ getStatusText(selectedPost.status) }}</span>
+              <span>{{ formatDate(selectedPost.regDate) }}</span>
+            </div>
+          </div>
+
+          <!-- 댓글 목록 -->
+          <div class="comments-section">
+            <div v-if="isLoadingComments" class="loading-text">
+              댓글을 불러오는 중...
+            </div>
+
+            <div v-else-if="comments.length === 0" class="empty-text">
+              댓글이 없습니다.
+            </div>
+
+            <div v-else class="comments-list">
+              <div
+                  v-for="comment in comments"
+                  :key="`comment-${comment.id}`"
+                  class="comment-item"
+                  :class="{ 'reply-comment': isReply(comment) }"
+              >
+                <div v-if="isReply(comment)" class="reply-indicator">
+                  ↳ 답글
                 </div>
 
-                <div class="delete-actions">
-                  <el-button size="small" @click="showDeleteForm[reply.id] = false">취소</el-button>
-                  <el-button size="small" type="danger" @click="deleteComment(reply)">삭제</el-button>
+                <div class="comment-content">
+                  <div class="comment-header">
+                    <div class="comment-info">
+                      <span class="comment-author">{{ maskEmail(comment.email) }}</span>
+                      <span class="comment-date">{{ formatDate(comment.regDate) }}</span>
+                      <span v-if="isReply(comment)" class="reply-badge">답글</span>
+                    </div>
+
+                    <div class="comment-actions">
+                      <el-button
+                          size="small"
+                          type="danger"
+                          @click="deleteComment(comment)"
+                          :loading="isDeleting"
+                          class="bold-text"
+                      >
+                        삭제
+                      </el-button>
+                    </div>
+                  </div>
+
+                  <div class="comment-text">{{ comment.content }}</div>
                 </div>
               </div>
             </div>
@@ -395,75 +342,207 @@ function maskEmail(email: string): string {
   font-family: 'NanumBarunPenBold', sans-serif;
 }
 
-.comments-section {
-  margin-top: 40px;
-  padding-top: 30px;
-  border-top: 2px solid #444;
-  font-family: 'NanumBarunPen', sans-serif;
-}
-
-.comments-title {
-  font-size: 20px;
-  color: #e0e0e0;
-  margin-bottom: 25px;
-}
-
-.comment-form {
-  background-color: #2a2a2a;
+.comment-admin-page {
   padding: 20px;
-  border-radius: 12px;
+  font-family: 'NanumBarunPen', sans-serif;
+  background-color: #1a1a1a;
+  min-height: 100vh;
+  color: #e0e0e0;
+}
+
+.comment-admin-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 30px;
-  border: 1px solid #444;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #444;
 }
 
-.form-row {
+.page-title {
+  font-size: 28px;
+  color: #e0e0e0;
+  margin: 0;
+}
+
+.header-actions {
   display: flex;
-  gap: 15px;
-  margin-bottom: 15px;
+  align-items: center;
+  gap: 20px;
 }
 
-.form-input {
-  flex: 1;
-}
-
-.form-input-small {
-  flex: 1;
-}
-
-.comment-textarea,
-.reply-textarea {
-  margin-bottom: 15px;
-}
-
-.form-actions,
-.reply-actions,
-.delete-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
+.posts-count,
+.comments-count {
+  color: #b0b0b0;
+  font-size: 16px;
 }
 
 .loading-text,
 .empty-text {
   text-align: center;
   color: #b0b0b0;
-  font-size: 16px;
-  margin: 40px 0;
-}
-
-.comment-item {
-  margin-bottom: 25px;
-}
-
-.comment-content {
-  background-color: #3a3a3a;
-  padding: 20px;
+  font-size: 18px;
+  margin: 60px 0;
+  padding: 40px;
+  background-color: #2a2a2a;
   border-radius: 12px;
   border: 1px solid #444;
 }
 
-.comment-header {
+/* 게시물 목록 스타일 */
+.posts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.post-item {
+  background-color: #2a2a2a;
+  border-radius: 12px;
+  border: 1px solid #444;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.post-item:hover {
+  border-color: #66b1ff;
+  box-shadow: 0 2px 8px rgba(102, 177, 255, 0.2);
+}
+
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
   margin-bottom: 10px;
+}
+
+.post-title {
+  color: #e0e0e0;
+  margin: 0;
+  font-size: 18px;
+  flex: 1;
+}
+
+.post-meta {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.post-status {
+  background-color: #67c23a;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+.post-date {
+  color: #888;
+  font-size: 12px;
+}
+
+.post-info {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 10px;
+  color: #b0b0b0;
+  font-size: 14px;
+}
+
+.post-author {
+  color: #66b1ff;
+}
+
+.post-category {
+  color: #f56c6c;
+}
+
+.post-content-preview {
+  color: #ccc;
+  line-height: 1.4;
+  font-size: 14px;
+}
+
+/* 선택된 게시물 정보 */
+.selected-post-info {
+  background-color: #2a2a2a;
+  border-radius: 12px;
+  border: 1px solid #66b1ff;
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.selected-post-title {
+  color: #e0e0e0;
+  margin: 0 0 10px 0;
+  font-size: 20px;
+}
+
+.selected-post-meta {
+  display: flex;
+  gap: 15px;
+  color: #b0b0b0;
+  font-size: 14px;
+}
+
+/* 댓글 관련 스타일 */
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.comment-item {
+  background-color: #2a2a2a;
+  border-radius: 12px;
+  border: 1px solid #444;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.comment-item:hover {
+  border-color: #555;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.reply-comment {
+  margin-left: 40px;
+  background-color: #252525;
+  border-left: 4px solid #66b1ff;
+}
+
+.reply-indicator {
+  padding: 8px 20px;
+  background-color: #1e1e1e;
+  color: #66b1ff;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.comment-content {
+  padding: 20px;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.comment-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
 }
 
 .comment-author {
@@ -472,64 +551,91 @@ function maskEmail(email: string): string {
   font-size: 14px;
 }
 
-.comment-text {
-  color: #e0e0e0;
-  line-height: 1.6;
-  margin-bottom: 15px;
-  white-space: pre-wrap;
+.comment-date {
+  color: #888;
+  font-size: 12px;
+}
+
+.reply-badge {
+  background-color: #66b1ff;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: bold;
 }
 
 .comment-actions {
   display: flex;
   gap: 10px;
+  flex-shrink: 0;
 }
 
-.reply-form,
-.delete-form {
-  margin-top: 15px;
-  padding: 15px;
-  background-color: #2a2a2a;
-  border-radius: 8px;
-  border: 1px solid #555;
-}
-
-.delete-warning {
-  color: #f56c6c;
-  font-size: 12px;
-  margin: 0 0 10px 0;
-}
-
-.replies-list {
-  margin-top: 15px;
-  margin-left: 30px;
-  border-left: 2px solid #555;
-  padding-left: 20px;
-}
-
-.reply-item {
-  background-color: #2a2a2a;
+.comment-text {
+  color: #e0e0e0;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  background-color: #1e1e1e;
   padding: 15px;
   border-radius: 8px;
-  border: 1px solid #555;
-  margin-bottom: 10px;
+  border: 1px solid #333;
 }
 
-@media (max-width: 600px) {
-  .form-row {
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+@media (max-width: 768px) {
+  .comment-admin-page {
+    padding: 10px;
+  }
+
+  .page-header {
     flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .post-header {
+    flex-direction: column;
+    align-items: flex-start;
     gap: 10px;
   }
 
-  .replies-list {
-    margin-left: 15px;
-    padding-left: 15px;
+  .post-info {
+    flex-direction: column;
+    gap: 5px;
   }
 
-  .comment-actions,
-  .form-actions,
-  .reply-actions,
-  .delete-actions {
+  .selected-post-meta {
     flex-direction: column;
+    gap: 5px;
+  }
+
+  .reply-comment {
+    margin-left: 20px;
+  }
+
+  .comment-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .comment-info {
+    width: 100%;
+  }
+
+  .comment-actions {
+    align-self: flex-end;
   }
 }
 </style>

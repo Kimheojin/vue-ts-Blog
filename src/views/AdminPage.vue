@@ -72,23 +72,35 @@ function goToCategoryDelete() {
 
         <div class="admin-content">
           <p class="admin-message">
-            카테고리는 하위 항목 없는 구조<br>
+            카테고리 -> 하위 항목 없는 구조<br>
             about me 관리 페이지 따로 만들어야 하나?
           </p>
 
           <div class="admin-actions">
-            <el-button @click="handleLogout">
+          <div class = "admin-title">카테고리 관련</div>
+            <el-button plain @click="goToCategoryAdd">카테고리 추가</el-button>
+            <el-button plain @click="goToCategoryDelete">카테고리 삭제</el-button>
+            <el-button plain @click="goToCategoryModify">카테고리 수정</el-button>
+          </div>
+          <div class="admin-actions">
+          <div class="admin-title">Post 관련</div>
+            <el-button plain @click="goToPostWrite">Post 작성</el-button>
+            <el-button plain @click="goToPostDelete">Post 삭제</el-button>
+            <el-button plain @click="goToPostModify">Post 수정</el-button>
+          </div>
+          <div class="admin-actions">
+          <div class="admin-title">Comment 관련</div>
+            <el-button plain @click="goToCommentManage">Comment 수정</el-button>
+            <el-button plain @click="goToAdminPosts">관리자 post</el-button>
+          </div>
+
+
+          <div class="admin-actions">
+          <div class="admin-title">로그 아웃</div>
+            <el-button plain @click="handleLogout">
               로그아웃
             </el-button>
 
-            <el-button type="success" @click="goToCategoryAdd">카테고리 추가</el-button>
-            <el-button type="success" @click="goToCategoryDelete">카테고리 삭제</el-button>
-            <el-button type="success" @click="goToCategoryModify">카테고리 수정</el-button>
-            <el-button type="success" @click="goToPostWrite">Post 작성</el-button>
-            <el-button type="success" @click="goToPostDelete">Post 삭제</el-button>
-            <el-button type="success" @click="goToPostModify">Post 수정</el-button>
-            <el-button type="success" @click="goToCommentManage">Comment 수정</el-button>
-            <el-button type="success" @click="goToAdminPosts">관리자 post 보기</el-button>
           </div>
         </div>
       </div>
@@ -105,11 +117,17 @@ function goToCategoryDelete() {
 
 .admin-container {
   width: 100%;
-  text-align: center;
+
 }
 
 .admin-actions .el-button {
   min-width: 120px;
+}
+.admin-actions {
+  margin-bottom: 16px;
+}
+.admin-title {
+  margin-bottom: 4px;
 }
 
 .loading-text {
