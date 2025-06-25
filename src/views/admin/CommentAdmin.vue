@@ -46,6 +46,11 @@ async function loadPosts(page: number = 0) {
     currentPage.value = response.pageNumber;
     totalPages.value = response.totalPages;
     totalElements.value = response.totalElements;
+
+    // 첫 번째 게시물 구조 확인
+    if (response.content.length > 0) {
+      console.log('게시물 데이터 구조:', response.content[0]);
+    }
   } catch (error) {
     console.error('게시물을 불러오는 중 오류:', error);
     ElMessage.error('게시물을 불러오는데 실패했습니다.');
@@ -67,7 +72,15 @@ async function loadComments() {
   isLoadingComments.value = true;
   try {
     const allComments = await COMMENT_ADMIN_REPOSITORY.getAdminCommentByPostId(selectedPost.value.postId);
-    comments.value = sortComments(allComments);
+
+    // 댓글 데이터 구조 확인
+    console.log('받아온 댓글 데이터:', allComments);
+
+    // 이미 계층 구조로 되어 있으므로 평면화해서 표시
+    comments.value = flattenComments(allComments);
+
+    console.log('평면화된 댓글:', comments.value);
+
   } catch (error) {
     console.error('댓글을 불러오는 중 오류:', error);
     ElMessage.error('댓글을 불러오는데 실패했습니다.');
@@ -76,24 +89,22 @@ async function loadComments() {
   }
 }
 
-// 댓글 정렬 함수
-function sortComments(commentList: Comment[]): Comment[] {
-  const parentComments = commentList
-      .filter(comment => comment.parentId === null)
-      .sort((a, b) => new Date(a.regDate).getTime() - new Date(b.regDate).getTime());
-
+// 계층 구조 댓글을 평면화하는 함수
+function flattenComments(commentList: Comment[]): Comment[] {
   const result: Comment[] = [];
 
-  parentComments.forEach(parent => {
-    result.push(parent);
+  function addCommentsRecursively(comments: Comment[]) {
+    comments.forEach(comment => {
+      result.push(comment);
 
-    const replies = commentList
-        .filter(comment => comment.parentId === parent.id)
-        .sort((a, b) => new Date(a.regDate).getTime() - new Date(b.regDate).getTime());
+      // replies가 있으면 재귀적으로 추가
+      if (comment.replies && comment.replies.length > 0) {
+        addCommentsRecursively(comment.replies);
+      }
+    });
+  }
 
-    result.push(...replies);
-  });
-
+  addCommentsRecursively(commentList);
   return result;
 }
 
@@ -124,14 +135,30 @@ async function deleteComment(comment: Comment) {
     deleteRequest.postId = selectedPost.value!.postId;
     deleteRequest.parentId = comment.parentId;
 
-    await COMMENT_ADMIN_REPOSITORY.deleteAdminComment(deleteRequest);
+    console.log('삭제 요청 데이터:', deleteRequest);
+
+    // 삭제 요청 실행
+    const updatedComments = await COMMENT_ADMIN_REPOSITORY.deleteAdminComment(deleteRequest);
+
+    console.log('삭제 후 받은 댓글 목록:', updatedComments);
+
+    // 백엔드에서 업데이트된 댓글 목록을 반환한다면 그걸 사용
+    if (updatedComments && Array.isArray(updatedComments)) {
+      comments.value = flattenComments(updatedComments);
+    } else {
+      // 백엔드에서 업데이트된 목록을 반환하지 않는다면 다시 조회
+      await loadComments();
+    }
+
     ElMessage.success('댓글이 삭제되었습니다.');
 
-    await loadComments();
   } catch (error: any) {
     if (error !== 'cancel') {
       console.error('댓글 삭제 중 오류:', error);
       ElMessage.error('댓글 삭제에 실패했습니다.');
+
+      // 에러가 발생해도 목록을 새로고침해서 실제 상태를 확인
+      await loadComments();
     }
   } finally {
     isDeleting.value = false;
@@ -176,14 +203,45 @@ function formatDate(dateString: string): string {
   }
 }
 
-// 댓글 타입 구분
+// 댓글 타입 구분 (parentId가 있으면 대댓글)
 function isReply(comment: Comment): boolean {
-  return comment.parentId !== null && comment.parentId !== 0;
+  return comment.parentId != null && comment.parentId > 0;
 }
 
 // 상태 텍스트
 function getStatusText(status: string): string {
-  return status === 'PUBLISHED' ? '발행' : '임시저장';
+  const statusMap: { [key: string]: string } = {
+    'PUBLISHED': '발행',
+    'DRAFT': '임시저장',
+    'PRIVATE': '비공개',
+    'SCHEDULED': '예약됨'
+  };
+  return statusMap[status] || status;
+}
+
+// PostItem의 속성명 안전하게 접근하는 함수들
+function getPostTitle(post: PostItem): string {
+  return (post as any).title || (post as any).postTitle || '제목 없음';
+}
+
+function getPostMemberName(post: PostItem): string {
+  return (post as any).memberName || (post as any).authorName || (post as any).author || '작성자 없음';
+}
+
+function getPostCategoryName(post: PostItem): string {
+  return (post as any).categoryName || (post as any).category || '카테고리 없음';
+}
+
+function getPostStatus(post: PostItem): string {
+  return (post as any).status || (post as any).postStatus || 'PUBLISHED';
+}
+
+function getPostRegDate(post: PostItem): string {
+  return (post as any).regDate || (post as any).createdDate || (post as any).createDate || '';
+}
+
+function getPostContent(post: PostItem): string {
+  return (post as any).content || (post as any).postContent || '';
 }
 
 function goBack() {
@@ -228,20 +286,20 @@ function goBack() {
                     @click="selectPost(post)"
                 >
                   <div class="post-header">
-                    <h3 class="post-title">{{ post.title }}</h3>
+                    <h3 class="post-title">{{ getPostTitle(post) }}</h3>
                     <div class="post-meta">
-                      <span class="post-status">{{ getStatusText(post.status) }}</span>
-                      <span class="post-date">{{ formatDate(post.regDate) }}</span>
+                      <span class="post-status">{{ getStatusText(getPostStatus(post)) }}</span>
+                      <span class="post-date">{{ formatDate(getPostRegDate(post)) }}</span>
                     </div>
                   </div>
 
                   <div class="post-info">
-                    <span class="post-author">{{ post.memberName }}</span>
-                    <span class="post-category">{{ post.categoryName }}</span>
+                    <span class="post-author">{{ getPostMemberName(post) }}</span>
+                    <span class="post-category">{{ getPostCategoryName(post) }}</span>
                   </div>
 
                   <div class="post-content-preview">
-                    {{ post.content.substring(0, 100) }}{{ post.content.length > 100 ? '...' : '' }}
+                    {{ getPostContent(post).substring(0, 100) }}{{ getPostContent(post).length > 100 ? '...' : '' }}
                   </div>
                 </div>
               </div>
@@ -272,12 +330,12 @@ function goBack() {
 
           <!-- 선택된 게시물 정보 -->
           <div class="selected-post-info">
-            <h3 class="selected-post-title">{{ selectedPost.title }}</h3>
+            <h3 class="selected-post-title">{{ getPostTitle(selectedPost) }}</h3>
             <div class="selected-post-meta">
-              <span>{{ selectedPost.memberName }}</span>
-              <span>{{ selectedPost.categoryName }}</span>
-              <span>{{ getStatusText(selectedPost.status) }}</span>
-              <span>{{ formatDate(selectedPost.regDate) }}</span>
+              <span>{{ getPostMemberName(selectedPost) }}</span>
+              <span>{{ getPostCategoryName(selectedPost) }}</span>
+              <span>{{ getStatusText(getPostStatus(selectedPost)) }}</span>
+              <span>{{ formatDate(getPostRegDate(selectedPost)) }}</span>
             </div>
           </div>
 
