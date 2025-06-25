@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 import type PostItem from '../../entity/post/data/PostItem.ts';
+import { getMarkdownPreview } from '../../composables/modifyMarkdown.ts';
 
 const props = defineProps<{
   posts: PostItem[];
@@ -83,7 +84,7 @@ function handlePageChange(page: number) {
             </div>
 
             <div class="post-content-preview">
-              {{ post.content.substring(0, 200) }}{{ post.content.length > 200 ? '...' : '' }}
+              {{ getMarkdownPreview(post.content, 200) }}
             </div>
           </div>
 
