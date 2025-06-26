@@ -24,7 +24,7 @@ export default class CommentAdminRepository {
     // 댓글 삭제(관리자)
 
     public async deleteAdminComment(request: CommentAdminDeleteRequest): Promise<Comment[]> {
-        const response = await this.httpRepository.post({
+        const response = await this.httpRepository.delete({
             path: '/api/admin/comments',
             body: request,
         }, CommentListResponse);

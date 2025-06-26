@@ -176,18 +176,13 @@ async function deleteComment(comment: Comment) {
 
     console.log('삭제 요청 데이터:', deleteRequest);
 
-    // 삭제 요청 실행
+    // 삭제 요청 실행 - 업데이트된 댓글 목록을 바로 받음
     const updatedComments = await COMMENT_ADMIN_REPOSITORY.deleteAdminComment(deleteRequest);
 
     console.log('삭제 후 받은 댓글 목록:', updatedComments);
 
-    // 백엔드에서 업데이트된 댓글 목록을 반환한다면 그걸 사용
-    if (updatedComments && Array.isArray(updatedComments)) {
-      comments.value = flattenComments(updatedComments);
-    } else {
-      // 백엔드에서 업데이트된 목록을 반환하지 않는다면 다시 조회
-      await loadComments();
-    }
+    // 백엔드에서 반환한 업데이트된 댓글 목록으로 바로 업데이트
+    comments.value = flattenComments(updatedComments);
 
     ElMessage.success('댓글이 삭제되었습니다.');
 
@@ -196,7 +191,7 @@ async function deleteComment(comment: Comment) {
       console.error('댓글 삭제 중 오류:', error);
       ElMessage.error('댓글 삭제에 실패했습니다.');
 
-      // 에러가 발생해도 목록을 새로고침해서 실제 상태를 확인
+      // 에러가 발생한 경우에만 다시 조회해서 실제 상태 확인
       await loadComments();
     }
   } finally {
@@ -391,10 +386,10 @@ function goBack() {
           <div class="page-header">
             <h2 class="page-title bold-text">댓글 관리</h2>
             <div class="header-actions">
-              <span class="comments-count">
-                총 {{ commentStatusCounts.TOTAL }}개
-                (활성: {{ commentStatusCounts.ACTIVE }}, 삭제: {{ commentStatusCounts.DELETED }}, 관리자삭제: {{ commentStatusCounts.ADMIN_DELETED }})
-              </span>
+             <span class="comments-count">
+               총 {{ commentStatusCounts.TOTAL }}개
+               (활성: {{ commentStatusCounts.ACTIVE }}, 삭제: {{ commentStatusCounts.DELETED }}, 관리자삭제: {{ commentStatusCounts.ADMIN_DELETED }})
+             </span>
               <el-button @click="backToPostList" class="bold-text">게시물 목록</el-button>
             </div>
           </div>
@@ -442,9 +437,9 @@ function goBack() {
                   :key="`comment-${comment.id}`"
                   class="comment-item"
                   :class="{
-                    'reply-comment': isReply(comment),
-                    'deleted-comment': comment.status === 'DELETED' || comment.status === 'ADMIN_DELETED'
-                  }"
+                   'reply-comment': isReply(comment),
+                   'deleted-comment': comment.status === 'DELETED' || comment.status === 'ADMIN_DELETED'
+                 }"
               >
                 <div v-if="isReply(comment)" class="reply-indicator">
                   ↳ 답글
@@ -460,8 +455,8 @@ function goBack() {
                           class="status-badge"
                           :style="{ backgroundColor: getCommentStatusColor(comment.status || 'ACTIVE') }"
                       >
-                        {{ getCommentStatusText(comment.status || 'ACTIVE') }}
-                      </span>
+                       {{ getCommentStatusText(comment.status || 'ACTIVE') }}
+                     </span>
                     </div>
 
                     <div class="comment-actions">
