@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import {onMounted, ref} from 'vue';
+import {onMounted, ref, computed} from 'vue';
 import {container} from 'tsyringe';
 import {ElMessage, ElMessageBox} from 'element-plus';
-import CommentDeleteRequest from '../../entity/comment/request/CommentDeleteRequest.ts';
 import type Comment from '../../entity/comment/data/Comment.ts';
 import type PostItem from '../../entity/post/data/PostItem.ts';
 import type PostPageResponse from '../../entity/post/response/PostPageResponse.ts';
@@ -10,6 +9,7 @@ import CommentAdminRepository from "../../repository/comment/CommentAdminReposit
 import PostAdminRepository from "../../repository/post/PostAdminRepository.ts";
 import {useAdminAuth} from "../../composables/useAdminAuth.ts";
 import {useRouter} from "vue-router";
+import CommentAdminDeleteRequest from "../../entity/comment/request/CommentAdminDeleteRequest.ts";
 
 const router = useRouter();
 const { isCheckingAuth, checkAuth } = useAdminAuth();
@@ -29,6 +29,15 @@ const totalElements = ref(0);
 const comments = ref<Comment[]>([]);
 const isLoadingComments = ref(false);
 const isDeleting = ref(false);
+
+// 상태 필터
+const statusFilter = ref<string>('ALL');
+const statusOptions = [
+  { label: '전체', value: 'ALL' },
+  { label: '활성', value: 'ACTIVE' },
+  { label: '삭제됨', value: 'DELETED' },
+  { label: '관리자삭제', value: 'ADMIN_DELETED' }
+];
 
 onMounted(async () => {
   const isAuth = await checkAuth();
@@ -62,6 +71,7 @@ async function loadPosts(page: number = 0) {
 // 게시물 선택 시 댓글 불러오기
 async function selectPost(post: PostItem) {
   selectedPost.value = post;
+  statusFilter.value = 'ALL'; // 상태 필터 초기화
   await loadComments();
 }
 
@@ -108,6 +118,36 @@ function flattenComments(commentList: Comment[]): Comment[] {
   return result;
 }
 
+// 상태별 댓글 필터링
+const filteredComments = computed(() => {
+  if (statusFilter.value === 'ALL') {
+    return comments.value;
+  }
+  return comments.value.filter(comment => {
+    const status = comment.status || 'ACTIVE'; // 빈 문자열이면 ACTIVE로 처리
+    return status === statusFilter.value;
+  });
+});
+
+// 상태별 댓글 개수
+const commentStatusCounts = computed(() => {
+  const counts = {
+    ACTIVE: 0,
+    DELETED: 0,
+    ADMIN_DELETED: 0,
+    TOTAL: comments.value.length
+  };
+
+  comments.value.forEach(comment => {
+    const status = comment.status || 'ACTIVE';
+    if (counts[status as keyof typeof counts] !== undefined) {
+      counts[status as keyof typeof counts]++;
+    }
+  });
+
+  return counts;
+});
+
 // 관리자 댓글 삭제
 async function deleteComment(comment: Comment) {
   try {
@@ -127,11 +167,10 @@ async function deleteComment(comment: Comment) {
 
     isDeleting.value = true;
 
-    const deleteRequest = new CommentDeleteRequest();
+    const deleteRequest = new CommentAdminDeleteRequest();
     deleteRequest.commentId = comment.id;
     deleteRequest.content = comment.content;
     deleteRequest.email = comment.email;
-    deleteRequest.password = '';
     deleteRequest.postId = selectedPost.value!.postId;
     deleteRequest.parentId = comment.parentId;
 
@@ -174,6 +213,7 @@ async function handlePageChange(page: number) {
 function backToPostList() {
   selectedPost.value = null;
   comments.value = [];
+  statusFilter.value = 'ALL';
 }
 
 // 이메일 마스킹
@@ -206,6 +246,34 @@ function formatDate(dateString: string): string {
 // 댓글 타입 구분 (parentId가 있으면 대댓글)
 function isReply(comment: Comment): boolean {
   return comment.parentId != null && comment.parentId > 0;
+}
+
+// 댓글 상태 텍스트
+function getCommentStatusText(status: string): string {
+  const statusMap: { [key: string]: string } = {
+    'ACTIVE': '활성',
+    'DELETED': '삭제됨',
+    'ADMIN_DELETED': '관리자삭제',
+    '': '활성' // 빈 문자열인 경우 활성으로 처리
+  };
+  return statusMap[status] || '활성';
+}
+
+// 댓글 상태 색상
+function getCommentStatusColor(status: string): string {
+  const colorMap: { [key: string]: string } = {
+    'ACTIVE': '#67c23a',
+    'DELETED': '#f56c6c',
+    'ADMIN_DELETED': '#e6a23c',
+    '': '#67c23a' // 빈 문자열인 경우 활성 색상
+  };
+  return colorMap[status] || '#67c23a';
+}
+
+// 삭제 가능한 댓글인지 확인
+function canDeleteComment(comment: Comment): boolean {
+  const status = comment.status || 'ACTIVE';
+  return status === 'ACTIVE'; // 활성 상태인 댓글만 삭제 가능
 }
 
 // 상태 텍스트
@@ -323,7 +391,10 @@ function goBack() {
           <div class="page-header">
             <h2 class="page-title bold-text">댓글 관리</h2>
             <div class="header-actions">
-              <span class="comments-count">총 {{ comments.length }}개의 댓글</span>
+              <span class="comments-count">
+                총 {{ commentStatusCounts.TOTAL }}개
+                (활성: {{ commentStatusCounts.ACTIVE }}, 삭제: {{ commentStatusCounts.DELETED }}, 관리자삭제: {{ commentStatusCounts.ADMIN_DELETED }})
+              </span>
               <el-button @click="backToPostList" class="bold-text">게시물 목록</el-button>
             </div>
           </div>
@@ -339,22 +410,41 @@ function goBack() {
             </div>
           </div>
 
+          <!-- 상태 필터 -->
+          <div class="filter-section">
+            <div class="filter-group">
+              <label class="filter-label bold-text">상태 필터:</label>
+              <el-select v-model="statusFilter" placeholder="상태 선택" style="width: 150px">
+                <el-option
+                    v-for="option in statusOptions"
+                    :key="option.value"
+                    :label="option.label"
+                    :value="option.value"
+                />
+              </el-select>
+              <span class="filter-result">{{ filteredComments.length }}개 댓글</span>
+            </div>
+          </div>
+
           <!-- 댓글 목록 -->
           <div class="comments-section">
             <div v-if="isLoadingComments" class="loading-text">
               댓글을 불러오는 중...
             </div>
 
-            <div v-else-if="comments.length === 0" class="empty-text">
-              댓글이 없습니다.
+            <div v-else-if="filteredComments.length === 0" class="empty-text">
+              {{ statusFilter === 'ALL' ? '댓글이 없습니다.' : '해당 상태의 댓글이 없습니다.' }}
             </div>
 
             <div v-else class="comments-list">
               <div
-                  v-for="comment in comments"
+                  v-for="comment in filteredComments"
                   :key="`comment-${comment.id}`"
                   class="comment-item"
-                  :class="{ 'reply-comment': isReply(comment) }"
+                  :class="{
+                    'reply-comment': isReply(comment),
+                    'deleted-comment': comment.status === 'DELETED' || comment.status === 'ADMIN_DELETED'
+                  }"
               >
                 <div v-if="isReply(comment)" class="reply-indicator">
                   ↳ 답글
@@ -366,10 +456,17 @@ function goBack() {
                       <span class="comment-author">{{ maskEmail(comment.email) }}</span>
                       <span class="comment-date">{{ formatDate(comment.regDate) }}</span>
                       <span v-if="isReply(comment)" class="reply-badge">답글</span>
+                      <span
+                          class="status-badge"
+                          :style="{ backgroundColor: getCommentStatusColor(comment.status || 'ACTIVE') }"
+                      >
+                        {{ getCommentStatusText(comment.status || 'ACTIVE') }}
+                      </span>
                     </div>
 
                     <div class="comment-actions">
                       <el-button
+                          v-if="canDeleteComment(comment)"
                           size="small"
                           type="danger"
                           @click="deleteComment(comment)"
@@ -378,10 +475,13 @@ function goBack() {
                       >
                         삭제
                       </el-button>
+                      <span v-else class="delete-disabled">삭제 불가</span>
                     </div>
                   </div>
 
-                  <div class="comment-text">{{ comment.content }}</div>
+                  <div class="comment-text" :class="{ 'deleted-content': comment.status === 'DELETED' || comment.status === 'ADMIN_DELETED' }">
+                    {{ comment.content }}
+                  </div>
                 </div>
               </div>
             </div>
@@ -437,7 +537,7 @@ function goBack() {
 .posts-count,
 .comments-count {
   color: #b0b0b0;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .loading-text,
@@ -450,6 +550,31 @@ function goBack() {
   background-color: #2a2a2a;
   border-radius: 12px;
   border: 1px solid #444;
+}
+
+/* 필터 섹션 */
+.filter-section {
+  margin-bottom: 20px;
+  padding: 20px;
+  background-color: #2a2a2a;
+  border-radius: 12px;
+  border: 1px solid #444;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.filter-label {
+  color: #e0e0e0;
+  font-size: 16px;
+}
+
+.filter-result {
+  color: #66b1ff;
+  font-size: 14px;
 }
 
 /* 게시물 목록 스타일 */
@@ -577,6 +702,12 @@ function goBack() {
   border-left: 4px solid #66b1ff;
 }
 
+.deleted-comment {
+  opacity: 0.7;
+  background-color: #2a2220;
+  border-color: #665544;
+}
+
 .reply-indicator {
   padding: 8px 20px;
   background-color: #1e1e1e;
@@ -623,10 +754,24 @@ function goBack() {
   font-weight: bold;
 }
 
+.status-badge {
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: bold;
+}
+
 .comment-actions {
   display: flex;
   gap: 10px;
   flex-shrink: 0;
+}
+
+.delete-disabled {
+  color: #666;
+  font-size: 12px;
+  padding: 5px 10px;
 }
 
 .comment-text {
@@ -638,6 +783,12 @@ function goBack() {
   padding: 15px;
   border-radius: 8px;
   border: 1px solid #333;
+}
+
+.deleted-content {
+  background-color: #2a2520;
+  border-color: #443a2a;
+  opacity: 0.8;
 }
 
 .pagination-container {
@@ -660,6 +811,12 @@ function goBack() {
   .header-actions {
     width: 100%;
     justify-content: space-between;
+  }
+
+  .filter-group {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
   }
 
   .post-header {

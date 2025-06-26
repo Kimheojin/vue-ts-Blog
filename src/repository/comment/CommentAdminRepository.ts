@@ -2,7 +2,7 @@ import {inject, singleton} from "tsyringe";
 import HttpRepository from "../HttpRepository.ts";
 import type Comment from "../../entity/comment/data/Comment.ts";
 import CommentListResponse from "../../entity/comment/response/CommentListResponse.ts";
-import CommentDeleteRequest from "../../entity/comment/request/CommentDeleteRequest.ts";
+import CommentAdminDeleteRequest from "../../entity/comment/request/CommentAdminDeleteRequest.ts";
 
 @singleton()
 export default class CommentAdminRepository {
@@ -23,7 +23,7 @@ export default class CommentAdminRepository {
 
     // 댓글 삭제(관리자)
 
-    public async deleteAdminComment(request: CommentDeleteRequest): Promise<Comment[]> {
+    public async deleteAdminComment(request: CommentAdminDeleteRequest): Promise<Comment[]> {
         const response = await this.httpRepository.post({
             path: '/api/admin/comments',
             body: request,
