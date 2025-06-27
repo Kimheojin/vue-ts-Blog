@@ -23,7 +23,7 @@ async function handleLogout() {
     await router.replace('/admin/login');
   } catch (error) {
     const httpError = error as HttpError;
-    if (httpError.getCode() === 401) {
+    if (httpError.getStatusCode() === 401) {
       ElMessage.warning('세션이 만료되었습니다.');
       await router.replace('/admin/login');
     } else {
