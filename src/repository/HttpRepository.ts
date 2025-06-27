@@ -46,4 +46,25 @@ export default class HttpRepository {
     }
 
 
+    public postFormData<T>(config: HttpRequestConfig, clazz: ClassConstructor<T> | null = null): Promise<T> {
+     
+        const formDataConfig = {
+            ...config,
+            method: 'POST' as const,
+            headers: {
+                // Content-Type을 설정하지 않음 - 브라우적가 자동으로 해주는듯
+                'Accept': 'application/json'
+            }
+        };
+
+        return this.httpClient
+            .request(formDataConfig)
+            .then((response) => {
+                return clazz !== null
+                    ? plainToInstance(clazz, response) as T
+                    : response as unknown as T;
+            });
+    }
+
+
 }

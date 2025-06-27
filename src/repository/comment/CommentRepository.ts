@@ -41,8 +41,4 @@ export default class CommentRepository {
 
         return response.commentDtoList || [];
     }
-
-
-
-
 }
