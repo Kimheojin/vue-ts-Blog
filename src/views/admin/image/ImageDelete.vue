@@ -212,9 +212,9 @@ onMounted(() => {
             </template>
           </el-table-column>
 
-          <el-table-column prop="originalFilename" label="파일명" min-width="200">
+          <el-table-column prop="originalFilename" label="URL" min-width="200">
             <template #default="{ row }: { row: ImageItem }">
-              <div class="filename-cell">{{ row.originalFilename || '알 수 없음' }}</div>
+              <div class="filename-cell">{{ row.secureUrl || '알 수 없음' }}</div>
             </template>
           </el-table-column>
 
@@ -261,7 +261,7 @@ onMounted(() => {
 
 <style scoped>
 .image-delete-page {
-  padding: 20px;
+
 }
 
 .delete-container {
@@ -273,7 +273,7 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
   padding-bottom: 15px;
   border-bottom: 1px solid #eee;
 }
@@ -281,7 +281,6 @@ onMounted(() => {
 .search-section {
   padding: 20px;
   border-radius: 8px;
-  margin-bottom: 20px;
 }
 
 .search-form {

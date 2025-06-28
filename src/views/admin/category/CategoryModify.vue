@@ -177,7 +177,7 @@ function goBack() {
               <div class="selected-icon">📝</div>
               <div>
                 <h3 class="selected-title">수정 중인 카테고리</h3>
-                <p class="selected-subtitle">기존: "{{ selectedCategory.categoryName }}"</p>
+                <p class="selected-subtitle">기존: "{{ selectedCategory?.['categoryName'] }}"</p>
               </div>
             </div>
           </div>

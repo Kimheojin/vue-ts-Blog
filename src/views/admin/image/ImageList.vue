@@ -117,7 +117,7 @@ onMounted(() => {
       <!-- 이미지 상세 다이얼로그 -->
       <el-dialog
           v-model="showImageDialog"
-          :title="selectedImage?.originalFilename"
+          :title="selectedImage?.secureUrl"
           width="70%"
           :before-close="() => showImageDialog = false"
       >
@@ -127,8 +127,8 @@ onMounted(() => {
           </div>
           <div class="detail-info">
             <div class="info-item">
-              <label>파일명:</label>
-              <span>{{ (selectedImage as ImageItem).originalFilename }}</span>
+              <label>URL:</label>
+              <span class="url-text">{{ (selectedImage as ImageItem).secureUrl }}</span>
             </div>
             <div class="info-item">
               <label>Public ID:</label>
@@ -150,10 +150,7 @@ onMounted(() => {
               <label>생성일:</label>
               <span>{{ formatDate((selectedImage as ImageItem).createdAt) }}</span>
             </div>
-            <div class="info-item">
-              <label>URL:</label>
-              <span class="url-text">{{ (selectedImage as ImageItem).secureUrl }}</span>
-            </div>
+
           </div>
         </div>
       </el-dialog>
@@ -175,15 +172,14 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
-  padding-bottom: 15px;
+  margin-bottom: 15px;
   border-bottom: 1px solid #eee;
 }
 
 .search-section {
   padding: 20px;
   border-radius: 8px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .search-form {
@@ -239,7 +235,7 @@ onMounted(() => {
 }
 
 .image-info {
-  padding: 15px;
+  padding: 5px;
 }
 
 .image-info h4 {
