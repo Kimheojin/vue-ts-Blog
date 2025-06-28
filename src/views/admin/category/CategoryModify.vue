@@ -107,33 +107,33 @@ function goBack() {
 
 <template>
   <div class="category-modify-page">
-    <div class="category-modify-container">
-      <div v-if="isCheckingAuth" class="loading-text">
+    <div class="container">
+      <div v-if="isCheckingAuth" class="loading">
         인증 확인 중...
       </div>
 
       <div v-else>
         <!-- 카테고리 목록 화면 -->
         <div v-if="!selectedCategory">
-          <div class="page-header">
-            <h2 class="page-title bold-text">카테고리 수정 - 카테고리 선택</h2>
-            <div class="header-actions">
-              <span class="categories-count">총 {{ categories.length }}개의 카테고리</span>
-              <el-button @click="goBack" class="bold-text">돌아가기</el-button>
+          <div class="header">
+            <h2>카테고리 수정 - 카테고리 선택</h2>
+            <div class="header-right">
+              <span>총 {{ categories.length }}개의 카테고리</span>
+              <el-button @click="goBack">돌아가기</el-button>
             </div>
           </div>
 
-          <div v-if="isLoadingCategories" class="loading-text">
+          <div v-if="isLoadingCategories" class="loading">
             카테고리 목록을 불러오는 중...
           </div>
 
-          <div v-else-if="categories.length === 0" class="empty-text">
+          <div v-else-if="categories.length === 0" class="empty">
             수정할 카테고리가 없습니다.
           </div>
 
           <div v-else>
             <div class="info-notice">
-              <div class="info-icon">ℹ️</div>
+              <div class="info-icon">INFO</div>
               <div class="info-content">
                 <h4>카테고리 수정</h4>
                 <p>수정하려는 카테고리를 선택해주세요. 카테고리명을 변경할 수 있습니다.</p>
@@ -149,13 +149,13 @@ function goBack() {
               >
                 <div class="category-content">
                   <div class="category-info">
-                    <div class="category-icon">📁</div>
+                    <div class="category-icon">FOLDER</div>
                     <div class="category-details">
                       <h3 class="category-name">{{ category.categoryName }}</h3>
                       <span class="category-id">ID: {{ category.categoryId }}</span>
                     </div>
                   </div>
-                  <div class="edit-indicator">✏️</div>
+                  <div class="edit-indicator">EDIT</div>
                 </div>
               </div>
             </div>
@@ -163,52 +163,44 @@ function goBack() {
         </div>
 
         <!-- 수정 폼 화면 -->
-        <div v-else>
-          <div class="page-header">
-            <h2 class="page-title bold-text">카테고리 수정</h2>
-            <div class="header-actions">
-              <el-button @click="backToCategoryList" class="bold-text">카테고리 목록</el-button>
+        <div v-else-if="selectedCategory">
+          <div class="header">
+            <h2>카테고리 수정</h2>
+            <div class="header-right">
+              <el-button @click="backToCategoryList">카테고리 목록</el-button>
             </div>
           </div>
 
           <!-- 선택된 카테고리 정보 -->
-          <div class="selected-category-info">
+          <div class="selected-info">
             <div class="selected-header">
-              <div class="selected-icon">📝</div>
+              <div class="selected-icon">EDIT</div>
               <div>
-                <h3 class="selected-title">수정 중인 카테고리</h3>
-                <p class="selected-subtitle">기존: "{{ selectedCategory?.['categoryName'] }}"</p>
+                <h3>수정 중인 카테고리</h3>
+                <p>기존: "{{ selectedCategory?.['categoryName'] }}"</p>
               </div>
             </div>
           </div>
 
           <!-- 수정 폼 -->
           <div class="form-section">
-            <el-form class="modify-form" label-position="top">
-              <el-form-item label="카테고리 ID" class="bold-text">
+            <el-form label-position="top">
+              <el-form-item label="카테고리 ID">
                 <el-input
                     :value="selectedCategory.categoryId"
                     disabled
                     placeholder="자동 생성"
-                >
-                  <template #prefix>
-                    <span style="color: #888;">ID:</span>
-                  </template>
-                </el-input>
+                />
               </el-form-item>
 
-              <el-form-item label="카테고리명" class="bold-text">
+              <el-form-item label="카테고리명">
                 <el-input
                     v-model="state.category.categoryName"
                     placeholder="새로운 카테고리명을 입력해주세요"
                     clearable
                     maxlength="50"
                     show-word-limit
-                >
-                  <template #prefix>
-                    <span style="color: #888;">📁</span>
-                  </template>
-                </el-input>
+                />
                 <div class="input-help">
                   영문, 한글, 숫자를 포함하여 최대 50자까지 입력 가능합니다.
                 </div>
@@ -221,7 +213,6 @@ function goBack() {
                       @click="handleModify"
                       :loading="isModifying"
                       :disabled="!state.category.categoryName.trim()"
-                      class="bold-text"
                   >
                     {{ isModifying ? '수정 중...' : '카테고리 수정' }}
                   </el-button>
@@ -229,7 +220,6 @@ function goBack() {
                   <el-button
                       @click="backToCategoryList"
                       :disabled="isModifying"
-                      class="bold-text"
                   >
                     취소
                   </el-button>
@@ -244,27 +234,17 @@ function goBack() {
 </template>
 
 <style scoped>
-/* 나눔바른펜 폰트 import */
-@import url('https://hangeul.pstatic.net/hangeul_static/css/nanum-barun-pen.css');
-
-.bold-text {
-  font-family: 'NanumBarunPenBold', sans-serif;
-}
-
 .category-modify-page {
   padding: 20px;
-  font-family: 'NanumBarunPen', sans-serif;
-  background-color: #1a1a1a;
   min-height: 100vh;
-  color: #e0e0e0;
 }
 
-.category-modify-container {
+.container {
   max-width: 1000px;
   margin: 0 auto;
 }
 
-.page-header {
+.header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -273,32 +253,30 @@ function goBack() {
   border-bottom: 2px solid #444;
 }
 
-.page-title {
-  font-size: 28px;
-  color: #e0e0e0;
+.header h2 {
   margin: 0;
+  color: #fff;
 }
 
-.header-actions {
+.header-right {
   display: flex;
   align-items: center;
   gap: 20px;
 }
 
-.categories-count {
-  color: #b0b0b0;
-  font-size: 16px;
+.header-right span {
+  color: #ccc;
+  font-size: 14px;
 }
 
-.loading-text,
-.empty-text {
+.loading,
+.empty {
   text-align: center;
-  color: #b0b0b0;
+  color: #ccc;
   font-size: 18px;
   margin: 60px 0;
   padding: 40px;
-  background-color: #2a2a2a;
-  border-radius: 12px;
+  border-radius: 8px;
   border: 1px solid #444;
 }
 
@@ -306,15 +284,19 @@ function goBack() {
   display: flex;
   align-items: flex-start;
   gap: 15px;
-  background-color: #1a2a2a;
   border: 1px solid #66b1ff;
-  border-radius: 12px;
+  border-radius: 8px;
   padding: 20px;
   margin-bottom: 30px;
 }
 
 .info-icon {
-  font-size: 24px;
+  color: #66b1ff;
+  font-size: 12px;
+  font-weight: bold;
+  border: 1px solid #66b1ff;
+  padding: 8px;
+  border-radius: 4px;
   flex-shrink: 0;
 }
 
@@ -325,7 +307,7 @@ function goBack() {
 }
 
 .info-content p {
-  color: #d0d0d0;
+  color: #ccc;
   margin: 0;
   line-height: 1.5;
   font-size: 14px;
@@ -339,17 +321,14 @@ function goBack() {
 }
 
 .category-card {
-  background-color: #2a2a2a;
-  border-radius: 12px;
+  border-radius: 8px;
   border: 1px solid #444;
   cursor: pointer;
   transition: all 0.3s ease;
-  overflow: hidden;
 }
 
 .category-card:hover {
   border-color: #66b1ff;
-  box-shadow: 0 4px 12px rgba(102, 177, 255, 0.2);
   transform: translateY(-2px);
 }
 
@@ -368,14 +347,16 @@ function goBack() {
 }
 
 .category-icon {
-  font-size: 24px;
+  font-size: 10px;
+  font-weight: bold;
+  color: #ccc;
   width: 40px;
   height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #3a3a3a;
-  border-radius: 8px;
+  border: 1px solid #666;
+  border-radius: 4px;
   flex-shrink: 0;
 }
 
@@ -386,25 +367,28 @@ function goBack() {
 }
 
 .category-name {
-  color: #e0e0e0;
+  color: #fff;
   margin: 0;
   font-size: 16px;
   font-weight: bold;
 }
 
 .category-id {
-  color: #888;
+  color: #aaa;
   font-size: 12px;
 }
 
 .edit-indicator {
-  font-size: 20px;
-  opacity: 0.7;
+  color: #66b1ff;
+  font-size: 12px;
+  font-weight: bold;
+  border: 1px solid #66b1ff;
+  padding: 4px 8px;
+  border-radius: 4px;
 }
 
-.selected-category-info {
-  background-color: #2a2a2a;
-  border-radius: 12px;
+.selected-info {
+  border-radius: 8px;
   border: 1px solid #66b1ff;
   padding: 20px;
   margin-bottom: 30px;
@@ -417,42 +401,39 @@ function goBack() {
 }
 
 .selected-icon {
-  font-size: 32px;
-  background-color: #66b1ff;
+  color: #66b1ff;
+  font-size: 12px;
+  font-weight: bold;
   width: 50px;
   height: 50px;
-  border-radius: 50%;
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border: 1px solid #66b1ff;
 }
 
-.selected-title {
-  color: #e0e0e0;
+.selected-header h3 {
   margin: 0 0 5px 0;
+  color: #fff;
   font-size: 18px;
 }
 
-.selected-subtitle {
-  color: #b0b0b0;
+.selected-header p {
   margin: 0;
+  color: #ccc;
   font-size: 14px;
 }
 
 .form-section {
-  background-color: #2a2a2a;
-  border-radius: 12px;
+  border-radius: 8px;
   border: 1px solid #444;
   padding: 30px;
 }
 
-.modify-form .el-form-item {
-  margin-bottom: 25px;
-}
-
 .input-help {
   font-size: 12px;
-  color: #888;
+  color: #aaa;
   margin-top: 5px;
 }
 
@@ -467,13 +448,13 @@ function goBack() {
     padding: 10px;
   }
 
-  .page-header {
+  .header {
     flex-direction: column;
     gap: 15px;
     align-items: flex-start;
   }
 
-  .header-actions {
+  .header-right {
     width: 100%;
     justify-content: space-between;
   }

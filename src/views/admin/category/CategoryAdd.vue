@@ -90,33 +90,33 @@ function goBack() {
 
 <template>
   <div class="category-add-page">
-    <div class="category-add-container">
-      <div v-if="isCheckingAuth" class="loading-text">
+    <div class="container">
+      <div v-if="isCheckingAuth" class="loading">
         인증 확인 중...
       </div>
 
       <div v-else>
-        <div class="page-header">
-          <h2 class="page-title bold-text">카테고리 추가</h2>
-          <div class="header-actions">
-            <span class="categories-count">현재 {{ categories.length }}개의 카테고리</span>
-            <el-button @click="goBack" class="bold-text">돌아가기</el-button>
+        <div class="header">
+          <h2>카테고리 추가</h2>
+          <div class="header-right">
+            <span>현재 {{ categories.length }}개의 카테고리</span>
+            <el-button @click="goBack">돌아가기</el-button>
           </div>
         </div>
 
-        <div class="content-layout">
+        <div class="content">
           <!-- 추가 폼 -->
           <div class="form-section">
             <div class="form-header">
-              <div class="form-icon">➕</div>
+              <div class="form-icon">ADD</div>
               <div>
-                <h3 class="form-title">새 카테고리 추가</h3>
-                <p class="form-subtitle">새로운 카테고리를 생성합니다</p>
+                <h3>새 카테고리 추가</h3>
+                <p>새로운 카테고리를 생성합니다</p>
               </div>
             </div>
 
-            <el-form class="add-form" label-position="top">
-              <el-form-item label="카테고리명" class="bold-text">
+            <el-form label-position="top">
+              <el-form-item label="카테고리명">
                 <el-input
                     v-model="state.category.categoryName"
                     placeholder="카테고리명을 입력해주세요"
@@ -124,11 +124,7 @@ function goBack() {
                     maxlength="50"
                     show-word-limit
                     @keyup.enter="handleAdd"
-                >
-                  <template #prefix>
-                    <span style="color: #888;">📁</span>
-                  </template>
-                </el-input>
+                />
                 <div class="input-help">
                   영문, 한글, 숫자를 포함하여 최대 50자까지 입력 가능합니다.
                 </div>
@@ -141,7 +137,6 @@ function goBack() {
                       @click="handleAdd"
                       :loading="isAdding"
                       :disabled="!state.category.categoryName.trim()"
-                      class="bold-text"
                   >
                     {{ isAdding ? '추가 중...' : '카테고리 추가' }}
                   </el-button>
@@ -149,7 +144,6 @@ function goBack() {
                   <el-button
                       @click="resetForm"
                       :disabled="isAdding"
-                      class="bold-text"
                   >
                     초기화
                   </el-button>
@@ -159,21 +153,21 @@ function goBack() {
           </div>
 
           <!-- 기존 카테고리 목록 -->
-          <div class="existing-categories">
-            <div class="existing-header">
-              <h3 class="existing-title bold-text">기존 카테고리 목록</h3>
-              <span class="existing-count">{{ categories.length }}개</span>
+          <div class="list-section">
+            <div class="list-header">
+              <h3>기존 카테고리 목록</h3>
+              <span class="count">{{ categories.length }}개</span>
             </div>
 
-            <div v-if="isLoadingCategories" class="loading-text-small">
+            <div v-if="isLoadingCategories" class="loading-small">
               카테고리 목록을 불러오는 중...
             </div>
 
-            <div v-else-if="categories.length === 0" class="empty-text-small">
+            <div v-else-if="categories.length === 0" class="empty">
               등록된 카테고리가 없습니다.
             </div>
 
-            <div v-else class="categories-list">
+            <div v-else class="category-list">
               <div
                   v-for="(category, index) in categories"
                   :key="`category-${category.categoryId}`"
@@ -194,74 +188,62 @@ function goBack() {
 </template>
 
 <style scoped>
-/* 나눔바른펜 폰트 import */
-@import url('https://hangeul.pstatic.net/hangeul_static/css/nanum-barun-pen.css');
-
-.bold-text {
-  font-family: 'NanumBarunPenBold', sans-serif;
-}
-
 .category-add-page {
-  padding: 20px;
-  font-family: 'NanumBarunPen', sans-serif;
-  background-color: #1a1a1a;
+  padding: 10px;
   min-height: 100vh;
-  color: #e0e0e0;
+  margin-bottom: 20px;
 }
 
-.category-add-container {
+.container {
   max-width: 1200px;
   margin: 0 auto;
 }
 
-.page-header {
+.header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
-  padding-bottom: 20px;
+  margin-bottom: 25px;
+  padding-bottom: 10px;
   border-bottom: 2px solid #444;
 }
 
-.page-title {
-  font-size: 28px;
-  color: #e0e0e0;
+.header h2 {
   margin: 0;
+  color: #fff;
 }
 
-.header-actions {
+.header-right {
   display: flex;
   align-items: center;
   gap: 20px;
 }
 
-.categories-count {
-  color: #b0b0b0;
-  font-size: 16px;
+.header-right span {
+  color: #ccc;
+  font-size: 14px;
 }
 
-.loading-text {
+.loading {
   text-align: center;
-  color: #b0b0b0;
+  color: #ccc;
   font-size: 18px;
   margin: 60px 0;
   padding: 40px;
-  background-color: #2a2a2a;
-  border-radius: 12px;
+  border-radius: 8px;
   border: 1px solid #444;
 }
 
-.content-layout {
+.content {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 30px;
 }
 
 .form-section {
-  background-color: #2a2a2a;
-  border-radius: 12px;
-  border: 1px solid #67c23a;
-  padding: 30px;
+  border-radius: 8px;
+  border: 1px solid #444;
+  padding: 15px;
 }
 
 .form-header {
@@ -272,35 +254,33 @@ function goBack() {
 }
 
 .form-icon {
-  font-size: 32px;
-  background-color: #67c23a;
+  color: #409eff;
   width: 50px;
   height: 50px;
-  border-radius: 50%;
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  border: 1px solid #409eff;
 }
 
-.form-title {
-  color: #e0e0e0;
+.form-header h3 {
   margin: 0 0 5px 0;
-  font-size: 20px;
+  color: #fff;
+  font-size: 18px;
 }
 
-.form-subtitle {
-  color: #b0b0b0;
+.form-header p {
   margin: 0;
+  color: #ccc;
   font-size: 14px;
-}
-
-.add-form .el-form-item {
-  margin-bottom: 25px;
 }
 
 .input-help {
   font-size: 12px;
-  color: #888;
+  color: #aaa;
   margin-top: 5px;
 }
 
@@ -309,46 +289,45 @@ function goBack() {
   gap: 15px;
 }
 
-.existing-categories {
-  background-color: #2a2a2a;
-  border-radius: 12px;
+.list-section {
+  border-radius: 8px;
   border: 1px solid #444;
-  padding: 30px;
+  padding: 15px;
 }
 
-.existing-header {
+.list-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   padding-bottom: 15px;
   border-bottom: 1px solid #444;
 }
 
-.existing-title {
-  color: #e0e0e0;
+.list-header h3 {
   margin: 0;
-  font-size: 18px;
+  color: #fff;
+  font-size: 16px;
 }
 
-.existing-count {
-  background-color: #67c23a;
-  color: white;
+.count {
+  color: #409eff;
   padding: 4px 12px;
   border-radius: 12px;
   font-size: 12px;
   font-weight: bold;
+  border: 1px solid #409eff;
 }
 
-.loading-text-small,
-.empty-text-small {
+.loading-small,
+.empty {
   text-align: center;
-  color: #888;
+  color: #aaa;
   font-size: 14px;
   padding: 30px 0;
 }
 
-.categories-list {
+.category-list {
   max-height: 400px;
   overflow-y: auto;
 }
@@ -358,30 +337,27 @@ function goBack() {
   align-items: center;
   gap: 15px;
   padding: 12px;
-  border-radius: 8px;
+  border-radius: 4px;
   margin-bottom: 8px;
-  background-color: #1e1e1e;
-  border: 1px solid #333;
-  transition: all 0.2s ease;
+  border: 1px solid #444;
 }
 
 .category-item:hover {
-  background-color: #2e2e2e;
-  border-color: #555;
+  border-color: #666;
 }
 
 .category-number {
   width: 30px;
   height: 30px;
-  background-color: #444;
+  color: #ccc;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 12px;
   font-weight: bold;
-  color: #ccc;
   flex-shrink: 0;
+  border: 1px solid #666;
 }
 
 .category-info {
@@ -392,18 +368,18 @@ function goBack() {
 }
 
 .category-name {
-  color: #e0e0e0;
+  color: #fff;
   font-size: 14px;
   font-weight: bold;
 }
 
 .category-id {
-  color: #888;
+  color: #aaa;
   font-size: 11px;
 }
 
 @media (max-width: 968px) {
-  .content-layout {
+  .content {
     grid-template-columns: 1fr;
     gap: 20px;
   }
@@ -414,25 +390,19 @@ function goBack() {
     padding: 10px;
   }
 
-  .page-header {
+  .header {
     flex-direction: column;
     gap: 15px;
     align-items: flex-start;
   }
 
-  .header-actions {
+  .header-right {
     width: 100%;
     justify-content: space-between;
   }
 
-  .form-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
-
   .form-section,
-  .existing-categories {
+  .list-section {
     padding: 20px;
   }
 
