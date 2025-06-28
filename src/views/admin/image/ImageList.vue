@@ -181,7 +181,6 @@ onMounted(() => {
 }
 
 .search-section {
-  background: #f9f9f9;
   padding: 20px;
   border-radius: 8px;
   margin-bottom: 20px;
@@ -213,7 +212,6 @@ onMounted(() => {
 }
 
 .image-card {
-  background: white;
   border: 1px solid #ddd;
   border-radius: 8px;
   overflow: hidden;
@@ -232,7 +230,6 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f5f5f5;
 }
 
 .image-preview img {
@@ -256,7 +253,7 @@ onMounted(() => {
 .image-info p {
   margin: 4px 0;
   font-size: 12px;
-  color: #666;
+  color: #ffffff;
 }
 
 .image-detail {
@@ -299,7 +296,6 @@ onMounted(() => {
 .url-text {
   word-break: break-all;
   font-size: 12px;
-  background: #f5f5f5;
   padding: 4px 8px;
   border-radius: 4px;
 }

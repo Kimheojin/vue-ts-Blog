@@ -132,9 +132,9 @@ const clearResult = () => {
 
         <div class="result-content">
           <div class="result-info">
-            <p><strong>파일명:</strong> {{ (uploadResult as any).originalFilename }}</p>
-            <p><strong>폴더:</strong> {{ (uploadResult as any).folder }}</p>
-            <p><strong>URL:</strong> {{ (uploadResult as any).imageUrl }}</p>
+            <p><strong>파일명:</strong> {{ uploadResult.originalFilename }}</p>
+            <p><strong>폴더:</strong> {{ uploadResult.folder }}</p>
+            <p><strong>URL:</strong> {{ uploadResult.imageUrl }}</p>
           </div>
 
           <div class="result-preview">
@@ -147,9 +147,6 @@ const clearResult = () => {
 </template>
 
 <style scoped>
-.image-upload-page {
-  padding: 20px;
-}
 
 .upload-container {
   max-width: 800px;
@@ -160,14 +157,12 @@ const clearResult = () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
-  padding-bottom: 15px;
+  margin-bottom: 15px;
   border-bottom: 1px solid #eee;
 }
 
 .upload-form {
-  background: #f9f9f9;
-  padding: 20px;
+  padding : 5px;
   border-radius: 8px;
   margin-bottom: 20px;
 }
@@ -184,14 +179,15 @@ const clearResult = () => {
 
 .form-actions {
   text-align: center;
-  padding-top: 20px;
+  padding-top: 5px;
+  margin-bottom: 5px;
 }
 
 .upload-result {
-  background: #fff;
   border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 20px;
+  border-radius: 7px;
+  padding: 10px;
+  margin-bottom: 40px;
 }
 
 .result-header {

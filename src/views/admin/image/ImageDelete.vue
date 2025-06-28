@@ -279,7 +279,6 @@ onMounted(() => {
 }
 
 .search-section {
-  background: #f9f9f9;
   padding: 20px;
   border-radius: 8px;
   margin-bottom: 20px;
@@ -318,7 +317,6 @@ onMounted(() => {
   overflow: hidden;
   border-radius: 4px;
   border: 1px solid #ddd;
-  background: #f5f5f5;
 }
 
 .table-image-preview img {
