@@ -15,9 +15,9 @@ const fileList = ref<UploadUserFile[]>([]);
 const folder = ref('blog-images');
 const isUploading = ref(false);
 const uploadResult = ref<{
-  imageUrl: string;
-  originalFilename: string;
-  folder: string;
+  imageUrl?: string;
+  originalFilename?: string;
+  folder?: string;
 } | null>(null);
 
 const handleUpload = async () => {
@@ -132,9 +132,9 @@ const clearResult = () => {
 
         <div class="result-content">
           <div class="result-info">
-            <p><strong>파일명:</strong> {{ uploadResult.originalFilename }}</p>
-            <p><strong>폴더:</strong> {{ uploadResult.folder }}</p>
-            <p><strong>URL:</strong> {{ uploadResult.imageUrl }}</p>
+            <p><strong>파일명:</strong> {{ uploadResult?.originalFilename || '알 수 없음'}}</p>
+            <p><strong>폴더:</strong> {{ uploadResult?.folder || '알 수 없음'}}</p>
+            <p><strong>URL:</strong> {{ uploadResult?.imageUrl || '알 수 없음'}}</p>
           </div>
 
           <div class="result-preview">
