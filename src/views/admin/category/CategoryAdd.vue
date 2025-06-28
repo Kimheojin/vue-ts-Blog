@@ -3,12 +3,12 @@ import { onMounted, reactive, ref } from 'vue';
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import { container } from "tsyringe";
-import CategoryRepository from "../../repository/category/CategoryRepository.ts";
-import CategoryAdminRepository from "../../repository/category/CategoryAdminRepository.ts";
-import CategoryAddRequest from "../../entity/category/request/CategoryRequest.ts";
-import type Category from "../../entity/category/data/Category.ts";
-import type HttpError from "../../http/HttpError.ts";
-import {useAdminAuth} from "../../composables/useAdminAuth.ts";
+import CategoryRepository from "../../../repository/category/CategoryRepository.ts";
+import CategoryAdminRepository from "../../../repository/category/CategoryAdminRepository.ts";
+import CategoryAddRequest from "../../../entity/category/request/CategoryRequest.ts";
+import type Category from "../../../entity/category/data/Category.ts";
+import type HttpError from "../../../http/HttpError.ts";
+import {useAdminAuth} from "../../../composables/useAdminAuth.ts";
 
 const router = useRouter();
 const CATEGORY_REPOSITORY = container.resolve(CategoryRepository);

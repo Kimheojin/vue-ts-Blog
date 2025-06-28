@@ -5,16 +5,19 @@ import Menu from "../components/Menu.vue";
 import AboutMe from "../views/Aboutme.vue";
 import LoginPage from "../views/LoginPage.vue";
 import AdminPage from "../views/AdminPage.vue";
-import PostWrite from "../views/admin/PostWrite.vue";
-import CategoryAdd from "../views/admin/CategoryAdd.vue";
+import PostWrite from "../views/admin/post/PostWrite.vue";
+import CategoryAdd from "../views/admin/category/CategoryAdd.vue";
 import CategoryPosts from "../components/post/CategoryPosts.vue";
-import CategoryDelete from "../views/admin/CategoryDelete.vue";
-import CategoryModify from "../views/admin/CategoryModify.vue";
-import PostDelete from "../views/admin/PostDelete.vue";
-import PostModify from "../views/admin/PostModify.vue";
-import CommentAdmin from "../views/admin/CommentAdmin.vue";
+import CategoryDelete from "../views/admin/category/CategoryDelete.vue";
+import CategoryModify from "../views/admin/category/CategoryModify.vue";
+import PostDelete from "../views/admin/post/PostDelete.vue";
+import PostModify from "../views/admin/post/PostModify.vue";
+import CommentAdmin from "../views/admin/comment/CommentAdmin.vue";
 import Allposts from "../components/post/Allposts.vue";
 import PostDetail from "../components/PostDetail.vue";
+import ImageDelete from "../views/admin/image/ImageDelete.vue";
+import ImageList from "../views/admin/image/ImageList.vue";
+import ImageUpload from "../views/admin/image/ImageUpload.vue";
 
 const routes = [
 
@@ -79,7 +82,18 @@ const routes = [
         path: '/admin/comment',
         component: CommentAdmin
     },
-
+    {
+        path: '/admin/image/delete',
+        component: ImageDelete
+    },
+    {
+        path: '/admin/image/list',
+        component: ImageList
+    },
+    {
+        path: '/admin/image/upload',
+        component: ImageUpload
+    }
 ];
 
 

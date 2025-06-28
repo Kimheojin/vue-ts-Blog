@@ -1,5 +1,5 @@
 export default class ImageUploadResponse {
-    public succes: boolean = false;
+    public success: boolean = false;
 
     public message : string = '';
     public imageUrl: string = '';

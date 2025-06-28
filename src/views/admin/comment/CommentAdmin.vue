@@ -2,14 +2,14 @@
 import {onMounted, ref, computed} from 'vue';
 import {container} from 'tsyringe';
 import {ElMessage, ElMessageBox} from 'element-plus';
-import type Comment from '../../entity/comment/data/Comment.ts';
-import type PostItem from '../../entity/post/data/PostItem.ts';
-import type PostPageResponse from '../../entity/post/response/PostPageResponse.ts';
-import CommentAdminRepository from "../../repository/comment/CommentAdminRepository.ts";
-import PostAdminRepository from "../../repository/post/PostAdminRepository.ts";
-import {useAdminAuth} from "../../composables/useAdminAuth.ts";
+import type Comment from '../../../entity/comment/data/Comment.ts';
+import type PostItem from '../../../entity/post/data/PostItem.ts';
+import type PostPageResponse from '../../../entity/post/response/PostPageResponse.ts';
+import CommentAdminRepository from "../../../repository/comment/CommentAdminRepository.ts";
+import PostAdminRepository from "../../../repository/post/PostAdminRepository.ts";
+import {useAdminAuth} from "../../../composables/useAdminAuth.ts";
 import {useRouter} from "vue-router";
-import CommentAdminDeleteRequest from "../../entity/comment/request/CommentAdminDeleteRequest.ts";
+import CommentAdminDeleteRequest from "../../../entity/comment/request/CommentAdminDeleteRequest.ts";
 
 const router = useRouter();
 const { isCheckingAuth, checkAuth } = useAdminAuth();

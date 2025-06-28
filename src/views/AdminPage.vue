@@ -59,6 +59,15 @@ function goToCategoryModify() {
 function goToCategoryDelete() {
   router.push('/admin/category/delete');
 }
+function goToImageUpload() {
+  router.push('/admin/image/upload');
+}
+function goToImageDelete() {
+  router.push('/admin/image/delete');
+}
+function goToImageList() {
+  router.push('/admin/image/list');
+}
 </script>
 
 <template>
@@ -92,6 +101,13 @@ function goToCategoryDelete() {
           <div class="admin-title">Comment 관련</div>
             <el-button plain @click="goToCommentManage">Comment 수정</el-button>
             <el-button plain @click="goToAdminPosts">관리자 post</el-button>
+          </div>
+
+          <div class="admin-actions">
+            <div class="admin-title">마크다운 이미지 관련</div>
+            <el-button plain @click="goToImageUpload">이미지 업로드</el-button>
+            <el-button plain @click="goToImageList">이미지 리스트 조회</el-button>
+            <el-button plain @click="goToImageDelete">이미지 삭제</el-button>
           </div>
 
 

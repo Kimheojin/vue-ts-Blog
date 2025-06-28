@@ -51,10 +51,7 @@ export default class HttpRepository {
         const formDataConfig = {
             ...config,
             method: 'POST' as const,
-            headers: {
-                // Content-Type을 설정하지 않음 - 브라우적가 자동으로 해주는듯
-                'Accept': 'application/json'
-            }
+
         };
 
         return this.httpClient
