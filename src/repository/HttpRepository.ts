@@ -46,4 +46,22 @@ export default class HttpRepository {
     }
 
 
+    public postFormData<T>(config: HttpRequestConfig, clazz: ClassConstructor<T> | null = null): Promise<T> {
+     
+        const formDataConfig = {
+            ...config,
+            method: 'POST' as const,
+
+        };
+
+        return this.httpClient
+            .request(formDataConfig)
+            .then((response) => {
+                return clazz !== null
+                    ? plainToInstance(clazz, response) as T
+                    : response as unknown as T;
+            });
+    }
+
+
 }

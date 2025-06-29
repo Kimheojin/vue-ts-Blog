@@ -3,12 +3,12 @@ import {onMounted, reactive, ref} from 'vue';
 import {useRouter} from "vue-router";
 import {ElMessage} from "element-plus";
 import {container} from "tsyringe";
-import CategoryRepository from "../../repository/category/CategoryRepository.ts";
-import PostRequest from "../../entity/post/request/PostRequest.ts";
-import type Category from "../../entity/category/data/Category.ts";
-import type HttpError from "../../http/HttpError.ts";
-import PostAdminRepository from "../../repository/post/PostAdminRepository.ts";
-import {useAdminAuth} from "../../composables/useAdminAuth.ts";
+import CategoryRepository from "../../../repository/category/CategoryRepository.ts";
+import PostRequest from "../../../entity/post/request/PostRequest.ts";
+import type Category from "../../../entity/category/data/Category.ts";
+import type HttpError from "../../../http/HttpError.ts";
+import PostAdminRepository from "../../../repository/post/PostAdminRepository.ts";
+import {useAdminAuth} from "../../../composables/useAdminAuth.ts";
 
 const router = useRouter();
 const POST_ADMIN_REPOSITORY = container.resolve(PostAdminRepository);

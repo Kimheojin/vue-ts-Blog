@@ -21,7 +21,7 @@ export default class AxiosHttpClient {
         withCredentials: true,  // 글로벌 설정
         headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            // 'Accept': 'application/json'
         }
     })
 
@@ -31,6 +31,12 @@ export default class AxiosHttpClient {
             (config) => {
                 // withCredentials를 각 요청마다 명시적으로 설정
                 config.withCredentials = true;
+                // FormData 감지시 Content-Type 헤더 제거
+                if (config.data instanceof FormData) {
+                    console.log('FormData 감지됨 - Content-Type 헤더 제거');
+                    delete config.headers['Content-Type'];
+                    delete config.headers['content-type'];
+                }
 
                 console.log('요청 전송:', {
                     url: `${config.baseURL}${config.url}`,
@@ -82,7 +88,11 @@ export default class AxiosHttpClient {
         );
     }
 
+    // header 부분 json 만 호환되게 짜놨어서 form 데이터도 호환되게 수정
     public async request<T = any>(config: HttpRequestConfig): Promise<T> {
+        const isFormData = config.body instanceof FormData
+        console.log('FormData 감지:', isFormData, config.body);
+
         const requestConfig = {
             method: config.method,
             url: config.path,
@@ -90,13 +100,17 @@ export default class AxiosHttpClient {
             data: config.body,
             // withCredentials를 명시적으로 true로 설정
             withCredentials: true,
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            }
+            // accept -> 반환타입 지정?
+            // content-Type -> 요청 타입
+            headers: isFormData ? {
+                'Accept' : 'application/json'
+            } :{
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
         }
 
-        console.log('최종 요청 설정:', requestConfig);
+
 
         return this.client
             .request<T>(requestConfig)

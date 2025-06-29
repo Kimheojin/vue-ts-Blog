@@ -31,7 +31,7 @@ export default class CommentRepository {
 
         return response.commentDtoList || [];
     }
-    // 댓글 삭제 (사용자 전용)
+    // 댓글 삭제 (일반 사용자 전용)
 
     public async addCategory(request: CommentDeleteRequest): Promise<Comment[]> {
         const response = await this.httpRepository.post({
@@ -41,8 +41,4 @@ export default class CommentRepository {
 
         return response.commentDtoList || [];
     }
-
-
-
-
 }

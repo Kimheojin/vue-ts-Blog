@@ -1,3 +1,4 @@
+
 <script setup lang="ts">
 import {reactive, ref, onMounted} from 'vue';
 import {useRouter} from "vue-router";
@@ -71,7 +72,6 @@ async function handleLogin() {
 
 
 </script>
-
 <template>
   <div class="login-page">
     <div class="admin-container">
@@ -86,9 +86,7 @@ async function handleLogin() {
               class="form-input"
               clearable
           />
-        </div>
 
-        <div class="form-group">
           <el-input
               v-model="state.login.password"
               type="password"
@@ -102,6 +100,7 @@ async function handleLogin() {
           <el-button
               class="admin-button"
               @click="handleLogin"
+              :loading="isLoading"
           >로그인
           </el-button>
         </div>
@@ -113,6 +112,8 @@ async function handleLogin() {
 <style scoped>
 .login-title{
   text-align: center;
+  font-size: 28px;
+  margin-bottom: 20px;
 }
 .login-page {
   display: flex;
@@ -130,5 +131,14 @@ async function handleLogin() {
   box-sizing: border-box;
 }
 
-
+.admin-button {
+  width: 100%;
+  box-sizing: border-box;
+}
+.login-form{
+  margin-bottom: 16px;
+}
+.form-group{
+  margin-bottom: 16px;
+}
 </style>
