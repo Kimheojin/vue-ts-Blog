@@ -45,6 +45,21 @@ const showImageDetail = (image: ImageItem) => {
   showImageDialog.value = true;
 };
 
+const copyImageUrl = async (imageUrl: string, event?: Event) => {
+  // 이벤트 버블링 방지 (카드 클릭 이벤트와 충돌 방지)
+  if (event) {
+    event.stopPropagation();
+  }
+
+  try {
+    await navigator.clipboard.writeText(imageUrl);
+    ElMessage.success('이미지 URL이 클립보드에 복사되었습니다.');
+  } catch (error) {
+    console.error('클립보드 복사 실패:', error);
+    ElMessage.error('클립보드 복사에 실패했습니다.');
+  }
+};
+
 const formatFileSize = (bytes: number): string => {
   if (bytes === 0) return '0 Bytes';
   const k = 1024;
@@ -103,11 +118,24 @@ onMounted(() => {
             @click="showImageDetail(image)"
         >
           <div class="image-preview">
-            <img :src="image.secureUrl" :alt="image.originalFilename" />
+            <img :src="image.secureUrl" />
           </div>
           <div class="image-info">
-            <h4>{{ image.originalFilename }}</h4>
-            <p>크기: {{ image.width }} x {{ image.height }}</p>
+            <div class="size-row">
+              <p>크기: {{ image.width }} x {{ image.height }}</p>
+              <el-button
+                  size="small"
+                  type="warning"
+                  @click="copyImageUrl(image.secureUrl, $event)"
+                  class="copy-btn"
+                  plain
+              >
+                <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                  <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                  <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+                </svg>
+              </el-button>
+            </div>
             <p>용량: {{ formatFileSize(image.bytes) }}</p>
             <p>형식: {{ image.format.toUpperCase() }}</p>
           </div>
@@ -123,11 +151,25 @@ onMounted(() => {
       >
         <div v-if="selectedImage" class="image-detail">
           <div class="detail-image">
-            <img :src="selectedImage.secureUrl" :alt="(selectedImage as ImageItem).originalFilename" />
+            <img :src="selectedImage.secureUrl" />
           </div>
           <div class="detail-info">
             <div class="info-item">
-              <label>URL:</label>
+              <div class="info-item-header">
+                <label>URL:</label>
+                <el-button
+                    size="small"
+                    type="warning"
+                    @click="copyImageUrl((selectedImage as ImageItem).secureUrl)"
+                    class="copy-btn-dialog"
+                    plain
+                >
+                  <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                    <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+                  </svg>
+                </el-button>
+              </div>
               <span class="url-text">{{ (selectedImage as ImageItem).secureUrl }}</span>
             </div>
             <div class="info-item">
@@ -150,7 +192,6 @@ onMounted(() => {
               <label>생성일:</label>
               <span>{{ formatDate((selectedImage as ImageItem).createdAt) }}</span>
             </div>
-
           </div>
         </div>
       </el-dialog>
@@ -235,15 +276,49 @@ onMounted(() => {
 }
 
 .image-info {
-  padding: 5px;
+  padding: 15px;
 }
 
-.image-info h4 {
-  margin: 0 0 10px 0;
+.size-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 4px 0;
+}
+
+.size-row p {
+  margin: 0;
+  flex: 1;
+  font-size: 12px;
+  color: #ffffff;
+}
+
+.info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+  gap: 10px;
+}
+
+.info-header h4 {
+  margin: 0;
   font-size: 14px;
   font-weight: bold;
   color: #333;
   word-break: break-all;
+  flex: 1;
+}
+
+.copy-btn {
+  flex-shrink: 0;
+  padding: 4px 8px;
+  height: auto;
+  min-height: 24px;
+}
+
+.copy-btn svg {
+  margin: 0;
 }
 
 .image-info p {
@@ -279,14 +354,31 @@ onMounted(() => {
   flex-direction: column;
 }
 
-.info-item label {
-  font-weight: bold;
-  color: #333;
+.info-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 4px;
 }
 
+.info-item label {
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.71);
+}
+
+.copy-btn-dialog {
+  padding: 4px 8px;
+  height: auto;
+  min-height: 24px;
+  gap: 4px;
+}
+
+.copy-btn-dialog svg {
+  margin: 0;
+}
+
 .info-item span {
-  color: #666;
+  color: #ffffff;
 }
 
 .url-text {
@@ -294,5 +386,6 @@ onMounted(() => {
   font-size: 12px;
   padding: 4px 8px;
   border-radius: 4px;
+  background-color: rgba(245, 245, 245, 0.18);
 }
 </style>

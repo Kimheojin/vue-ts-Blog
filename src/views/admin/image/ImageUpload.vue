@@ -48,7 +48,6 @@ const handleUpload = async () => {
         originalFilename: response.originalFilename,
         folder: response.folder
       };
-      // 파일 리스트 초기화
       fileList.value = [];
     } else {
       ElMessage.error('업로드 실패: ' + response.message);
@@ -75,6 +74,18 @@ const goBack = () => {
 
 const clearResult = () => {
   uploadResult.value = null;
+};
+
+// URL 복사 함수 추가
+const copyUrl = async () => {
+  if (!uploadResult.value?.imageUrl) return;
+
+  try {
+    await navigator.clipboard.writeText(uploadResult.value.imageUrl);
+    ElMessage.success('URL이 클립보드에 복사되었습니다!');
+  } catch (error) {
+    ElMessage.error('URL 복사에 실패했습니다.');
+  }
 };
 </script>
 
@@ -134,7 +145,14 @@ const clearResult = () => {
           <div class="result-info">
             <p><strong>파일명:</strong> {{ uploadResult?.['originalFilename'] || '알 수 없음'}}</p>
             <p><strong>폴더:</strong> {{ uploadResult?.['folder'] || '알 수 없음'}}</p>
-            <p><strong>URL:</strong> {{ uploadResult?.['imageUrl'] || '알 수 없음'}}</p>
+            <p class="url-row">
+              <strong>URL:</strong> {{ uploadResult?.['imageUrl'] || '알 수 없음'}}
+              <el-button @click="copyUrl" type="warning" plain style="margin-left: 10px;">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 16px; height: 16px;">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                </svg>
+              </el-button>
+            </p>
           </div>
 
           <div class="result-preview">
@@ -147,7 +165,6 @@ const clearResult = () => {
 </template>
 
 <style scoped>
-
 .upload-container {
   max-width: 800px;
   margin: 0 auto;
@@ -210,6 +227,11 @@ const clearResult = () => {
 
 .result-info p {
   margin-bottom: 8px;
+}
+
+.url-row {
+  display: flex;
+  align-items: center;
 }
 
 .result-preview {

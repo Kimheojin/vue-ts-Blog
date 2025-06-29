@@ -143,8 +143,21 @@ const formatFileSize = (bytes: number): string => {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 };
 
+// 날짜만 표시하도록 수정
 const formatDate = (dateString: string): string => {
-  return new Date(dateString).toLocaleString('ko-KR');
+  return new Date(dateString).toLocaleDateString('ko-KR');
+};
+
+// URL 복사 함수 추가
+const copyUrl = async (url: string) => {
+  if (!url) return;
+
+  try {
+    await navigator.clipboard.writeText(url);
+    ElMessage.success('URL이 클립보드에 복사되었습니다!');
+  } catch (error) {
+    ElMessage.error('URL 복사에 실패했습니다.');
+  }
 };
 
 const goBack = () => {
@@ -236,13 +249,27 @@ onMounted(() => {
             </template>
           </el-table-column>
 
-          <el-table-column label="생성일" width="180">
+          <el-table-column label="생성일" width="120">
             <template #default="{ row }: { row: ImageItem }">
               {{ row.createdAt ? formatDate(row.createdAt) : '알 수 없음' }}
             </template>
           </el-table-column>
+          <el-table-column label="복사" width="80">
+            <template #default="{ row }">
+              <el-button
+                  type="warning"
+                  size="small"
+                  @click="copyUrl(row.secureUrl)"
+                  plain
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 14px; height: 14px;">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
+                </svg>
+              </el-button>
+            </template>
+          </el-table-column>
 
-          <el-table-column label="작업" width="100">
+          <el-table-column label="삭제" width="80">
             <template #default="{ row }">
               <el-button
                   type="danger"
