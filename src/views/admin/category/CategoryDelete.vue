@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref} from 'vue';
 import { useRouter } from "vue-router";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { container } from "tsyringe";
@@ -8,7 +8,7 @@ import CategoryDeleteRequest from "../../../entity/category/request/CategoryDele
 import type Category from "../../../entity/category/data/Category.ts";
 import CategoryAdminRepository from "../../../repository/category/CategoryAdminRepository.ts";
 import {useAdminAuth} from "../../../composables/useAdminAuth.ts";
-
+import { useErrorHandler } from '../../../composables/useErrorHandler.ts';
 const router = useRouter()
 const CATEGORY_REPOSITORY = container.resolve(CategoryRepository)
 const CATEGORY_ADMIN_REPOSITORY = container.resolve(CategoryAdminRepository)
@@ -18,6 +18,9 @@ const categories = ref<Category[]>([]);
 const isLoading = ref(false);
 const isDeleting = ref(false);
 
+
+// handler 처리 부분
+const { customHandleError } = useErrorHandler();
 onMounted(async () => {
   const isAuth = await checkAuth();
   if (isAuth) {
@@ -61,10 +64,7 @@ async function handleDelete(category: Category) {
     await loadCategories();
 
   } catch (error: any) {
-    if (error !== 'cancel') {
-      console.error('카테고리 삭제 중 오류:', error);
-      ElMessage.error('카테고리 삭제에 실패했습니다.');
-    }
+    customHandleError(error, '카테고리 삭제에 실패했습니다.');
   } finally {
     isDeleting.value = false;
   }
