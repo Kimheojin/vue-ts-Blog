@@ -9,8 +9,10 @@ import ModifyPostRequest from "../../../entity/post/request/ModifyPostRequest.ts
 import type PostItem from "../../../entity/post/data/PostItem.ts";
 import type Category from "../../../entity/category/data/Category.ts";
 import type PostPageResponse from "../../../entity/post/response/PostPageResponse.ts";
-import type HttpError from "../../../http/HttpError.ts";
 import {useAdminAuth} from "../../../composables/useAdminAuth.ts";
+import { useErrorHandler } from '../../../composables/useErrorHandler.ts';
+
+const { customHandleError } = useErrorHandler();
 
 const router = useRouter();
 const POST_ADMIN_REPOSITORY = container.resolve(PostAdminRepository);
@@ -49,8 +51,7 @@ async function loadPosts(page: number = 0) {
     totalPages.value = response.totalPages;
     totalElements.value = response.totalElements;
   } catch (error) {
-    console.error('게시글을 불러오는 중 오류:', error);
-    ElMessage.error('게시글을 불러오는데 실패했습니다.');
+    customHandleError(error, '게시글을 불러오는데 실패했습니다.');
   } finally {
     isLoadingPosts.value = false;
   }
@@ -61,8 +62,7 @@ async function loadCategories() {
   try {
     categories.value = await CATEGORY_REPOSITORY.getCategories();
   } catch (error) {
-    console.error('카테고리를 불러오는 중 오류:', error);
-    ElMessage.error('카테고리를 불러오는데 실패했습니다.');
+    customHandleError(error, '카테고리를 불러오는데 실패했습니다.');
   } finally {
     isLoadingCategories.value = false;
   }
@@ -108,8 +108,7 @@ async function handleModify() {
     await loadPosts(currentPage.value);
 
   } catch (error) {
-    const httpError = error as HttpError;
-    ElMessage.error('게시글 수정에 실패했습니다: ' + httpError.getMessage());
+    customHandleError(error, '게시글 수정에 실패했습니다.');
   } finally {
     isModifying.value = false;
   }
@@ -163,7 +162,6 @@ function goBack() {
   router.back();
 }
 </script>
-
 <template>
   <div class="post-modify-page">
     <div class="post-modify-container">

@@ -2,11 +2,13 @@
 import { ref, onMounted, watch, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { container } from 'tsyringe';
-import { ElMessage } from 'element-plus';
 import { marked } from 'marked';
 import PostRepository from '../repository/post/PostRepository.ts';
 import PostItem from '../entity/post/data/PostItem.ts';
 import PostComments from '../components/PostComments.vue';
+import { useErrorHandler } from '../composables/useErrorHandler.ts';
+
+const { customHandleError } = useErrorHandler();
 
 const route = useRoute();
 const router = useRouter();
@@ -48,8 +50,7 @@ async function loadPost() {
     const loadedPost = await POST_REPOSITORY.getSinglePost(postId.value);
     post.value = loadedPost;
   } catch (error) {
-    console.error('게시글을 불러오는 중 오류:', error);
-    ElMessage.error('게시글을 불러오는데 실패했습니다.');
+    customHandleError(error, '게시글을 불러오는데 실패했습니다.');
     router.replace('/');
   } finally {
     isLoading.value = false;
@@ -74,7 +75,6 @@ function goBack() {
   router.back();
 }
 </script>
-
 <template>
   <div class="post-detail-page">
     <div class="post-detail-container">

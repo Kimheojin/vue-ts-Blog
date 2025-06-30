@@ -5,7 +5,9 @@ import { ElMessage } from "element-plus";
 import { container } from "tsyringe";
 import { useAdminAuth } from "../composables/useAdminAuth.ts";
 import AuthRepository from "../repository/auth/AuthRepository.ts";
-import HttpError from "../http/HttpError.ts";
+import { useErrorHandler } from '../composables/useErrorHandler.ts';
+
+const { customHandleError } = useErrorHandler();
 
 const router = useRouter();
 const AUTH_REPOSITORY = container.resolve(AuthRepository)
@@ -17,18 +19,16 @@ onMounted(async () => {
 });
 
 async function handleLogout() {
+
   try {
     await AUTH_REPOSITORY.logout();
     ElMessage.success('로그아웃 되었습니다.');
+
+  } catch (error: any) {
+    customHandleError(error, '로그아웃 중 오류가 발생했습니다.');
+  } finally {
+    // 성공/실패 관계없이 로그인 페이지로 이동
     await router.replace('/admin/login');
-  } catch (error) {
-    const httpError = error as HttpError;
-    if (httpError.getStatusCode() === 401) {
-      ElMessage.warning('세션이 만료되었습니다.');
-      await router.replace('/admin/login');
-    } else {
-      ElMessage.error('로그아웃 중 오류가 발생했습니다: ' + httpError.getMessage());
-    }
   }
 }
 

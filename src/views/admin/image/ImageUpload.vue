@@ -5,8 +5,10 @@ import { container } from 'tsyringe';
 import { useRouter } from 'vue-router';
 import ImageRepository from '../../../repository/image/ImageRepository.ts';
 import ImageUploadRequest from '../../../entity/image/request/ImageUploadRequest.ts';
-import HttpError from '../../../http/HttpError.ts';
 import type { UploadProps, UploadUserFile } from 'element-plus';
+import { useErrorHandler } from '../../../composables/useErrorHandler.ts';
+
+const { customHandleError } = useErrorHandler();
 
 const router = useRouter();
 const IMAGE_REPOSITORY = container.resolve(ImageRepository);
@@ -53,8 +55,7 @@ const handleUpload = async () => {
       ElMessage.error('업로드 실패: ' + response.message);
     }
   } catch (error) {
-    const httpError = error as HttpError;
-    ElMessage.error(httpError.getStatusCode() + " : " + httpError.getMessage());
+    customHandleError(error, '이미지 업로드에 실패했습니다.');
   } finally {
     isUploading.value = false;
   }
@@ -88,7 +89,6 @@ const copyUrl = async () => {
   }
 };
 </script>
-
 <template>
   <div class="image-upload-page">
     <div class="upload-container">

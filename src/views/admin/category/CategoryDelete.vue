@@ -9,18 +9,18 @@ import type Category from "../../../entity/category/data/Category.ts";
 import CategoryAdminRepository from "../../../repository/category/CategoryAdminRepository.ts";
 import {useAdminAuth} from "../../../composables/useAdminAuth.ts";
 import { useErrorHandler } from '../../../composables/useErrorHandler.ts';
+
+const { isCheckingAuth, checkAuth } = useAdminAuth();
+const { customHandleError } = useErrorHandler();
+
 const router = useRouter()
 const CATEGORY_REPOSITORY = container.resolve(CategoryRepository)
 const CATEGORY_ADMIN_REPOSITORY = container.resolve(CategoryAdminRepository)
-const { isCheckingAuth, checkAuth } = useAdminAuth();
 
 const categories = ref<Category[]>([]);
 const isLoading = ref(false);
 const isDeleting = ref(false);
 
-
-// handler 처리 부분
-const { customHandleError } = useErrorHandler();
 onMounted(async () => {
   const isAuth = await checkAuth();
   if (isAuth) {
@@ -33,8 +33,7 @@ async function loadCategories() {
   try {
     categories.value = await CATEGORY_REPOSITORY.getCategories();
   } catch (error) {
-    console.error('카테고리를 불러오는 중 오류:', error);
-    ElMessage.error('카테고리를 불러오는데 실패했습니다.');
+    customHandleError(error, '카테고리를 불러오는데 실패했습니다.');
   } finally {
     isLoading.value = false;
   }
@@ -74,7 +73,6 @@ function handleCancel() {
   router.back();
 }
 </script>
-
 <template>
   <div class="category-delete-page">
     <div class="container">

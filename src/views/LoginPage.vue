@@ -1,4 +1,3 @@
-
 <script setup lang="ts">
 import {reactive, ref, onMounted} from 'vue';
 import {useRouter} from "vue-router";
@@ -7,7 +6,9 @@ import {container} from "tsyringe";
 import AuthRepository from "../repository/auth/AuthRepository.ts";
 import AuthService from "../service/AuthService.ts";
 import LoginRequest from "../entity/auth/request/LoginRequest.ts";
-import type HttpError from "../http/HttpError.ts";
+import { useErrorHandler } from '../composables/useErrorHandler.ts';
+
+const { customHandleError } = useErrorHandler();
 
 const router = useRouter()
 const AUTH_REPOSITORY = container.resolve(AuthRepository)
@@ -63,8 +64,7 @@ async function handleLogin() {
 
     router.replace('/admin');
   } catch (error) {
-    const httpError = error as HttpError;
-    ElMessage.error('로그인 실패: ' + httpError.getMessage());
+    customHandleError(error, '로그인에 실패했습니다.');
   } finally {
     isLoading.value = false;
   }
