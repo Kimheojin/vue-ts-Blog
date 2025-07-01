@@ -7,14 +7,15 @@ import CategoryRepository from "../../../repository/category/CategoryRepository.
 import CategoryAdminRepository from "../../../repository/category/CategoryAdminRepository.ts";
 import CategoryModifyRequest from "../../../entity/category/request/CategoryModifyRequest.ts";
 import type Category from "../../../entity/category/data/Category.ts";
-import type HttpError from "../../../http/HttpError.ts";
-import {useAdminAuth} from "../../../composables/useAdminAuth.ts";
+import { useAdminAuth } from "../../../composables/useAdminAuth.ts";
+import { useErrorHandler } from '../../../composables/useErrorHandler.ts';
+
+const { isCheckingAuth, checkAuth } = useAdminAuth();
+const { customHandleError } = useErrorHandler();
 
 const router = useRouter();
 const CATEGORY_REPOSITORY = container.resolve(CategoryRepository);
 const CATEGORY_ADMIN_REPOSITORY = container.resolve(CategoryAdminRepository);
-
-const { isCheckingAuth, checkAuth } = useAdminAuth();
 
 const categories = ref<Category[]>([]);
 const selectedCategory = ref<Category | null>(null);
@@ -37,8 +38,7 @@ async function loadCategories() {
   try {
     categories.value = await CATEGORY_REPOSITORY.getCategories();
   } catch (error) {
-    console.error('카테고리를 불러오는 중 오류:', error);
-    ElMessage.error('카테고리를 불러오는데 실패했습니다.');
+    customHandleError(error, '카테고리를 불러오는데 실패했습니다.');
   } finally {
     isLoadingCategories.value = false;
   }
@@ -87,9 +87,7 @@ async function handleModify() {
     await loadCategories();
 
   } catch (error) {
-    const httpError = error as HttpError;
-    console.error('카테고리 수정 중 오류:', error);
-    ElMessage.error('카테고리 수정에 실패했습니다: ' + httpError.getMessage());
+    customHandleError(error, '카테고리 수정에 실패했습니다.');
   } finally {
     isModifying.value = false;
   }
@@ -104,7 +102,6 @@ function goBack() {
   router.back();
 }
 </script>
-
 <template>
   <div class="category-modify-page">
     <div class="container">

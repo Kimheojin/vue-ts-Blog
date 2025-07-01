@@ -10,6 +10,9 @@ import PostAdminRepository from "../../../repository/post/PostAdminRepository.ts
 import {useAdminAuth} from "../../../composables/useAdminAuth.ts";
 import {useRouter} from "vue-router";
 import CommentAdminDeleteRequest from "../../../entity/comment/request/CommentAdminDeleteRequest.ts";
+import { useErrorHandler } from '../../../composables/useErrorHandler.ts';
+
+const { customHandleError } = useErrorHandler();
 
 const router = useRouter();
 const { isCheckingAuth, checkAuth } = useAdminAuth();
@@ -61,8 +64,7 @@ async function loadPosts(page: number = 0) {
       console.log('게시물 데이터 구조:', response.content[0]);
     }
   } catch (error) {
-    console.error('게시물을 불러오는 중 오류:', error);
-    ElMessage.error('게시물을 불러오는데 실패했습니다.');
+    customHandleError(error, '게시물을 불러오는데 실패했습니다.');
   } finally {
     isLoadingPosts.value = false;
   }
@@ -86,14 +88,13 @@ async function loadComments() {
     // 댓글 데이터 구조 확인
     console.log('받아온 댓글 데이터:', allComments);
 
-    // 이미 계층 구조로 되어 있으므로 평면화해서 표시
+    // 평면화?해서 표시
     comments.value = flattenComments(allComments);
 
     console.log('평면화된 댓글:', comments.value);
 
   } catch (error) {
-    console.error('댓글을 불러오는 중 오류:', error);
-    ElMessage.error('댓글을 불러오는데 실패했습니다.');
+    customHandleError(error, '댓글을 불러오는데 실패했습니다.');
   } finally {
     isLoadingComments.value = false;
   }
@@ -188,8 +189,7 @@ async function deleteComment(comment: Comment) {
 
   } catch (error: any) {
     if (error !== 'cancel') {
-      console.error('댓글 삭제 중 오류:', error);
-      ElMessage.error('댓글 삭제에 실패했습니다.');
+      customHandleError(error, '댓글 삭제에 실패했습니다.');
 
       // 에러가 발생한 경우에만 다시 조회해서 실제 상태 확인
       await loadComments();
@@ -311,7 +311,6 @@ function goBack() {
   router.back();
 }
 </script>
-
 <template>
   <div class="comment-admin-page">
     <div class="comment-admin-container">

@@ -7,7 +7,9 @@ import ImageRepository from '../../../repository/image/ImageRepository.ts';
 import ImageListRequest from '../../../entity/image/request/ImageListRequest.ts';
 import ImageDeleteRequest from '../../../entity/image/request/ImageDeleteRequest.ts';
 import type ImageItem from '../../../entity/image/data/ImageItem.ts';
-import HttpError from '../../../http/HttpError.ts';
+import { useErrorHandler } from '../../../composables/useErrorHandler.ts';
+
+const { customHandleError } = useErrorHandler();
 
 const router = useRouter();
 const IMAGE_REPOSITORY = container.resolve(ImageRepository);
@@ -35,8 +37,7 @@ const loadImages = async () => {
       ElMessage.success(`${response.length}개의 이미지를 불러왔습니다.`);
     }
   } catch (error) {
-    const httpError = error as HttpError;
-    ElMessage.error('이미지 목록을 불러오는 중 오류가 발생했습니다: ' + httpError.getMessage());
+    customHandleError(error, '이미지 목록을 불러오는 중 오류가 발생했습니다.');
   } finally {
     isLoading.value = false;
   }
@@ -129,8 +130,7 @@ const deleteSingleImage = async (image: ImageItem) => {
     }
   } catch (error) {
     if (error !== 'cancel') {
-      const httpError = error as HttpError;
-      ElMessage.error('삭제 중 오류가 발생했습니다: ' + httpError.getMessage());
+      customHandleError(error, '삭제 중 오류가 발생했습니다.');
     }
   }
 };
@@ -168,7 +168,6 @@ onMounted(() => {
   loadImages();
 });
 </script>
-
 <template>
   <div class="image-delete-page">
     <div class="delete-container">

@@ -7,8 +7,10 @@ import CategoryRepository from "../../../repository/category/CategoryRepository.
 import CategoryAdminRepository from "../../../repository/category/CategoryAdminRepository.ts";
 import CategoryAddRequest from "../../../entity/category/request/CategoryRequest.ts";
 import type Category from "../../../entity/category/data/Category.ts";
-import type HttpError from "../../../http/HttpError.ts";
-import {useAdminAuth} from "../../../composables/useAdminAuth.ts";
+import { useAdminAuth } from "../../../composables/useAdminAuth.ts";
+import { useErrorHandler } from '../../../composables/useErrorHandler.ts';
+
+const { customHandleError } = useErrorHandler();
 
 const router = useRouter();
 const CATEGORY_REPOSITORY = container.resolve(CategoryRepository);
@@ -36,8 +38,7 @@ async function loadCategories() {
   try {
     categories.value = await CATEGORY_REPOSITORY.getCategories();
   } catch (error) {
-    console.error('카테고리를 불러오는 중 오류:', error);
-    ElMessage.error('카테고리를 불러오는데 실패했습니다.');
+    customHandleError(error, '카테고리를 불러오는데 실패했습니다.');
   } finally {
     isLoadingCategories.value = false;
   }
@@ -71,9 +72,7 @@ async function handleAdd() {
     await loadCategories();
 
   } catch (error) {
-    const httpError = error as HttpError;
-    console.error('카테고리 추가 중 오류:', error);
-    ElMessage.error('카테고리 추가에 실패했습니다: ' + httpError.getMessage());
+    customHandleError(error, '카테고리 추가에 실패했습니다.');
   } finally {
     isAdding.value = false;
   }
@@ -87,7 +86,6 @@ function goBack() {
   router.back();
 }
 </script>
-
 <template>
   <div class="category-add-page">
     <div class="container">

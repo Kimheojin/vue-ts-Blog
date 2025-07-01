@@ -6,6 +6,9 @@ import CommentRepository from '../repository/comment/CommentRepository.ts';
 import CommentWriteRequest from '../entity/comment/request/CommentWirteRequest.ts';
 import CommentDeleteRequest from '../entity/comment/request/CommentDeleteRequest.ts';
 import type Comment from '../entity/comment/data/Comment.ts';
+import { useErrorHandler } from '../composables/useErrorHandler.ts';
+
+const { customHandleError } = useErrorHandler();
 
 // Props 정의
 const props = defineProps<{
@@ -41,8 +44,7 @@ async function loadComments() {
   try {
     comments.value = await COMMENT_REPOSITORY.getCommentByPostId(props.postId);
   } catch (error) {
-    console.error('댓글을 불러오는 중 오류:', error);
-    ElMessage.error('댓글을 불러오는데 실패했습니다.');
+    customHandleError(error, '댓글을 불러오는데 실패했습니다.');
   } finally {
     isLoading.value = false;
   }
@@ -75,8 +77,7 @@ async function submitComment() {
     // 댓글 목록 새로고침
     await loadComments();
   } catch (error) {
-    console.error('댓글 작성 중 오류:', error);
-    ElMessage.error('댓글 작성에 실패했습니다.');
+    customHandleError(error, '댓글 작성에 실패했습니다.');
   } finally {
     isSubmitting.value = false;
   }
@@ -121,8 +122,7 @@ async function submitReply(commentId: number) {
     // 댓글 목록 새로고침
     await loadComments();
   } catch (error) {
-    console.error('답글 작성 중 오류:', error);
-    ElMessage.error('답글 작성에 실패했습니다.');
+    customHandleError(error, '답글 작성에 실패했습니다.');
   }
 }
 
@@ -157,7 +157,7 @@ async function deleteComment(comment: Comment) {
     deleteRequest.postId = props.postId;
     deleteRequest.parentId = comment.parentId;
 
-    await COMMENT_REPOSITORY.addCategory(deleteRequest); // 메서드명이 잘못된 것 같지만 기존 코드 유지
+    await COMMENT_REPOSITORY.deleteComment(deleteRequest);
     ElMessage.success('댓글이 삭제되었습니다.');
 
     // 삭제 폼 숨기기
@@ -167,8 +167,7 @@ async function deleteComment(comment: Comment) {
     // 댓글 목록 새로고침
     await loadComments();
   } catch (error) {
-    console.error('댓글 삭제 중 오류:', error);
-    ElMessage.error('댓글 삭제에 실패했습니다.');
+    customHandleError(error, '댓글 삭제에 실패했습니다.');
   }
 }
 
@@ -191,7 +190,6 @@ function maskEmail(email: string): string {
   return `${local.substring(0, 3)}***@${domain}`;
 }
 </script>
-
 <template>
   <div class="comments-section">
     <h3 class="comments-title bold-text">댓글 {{ comments.length }}개</h3>

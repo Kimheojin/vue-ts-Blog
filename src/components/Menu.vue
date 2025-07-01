@@ -4,6 +4,9 @@ import {onMounted, ref} from "vue";
 import {container} from "tsyringe";
 import CategoryRepository from "../repository/category/CategoryRepository.ts";
 import type CategoryWithCount from "../entity/category/data/CategoryWithCount.ts";
+import { useErrorHandler } from '../composables/useErrorHandler.ts';
+
+const { customHandleError } = useErrorHandler();
 
 const router = useRouter();
 const CATEGORY_REPOSITORY = container.resolve(CategoryRepository);
@@ -25,9 +28,9 @@ const goToAllPosts = () => {
 onMounted(async () => {
   try {
     categories.value = await CATEGORY_REPOSITORY.getCategoriesAndPostCount();
-    isLoading.value = false;
   } catch (error) {
-    console.error("카테고리를 불러오는 중 오류가 발생했습니다:", error);
+    customHandleError(error, '카테고리를 불러오는 중 오류가 발생했습니다.');
+  } finally {
     isLoading.value = false;
   }
 });

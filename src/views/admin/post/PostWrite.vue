@@ -6,9 +6,11 @@ import {container} from "tsyringe";
 import CategoryRepository from "../../../repository/category/CategoryRepository.ts";
 import PostRequest from "../../../entity/post/request/PostRequest.ts";
 import type Category from "../../../entity/category/data/Category.ts";
-import type HttpError from "../../../http/HttpError.ts";
 import PostAdminRepository from "../../../repository/post/PostAdminRepository.ts";
 import {useAdminAuth} from "../../../composables/useAdminAuth.ts";
+import { useErrorHandler } from '../../../composables/useErrorHandler.ts';
+
+const { customHandleError } = useErrorHandler();
 
 const router = useRouter();
 const POST_ADMIN_REPOSITORY = container.resolve(PostAdminRepository);
@@ -26,7 +28,6 @@ const isSubmitting = ref(false);
 
 const { isCheckingAuth, checkAuth } = useAdminAuth();
 
-
 onMounted(async () => {
   const isAuth = await checkAuth();
   if (isAuth) {
@@ -34,15 +35,12 @@ onMounted(async () => {
   }
 });
 
-
-
-
 async function loadCategories() {
   isLoading.value = true;
   try {
     categories.value = await CATEGORY_REPOSITORY.getCategories();
   } catch (error) {
-    ElMessage.error('카테고리를 불러오는데 실패했습니다.');
+    customHandleError(error, '카테고리를 불러오는데 실패했습니다.');
   } finally {
     isLoading.value = false;
   }
@@ -71,8 +69,7 @@ async function handleSubmit() {
     ElMessage.success('글이 성공적으로 작성되었습니다.');
     router.replace('/admin');
   } catch (error) {
-    const httpError = error as HttpError;
-    ElMessage.error('글 작성에 실패했습니다: ' + httpError.getMessage());
+    customHandleError(error, '글 작성에 실패했습니다.');
   } finally {
     isSubmitting.value = false;
   }
@@ -86,7 +83,6 @@ function handleReset() {
   state.post = new PostRequest();
 }
 </script>
-
 <template>
   <div class="post-write-page">
     <div class="post-write-container">

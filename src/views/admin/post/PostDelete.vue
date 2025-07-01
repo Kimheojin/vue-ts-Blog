@@ -8,6 +8,9 @@ import DeletePostRequest from "../../../entity/post/request/DeletePostRequest.ts
 import type PostItem from "../../../entity/post/data/PostItem.ts";
 import type PostPageResponse from "../../../entity/post/response/PostPageResponse.ts";
 import {useAdminAuth} from "../../../composables/useAdminAuth.ts";
+import { useErrorHandler } from '../../../composables/useErrorHandler.ts';
+
+const { customHandleError } = useErrorHandler();
 
 const router = useRouter();
 const POST_ADMIN_REPOSITORY = container.resolve(PostAdminRepository);
@@ -38,8 +41,7 @@ async function loadPosts(page: number = 0) {
     totalPages.value = response.totalPages;
     totalElements.value = response.totalElements;
   } catch (error) {
-    console.error('게시글을 불러오는 중 오류:', error);
-    ElMessage.error('게시글을 불러오는데 실패했습니다.');
+    customHandleError(error, '게시글을 불러오는데 실패했습니다.');
   } finally {
     isLoading.value = false;
   }
@@ -73,8 +75,7 @@ async function handleDelete(post: PostItem) {
 
   } catch (error: any) {
     if (error !== 'cancel') {
-      console.error('게시글 삭제 중 오류:', error);
-      ElMessage.error('게시글 삭제에 실패했습니다.');
+      customHandleError(error, '게시글 삭제에 실패했습니다.');
     }
   } finally {
     isDeleting.value = false;
@@ -124,7 +125,6 @@ function goBack() {
   router.back();
 }
 </script>
-
 <template>
   <div class="post-delete-page">
     <div class="post-delete-container">
