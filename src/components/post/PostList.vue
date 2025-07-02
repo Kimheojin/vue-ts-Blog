@@ -53,7 +53,9 @@ function handlePageChange(page: number) {
       </h2>
 
       <div v-if="props.showAllPostsButton" class="navigation-buttons">
-        <el-button @click="goToAllPosts" type="success" text bg>글 전체 보기</el-button>
+        <el-button @click="goToAllPosts"
+                   type="success"
+                   text bg>글 전체 보기</el-button>
       </div>
     </div>
 
