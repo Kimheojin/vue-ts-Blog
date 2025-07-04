@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, reactive, ref, computed } from 'vue';
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import { container } from "tsyringe";
@@ -24,6 +24,11 @@ const isAdding = ref(false);
 
 const state = reactive({
   category: new CategoryAddRequest()
+});
+
+// priority로 정렬된 카테고리 목록
+const sortedCategories = computed(() => {
+  return [...categories.value].sort((a, b) => a.priority - b.priority);
 });
 
 onMounted(async () => {
@@ -86,6 +91,7 @@ function goBack() {
   router.back();
 }
 </script>
+
 <template>
   <div class="category-add-page">
     <div class="container">
@@ -128,6 +134,20 @@ function goBack() {
                 </div>
               </el-form-item>
 
+              <el-form-item label="우선순위">
+                <el-input-number
+                    v-model="state.category.priority"
+                    :min="0"
+                    :max="999999"
+                    placeholder="우선순위를 입력해주세요"
+                    controls-position="right"
+                    style="width: 100%"
+                />
+                <div class="input-help">
+                  숫자가 낮을수록 먼저 표시됩니다. (0이 가장 우선)
+                </div>
+              </el-form-item>
+
               <el-form-item>
                 <div class="button-group">
                   <el-button
@@ -167,14 +187,17 @@ function goBack() {
 
             <div v-else class="category-list">
               <div
-                  v-for="(category, index) in categories"
+                  v-for="(category, index) in sortedCategories"
                   :key="`category-${category.categoryId}`"
                   class="category-item"
               >
                 <div class="category-number">{{ index + 1 }}</div>
                 <div class="category-info">
                   <span class="category-name">{{ category.categoryName }}</span>
-                  <span class="category-id">ID: {{ category.categoryId }}</span>
+                  <div class="category-details">
+                    <span class="category-id">ID: {{ category.categoryId }}</span>
+                    <span class="category-priority">우선순위: {{ category.priority }}</span>
+                  </div>
                 </div>
               </div>
             </div>
