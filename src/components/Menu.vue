@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {useRouter} from "vue-router";
-import {onMounted, ref} from "vue";
+import {onMounted, ref, computed} from "vue";
 import {container} from "tsyringe";
 import CategoryRepository from "../repository/category/CategoryRepository.ts";
 import type CategoryWithCount from "../entity/category/data/CategoryWithCount.ts";
@@ -25,6 +25,11 @@ const goToAllPosts = () => {
   router.push("/posts");
 };
 
+// priority로 정렬된 카테고리 목록
+const sortedCategories = computed(() => {
+  return [...categories.value].sort((a, b) => a.priority - b.priority);
+});
+
 onMounted(async () => {
   try {
     categories.value = await CATEGORY_REPOSITORY.getCategoriesAndPostCount();
@@ -44,19 +49,18 @@ onMounted(async () => {
       <!-- 로딩 상태 표시 -->
       <div v-if="isLoading" class="regular-text">카테고리 로딩 중...</div>
 
-      <!-- 카테고리 목록 - el-link 사용 -->
+      <!-- 카테고리 목록 - priority로 정렬 -->
       <div v-else class="category-list">
         <el-link
-            v-for="category in categories"
+            v-for="category in sortedCategories"
             :key="category.categoryId"
             @click="goToCategory(category.categoryName)"
             class="category-item regular-text"
             :underline="false"
         >
           <span class="category-name">{{ category.categoryName }}</span>
-          <span class="post-count" >({{ category.postCount }})</span>
+          <span class="post-count">({{ category.postCount }})</span>
         </el-link>
-
       </div>
     </div>
 

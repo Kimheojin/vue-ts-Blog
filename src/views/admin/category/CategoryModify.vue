@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, reactive, ref, computed } from 'vue';
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import { container } from "tsyringe";
@@ -26,6 +26,11 @@ const state = reactive({
   category: new CategoryModifyRequest()
 });
 
+// priority로 정렬된 카테고리 목록
+const sortedCategories = computed(() => {
+  return [...categories.value].sort((a, b) => a.priority - b.priority);
+});
+
 onMounted(async () => {
   const isAuth = await checkAuth();
   if (isAuth) {
@@ -48,6 +53,7 @@ function selectCategory(category: Category) {
   selectedCategory.value = category;
   state.category.categoryId = category.categoryId;
   state.category.categoryName = category.categoryName;
+  state.category.priority = category.priority;
 }
 
 async function handleModify() {
@@ -61,12 +67,16 @@ async function handleModify() {
     return;
   }
 
-  if (state.category.categoryName === selectedCategory.value.categoryName) {
+  // 변경 사항 확인
+  const hasNameChange = state.category.categoryName !== selectedCategory.value.categoryName;
+  const hasPriorityChange = state.category.priority !== selectedCategory.value.priority;
+
+  if (!hasNameChange && !hasPriorityChange) {
     ElMessage.warning('변경된 내용이 없습니다.');
     return;
   }
 
-  // 중복 체크
+  // 중복 체크 (카테고리명만)
   const isDuplicate = categories.value.some(cat =>
       cat.categoryId !== selectedCategory.value!.categoryId &&
       cat.categoryName === state.category.categoryName.trim()
@@ -80,6 +90,7 @@ async function handleModify() {
   isModifying.value = true;
 
   try {
+    state.category.categoryName = state.category.categoryName.trim();
     await CATEGORY_ADMIN_REPOSITORY.ModifyCategory(state.category);
     ElMessage.success('카테고리가 성공적으로 수정되었습니다.');
 
@@ -102,6 +113,7 @@ function goBack() {
   router.back();
 }
 </script>
+
 <template>
   <div class="category-modify-page">
     <div class="container">
@@ -133,13 +145,13 @@ function goBack() {
               <div class="info-icon">INFO</div>
               <div class="info-content">
                 <h4>카테고리 수정</h4>
-                <p>수정하려는 카테고리를 선택해주세요. 카테고리명을 변경할 수 있습니다.</p>
+                <p>수정하려는 카테고리를 선택해주세요. 카테고리명과 우선순위를 변경할 수 있습니다.</p>
               </div>
             </div>
 
             <div class="categories-grid">
               <div
-                  v-for="category in categories"
+                  v-for="category in sortedCategories"
                   :key="`category-${category.categoryId}`"
                   class="category-card"
                   @click="selectCategory(category)"
@@ -149,7 +161,10 @@ function goBack() {
                     <div class="category-icon">FOLDER</div>
                     <div class="category-details">
                       <h3 class="category-name">{{ category.categoryName }}</h3>
-                      <span class="category-id">ID: {{ category.categoryId }}</span>
+                      <div class="category-meta">
+                        <span class="category-id">ID: {{ category.categoryId }}</span>
+                        <span class="category-priority">우선순위: {{ category.priority }}</span>
+                      </div>
                     </div>
                   </div>
                   <div class="edit-indicator">EDIT</div>
@@ -174,7 +189,7 @@ function goBack() {
               <div class="selected-icon">EDIT</div>
               <div>
                 <h3>수정 중인 카테고리</h3>
-                <p>기존: "{{ selectedCategory?.['categoryName'] }}"</p>
+                <p>기존: "{{ (selectedCategory as Category).categoryName }}" (우선순위: {{ (selectedCategory as Category).priority}})</p>
               </div>
             </div>
           </div>
@@ -200,6 +215,20 @@ function goBack() {
                 />
                 <div class="input-help">
                   영문, 한글, 숫자를 포함하여 최대 50자까지 입력 가능합니다.
+                </div>
+              </el-form-item>
+
+              <el-form-item label="우선순위">
+                <el-input-number
+                    v-model="state.category.priority"
+                    :min="0"
+                    :max="999999"
+                    placeholder="우선순위를 입력해주세요"
+                    controls-position="right"
+                    style="width: 100%"
+                />
+                <div class="input-help">
+                  숫자가 낮을수록 먼저 표시됩니다. (0이 가장 우선)
                 </div>
               </el-form-item>
 
@@ -479,5 +508,15 @@ function goBack() {
   .button-group {
     flex-direction: column;
   }
+}
+.category-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.category-priority {
+  color: #aaa;
+  font-size: 12px;
 }
 </style>

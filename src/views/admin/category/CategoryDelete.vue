@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref} from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import { useRouter } from "vue-router";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { container } from "tsyringe";
@@ -20,6 +20,11 @@ const CATEGORY_ADMIN_REPOSITORY = container.resolve(CategoryAdminRepository)
 const categories = ref<Category[]>([]);
 const isLoading = ref(false);
 const isDeleting = ref(false);
+
+// priority로 정렬된 카테고리 목록
+const sortedCategories = computed(() => {
+  return [...categories.value].sort((a, b) => a.priority - b.priority);
+});
 
 onMounted(async () => {
   const isAuth = await checkAuth();
@@ -73,6 +78,7 @@ function handleCancel() {
   router.back();
 }
 </script>
+
 <template>
   <div class="category-delete-page">
     <div class="container">
@@ -108,7 +114,7 @@ function handleCancel() {
 
           <div class="categories-grid">
             <div
-                v-for="category in categories"
+                v-for="category in sortedCategories"
                 :key="`category-${category.categoryId}`"
                 class="category-card"
             >
@@ -117,7 +123,10 @@ function handleCancel() {
                   <div class="category-icon">FOLDER</div>
                   <div class="category-details">
                     <h3 class="category-name">{{ category.categoryName }}</h3>
-                    <span class="category-id">ID: {{ category.categoryId }}</span>
+                    <div class="category-meta">
+                      <span class="category-id">ID: {{ category.categoryId }}</span>
+                      <span class="category-priority">우선순위: {{ category.priority }}</span>
+                    </div>
                   </div>
                 </div>
 
@@ -340,5 +349,15 @@ function handleCancel() {
   .warning-notice {
     padding: 15px;
   }
+}
+.category-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.category-priority {
+  color: #aaa;
+  font-size: 12px;
 }
 </style>
