@@ -167,4 +167,20 @@ html.dark body {
   /* 또는 원하는 고정 너비 (예: 1600px) */
   margin: 0 auto; /* 가운데 정렬 */
 }
+
+/* 헤딩 태그들에 명시적으로 폰트 적용 */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'NanumBarunPen', sans-serif !important;
+}
+
+/* 굵은 제목용 */
+h1.bold-text, h2.bold-text, h3.bold-text,
+h4.bold-text, h5.bold-text, h6.bold-text {
+  font-family: 'NanumBarunPenBold', sans-serif !important;
+}
+
+/* Element Plus 컴포넌트들에도 폰트 적용 */
+[class*="el-"] {
+  font-family: 'NanumBarunPen', sans-serif;
+}
 </style>

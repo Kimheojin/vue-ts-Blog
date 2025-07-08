@@ -134,10 +134,10 @@ function goBack() {
 
       <div v-else>
         <div class="page-header">
-          <h2 class="page-title bold-text">게시글 삭제</h2>
+          <h1>게시글 삭제</h1>
           <div class="header-actions">
             <span class="posts-count">총 {{ totalElements }}개의 게시글</span>
-            <el-button @click="goBack" class="bold-text">돌아가기</el-button>
+            <el-button @click="goBack" >돌아가기</el-button>
           </div>
         </div>
 

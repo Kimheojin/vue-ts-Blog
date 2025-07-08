@@ -91,7 +91,7 @@ function handleReset() {
       </div>
 
       <div v-else>
-        <h2 class="page-title bold-text">글 작성</h2>
+        <h2>글 작성</h2>
 
         <el-form class="post-form" label-position="top">
           <el-form-item label="제목" class="bold-text">
