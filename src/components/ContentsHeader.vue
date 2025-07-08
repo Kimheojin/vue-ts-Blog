@@ -11,7 +11,9 @@ const headerTitle = computed(() => {
     return 'About me'
   } else if (route.path.startsWith('/category/')) {
     const categoryName = route.path.split('/category/')[1];
-    return `${categoryName}`;
+    // 뒤로 가기 시 글자 깨지는 현상 제거
+    const decodedName = decodeURIComponent(categoryName);
+    return `${decodedName}`;
   } else if (route.path.startsWith('/admin')){
     return '관리자 페이지';
   }
