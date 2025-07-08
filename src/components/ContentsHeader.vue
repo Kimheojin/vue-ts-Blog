@@ -17,7 +17,7 @@ const headerTitle = computed(() => {
   } else if (route.path.startsWith('/admin')){
     return '관리자 페이지';
   }
-    return '경로 따른 헤더 머시기';
+    return '';
 });
 </script>
 
@@ -42,5 +42,6 @@ const headerTitle = computed(() => {
   text-align: center; /* 텍스트를 가로 중앙 정렬 */
   margin-bottom: 50px;
   font-weight: bold;
+  min-height: 20px;  /* 최소 공백 유지 */
 }
 </style>
