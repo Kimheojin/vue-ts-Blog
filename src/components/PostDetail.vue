@@ -118,10 +118,7 @@ function goBack() {
     </div>
   </div>
 </template>
-
 <style scoped>
-/* GitHub Markdown CSS import */
-@import url('https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.1/github-markdown-dark.min.css');
 
 /* 나눔바른펜 폰트 */
 @import url('https://hangeul.pstatic.net/hangeul_static/css/nanum-barun-pen.css');
@@ -132,8 +129,6 @@ function goBack() {
   margin: 0 auto;
   font-family: 'NanumBarunPen', sans-serif;
 }
-
-
 
 .loading-text, .error-text {
   text-align: center;
@@ -191,39 +186,39 @@ function goBack() {
   margin-bottom: 40px;
 }
 
-/* GitHub 마크다운 스타일 커스터마이징 */
-.markdown-body {
+/* GitHub 마크다운 스타일 커스터마이징 - :deep() 사용 */
+:deep(.markdown-body) {
   box-sizing: border-box;
   min-width: 200px;
   max-width: 100%;
   margin: 0;
   padding: 0;
-  font-family: 'NanumBarunPen', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
   background-color: transparent !important;
+  line-height: 1.8; /* 줄간격 늘리기 (기본 1.5 → 1.8) */
+  letter-spacing: 0.05em; /* 글자간격 추가 */
 }
 
-/* 한글 폰트 적용 */
-.markdown-body h1,
-.markdown-body h2,
-.markdown-body h3,
-.markdown-body h4,
-.markdown-body h5,
-.markdown-body h6 {
+/* 한글 폰트 적용 - :deep() 사용 */
+:deep(.markdown-body h1),
+:deep(.markdown-body h2),
+:deep(.markdown-body h3),
+:deep(.markdown-body h4),
+:deep(.markdown-body h5),
+:deep(.markdown-body h6) {
   font-family: 'NanumBarunPenBold', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
   word-break: keep-all;
 }
 
-.markdown-body p,
-.markdown-body li,
-.markdown-body blockquote {
+:deep(.markdown-body p),
+:deep(.markdown-body li),
+:deep(.markdown-body blockquote) {
   font-family: 'NanumBarunPen', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
   word-break: keep-all;
   overflow-wrap: break-word;
 }
 
-/* 코드 폰트는 모노스페이스 유지 */
-.markdown-body code,
-.markdown-body pre {
+:deep(.markdown-body code),
+:deep(.markdown-body pre) {
   font-family: 'Fira Code', 'JetBrains Mono', 'Monaco', 'Consolas', 'Courier New', monospace;
 }
 
