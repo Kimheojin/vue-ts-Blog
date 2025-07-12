@@ -226,25 +226,25 @@ function goBack() {
 }
 
 :deep(.markdown-body h1) {
-  color: #ff6b6b;
+  color: #fff86b;
   line-height: 1.5;
   font-size: 2.5em;
 }
 
 :deep(.markdown-body h2) {
-  color: rgba(238, 201, 2, 0.97);
+  color: #CDDC39;
   line-height: 1.5;
   font-size: 2em;
 }
 
 :deep(.markdown-body h3) {
-  color: #66b04b;
+  color: #719b3d;
   line-height: 1.5;
   font-size: 1.7em;
 }
 
 :deep(.markdown-body h4) {
-  color: #eabe10;
+  color: #4b8a23;
   line-height: 1.5;
   font-size: 1.4em;
 }
