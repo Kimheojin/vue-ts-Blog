@@ -2,7 +2,6 @@
 Vue 3 + TypeScript 기반 웹 애플리케이션
 
 ## 링크
-- **배포**: [배포 링크](https://heojinblog.vercel.app/)
 - **백엔드 API**: [Blog API 문서](https://heojin1109.github.io/2025.07.04.htm)
 
 ## 배포 환경

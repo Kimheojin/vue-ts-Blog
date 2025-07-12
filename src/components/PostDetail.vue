@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, watch, computed } from 'vue';
+import { ref, onMounted, watch, computed, nextTick } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { container } from 'tsyringe';
 import { marked } from 'marked';
@@ -25,7 +25,15 @@ marked.setOptions({
 
 const renderedContent = computed(() => {
   if (!post.value.content) return '';
-  return marked(post.value.content);
+  const html = marked(post.value.content);
+
+  nextTick(() => {
+    if ((window as any).hljs) {
+      (window as any).hljs.highlightAll();
+    }
+  });
+
+  return html;
 });
 
 const isPostLoaded = computed(() => {
@@ -56,6 +64,14 @@ async function loadPost() {
     isLoading.value = false;
   }
 }
+
+watch(() => post.value.content, () => {
+  nextTick(() => {
+    if ((window as any).hljs) {
+      (window as any).hljs.highlightAll();
+    }
+  });
+});
 
 function formatDate(dateString: string): string {
   return new Date(dateString).toLocaleDateString('ko-KR', {
@@ -118,10 +134,7 @@ function goBack() {
     </div>
   </div>
 </template>
-
 <style scoped>
-/* GitHub Markdown CSS import */
-@import url('https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.1/github-markdown-dark.min.css');
 
 /* 나눔바른펜 폰트 */
 @import url('https://hangeul.pstatic.net/hangeul_static/css/nanum-barun-pen.css');
@@ -132,8 +145,6 @@ function goBack() {
   margin: 0 auto;
   font-family: 'NanumBarunPen', sans-serif;
 }
-
-
 
 .loading-text, .error-text {
   text-align: center;
@@ -191,39 +202,64 @@ function goBack() {
   margin-bottom: 40px;
 }
 
-/* GitHub 마크다운 스타일 커스터마이징 */
-.markdown-body {
+/* GitHub 마크다운 스타일 커스터마이징 - :deep() 사용 */
+:deep(.markdown-body) {
   box-sizing: border-box;
   min-width: 200px;
   max-width: 100%;
   margin: 0;
   padding: 0;
-  font-family: 'NanumBarunPen', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
   background-color: transparent !important;
+  line-height: 1.8; /* 줄간격 늘리기 (기본 1.5 → 1.8) */
+  letter-spacing: 0.05em; /* 글자간격 추가 */
 }
 
-/* 한글 폰트 적용 */
-.markdown-body h1,
-.markdown-body h2,
-.markdown-body h3,
-.markdown-body h4,
-.markdown-body h5,
-.markdown-body h6 {
+/* 한글 폰트 적용 - :deep() 사용 */
+:deep(.markdown-body h1),
+:deep(.markdown-body h2),
+:deep(.markdown-body h3),
+:deep(.markdown-body h4),
+:deep(.markdown-body h5),
+:deep(.markdown-body h6) {
   font-family: 'NanumBarunPenBold', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
   word-break: keep-all;
 }
 
-.markdown-body p,
-.markdown-body li,
-.markdown-body blockquote {
+:deep(.markdown-body h1) {
+  color: #ff6b6b;
+  line-height: 1.5;
+  font-size: 2.5em;
+}
+
+:deep(.markdown-body h2) {
+  color: rgba(238, 201, 2, 0.97);
+  line-height: 1.5;
+  font-size: 2em;
+}
+
+:deep(.markdown-body h3) {
+  color: #66b04b;
+  line-height: 1.5;
+  font-size: 1.7em;
+}
+
+:deep(.markdown-body h4) {
+  color: #eabe10;
+  line-height: 1.5;
+  font-size: 1.4em;
+}
+
+
+:deep(.markdown-body p),
+:deep(.markdown-body li),
+:deep(.markdown-body blockquote) {
   font-family: 'NanumBarunPen', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
   word-break: keep-all;
   overflow-wrap: break-word;
 }
 
-/* 코드 폰트는 모노스페이스 유지 */
-.markdown-body code,
-.markdown-body pre {
+:deep(.markdown-body code),
+:deep(.markdown-body pre) {
   font-family: 'Fira Code', 'JetBrains Mono', 'Monaco', 'Consolas', 'Courier New', monospace;
 }
 
