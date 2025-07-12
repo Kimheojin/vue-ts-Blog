@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, watch, computed } from 'vue';
+import { ref, onMounted, watch, computed, nextTick } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { container } from 'tsyringe';
 import { marked } from 'marked';
@@ -25,7 +25,15 @@ marked.setOptions({
 
 const renderedContent = computed(() => {
   if (!post.value.content) return '';
-  return marked(post.value.content);
+  const html = marked(post.value.content);
+
+  nextTick(() => {
+    if ((window as any).hljs) {
+      (window as any).hljs.highlightAll();
+    }
+  });
+
+  return html;
 });
 
 const isPostLoaded = computed(() => {
@@ -56,6 +64,14 @@ async function loadPost() {
     isLoading.value = false;
   }
 }
+
+watch(() => post.value.content, () => {
+  nextTick(() => {
+    if ((window as any).hljs) {
+      (window as any).hljs.highlightAll();
+    }
+  });
+});
 
 function formatDate(dateString: string): string {
   return new Date(dateString).toLocaleDateString('ko-KR', {
@@ -208,6 +224,31 @@ function goBack() {
   font-family: 'NanumBarunPenBold', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
   word-break: keep-all;
 }
+
+:deep(.markdown-body h1) {
+  color: #ff6b6b;
+  line-height: 1.5;
+  font-size: 2.5em;
+}
+
+:deep(.markdown-body h2) {
+  color: rgba(238, 201, 2, 0.97);
+  line-height: 1.5;
+  font-size: 2em;
+}
+
+:deep(.markdown-body h3) {
+  color: #66b04b;
+  line-height: 1.5;
+  font-size: 1.7em;
+}
+
+:deep(.markdown-body h4) {
+  color: #eabe10;
+  line-height: 1.5;
+  font-size: 1.4em;
+}
+
 
 :deep(.markdown-body p),
 :deep(.markdown-body li),
