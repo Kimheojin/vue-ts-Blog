@@ -167,7 +167,7 @@ function goBack() {
 }
 
 .post-title {
-  font-size: 32px;
+  font-size: 36px;
   color: #ffffff;
   margin: 0 0 20px 0;
   line-height: 1.4;
@@ -210,7 +210,7 @@ function goBack() {
   margin: 0;
   padding: 0;
   background-color: transparent !important;
-  line-height: 1.8; /* 줄간격 늘리기 (기본 1.5 → 1.8) */
+  line-height: 1.7; /* 줄간격 늘리기 (기본 1.5 → 1.7) */
   letter-spacing: 0.05em; /* 글자간격 추가 */
 }
 
@@ -238,13 +238,13 @@ function goBack() {
 }
 
 :deep(.markdown-body h3) {
-  color: #719b3d;
+  color: #9CCC65;
   line-height: 1.5;
   font-size: 1.7em;
 }
 
 :deep(.markdown-body h4) {
-  color: #4b8a23;
+  color: #8BC34A;
   line-height: 1.5;
   font-size: 1.4em;
 }
@@ -253,9 +253,11 @@ function goBack() {
 :deep(.markdown-body p),
 :deep(.markdown-body li),
 :deep(.markdown-body blockquote) {
-  font-family: 'NanumBarunPen', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-family: 'NanumBarunPen', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif !important;
   word-break: keep-all;
   overflow-wrap: break-word;
+  font-size: 20px !important;
+  margin-bottom: 1.0em; /* 단락 간격 추가 */
 }
 
 :deep(.markdown-body code),

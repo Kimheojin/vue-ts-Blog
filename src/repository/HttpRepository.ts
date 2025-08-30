@@ -13,7 +13,8 @@ export default class HttpRepository {
             .then((response) => plainToInstance(clazz, response))
     }
 
-    public delete<T>(config: HttpRequestConfig, clazz: ClassConstructor<T> | null = null): Promise<T> {
+    public delete<T>(config: HttpRequestConfig, clazz: ClassConstructor<T> | null = null)
+    : Promise<T> {
         return this.httpClient
             .request({ ...config, method: 'DELETE' })
             .then((response) => {
