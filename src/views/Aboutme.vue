@@ -75,7 +75,7 @@ const renderedContent = computed(() => {
   margin: 0;
   padding: 0;
   background-color: transparent !important;
-  line-height: 1.8;
+  line-height: 1.7;
   letter-spacing: 0.05em;
 }
 
@@ -102,13 +102,13 @@ const renderedContent = computed(() => {
 }
 
 :deep(.markdown-body h3) {
-  color: #719b3d;
+  color: #9CCC65;
   line-height: 1.5;
   font-size: 1.7em;
 }
 
 :deep(.markdown-body h4) {
-  color: #4b8a23;
+  color: #8BC34A;
   line-height: 1.5;
   font-size: 1.4em;
 }
@@ -116,9 +116,11 @@ const renderedContent = computed(() => {
 :deep(.markdown-body p),
 :deep(.markdown-body li),
 :deep(.markdown-body blockquote) {
-  font-family: 'NanumBarunPen', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-family: 'NanumBarunPen', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif !important;
   word-break: keep-all;
   overflow-wrap: break-word;
+  font-size: 20px !important;
+  margin-bottom: 1.0em;
 }
 
 :deep(.markdown-body code),
