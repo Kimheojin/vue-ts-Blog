@@ -35,7 +35,7 @@ const aboutContent = `## Contact
 1. 개인 블로그 구현 프로젝트
 - 백 엔드 코드 주소 : [https://github.com/Kimheojin/Blog-Spring.git](https://github.com/Kimheojin/Blog-Spring.git)
 - 프론트 엔드 코드 주소 : [https://github.com/Kimheojin/vue-ts-Blog.git](https://github.com/Kimheojin/vue-ts-Blog.git)
-- 배포 주소: [https://heojinblog.vercel.app/](https://heojinblog.vercel.app/)
+- 배포 주소: [https://heojin.vercel.app/](https://heojin.vercel.app/)
 
 ### 팀 프로젝트
 1. **도서 추천 및 공공 도서관 연계 서비스 프로젝트**
