@@ -49,7 +49,7 @@ const renderedContent = computed(() => {
 <template>
   <div class="about-page">
     <div class="about-container">
-      <article class="markdown-body" v-html="renderedContent"></article>
+      <article class="markdown-body about-content" v-html="renderedContent"></article>
     </div>
   </div>
 </template>
@@ -126,6 +126,26 @@ const renderedContent = computed(() => {
 :deep(.markdown-body code),
 :deep(.markdown-body pre) {
   font-family: 'Fira Code', 'JetBrains Mono', 'Monaco', 'Consolas', 'Courier New', monospace;
+}
+
+/* 마크다운 링크 스타일 */
+:deep(.markdown-body a) {
+  color: #07b3cc !important;
+  text-decoration: none;
+}
+
+:deep(.markdown-body a:hover) {
+  color: #5cbb60 !important;
+  text-decoration: underline;
+}
+
+:deep(.markdown-body a:visited) {
+  color: #90CAF9 !important;
+}
+
+.about-content {
+  margin-bottom: 60px;
+  padding-bottom: 40px;
 }
 
 @media (max-width: 767px) {

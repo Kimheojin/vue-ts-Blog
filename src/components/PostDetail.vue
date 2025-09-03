@@ -265,6 +265,21 @@ function goBack() {
   font-family: 'Fira Code', 'JetBrains Mono', 'Monaco', 'Consolas', 'Courier New', monospace;
 }
 
+/* 마크다운 링크 스타일 */
+:deep(.markdown-body a) {
+  color: #07b3cc !important;
+  text-decoration: none;
+}
+
+:deep(.markdown-body a:hover) {
+  color: #5cbb60 !important;
+  text-decoration: underline;
+}
+
+:deep(.markdown-body a:visited) {
+  color: #90CAF9 !important;
+}
+
 .bottom-navigation {
   display: flex;
   justify-content: space-between;
