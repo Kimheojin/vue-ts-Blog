@@ -267,13 +267,13 @@ function goBack() {
 
 /* 마크다운 링크 스타일 */
 :deep(.markdown-body a) {
-  color: #07b3cc !important;
+  color: #90CAF9 !important;
   text-decoration: none;
 }
 
 :deep(.markdown-body a:hover) {
-  color: #5cbb60 !important;
-  text-decoration: underline;
+  color: #16c2d7 !important;
+  text-decoration: none;
 }
 
 :deep(.markdown-body a:visited) {
