@@ -141,6 +141,11 @@ const renderedContent = computed(() => {
 
 :deep(.markdown-body a:visited) {
   color: #90CAF9 !important;
+  text-decoration: none;
+}
+:deep(.markdown-body a:visited:hover) {
+  color: #16c2d7 !important;
+  text-decoration: none;
 }
 
 .about-content {
