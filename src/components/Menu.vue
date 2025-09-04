@@ -44,7 +44,7 @@ onMounted(async () => {
 <template>
   <div class="menu-container">
     <div class="categories-section">
-      <el-link type="warning" class="regular-text" :underline="false" @click="goToAllPosts">글 전체보기</el-link>
+      <el-link type="warning" class="regular-text" :underline="false" @click="goToAllPosts">전체 글 보기</el-link>
 
       <!-- 로딩 상태 표시 -->
       <div v-if="isLoading" class="regular-text">카테고리 로딩 중...</div>

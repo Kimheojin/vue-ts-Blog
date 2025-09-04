@@ -54,8 +54,8 @@ function handlePageChange(page: number) {
 
       <div v-if="props.showAllPostsButton" class="navigation-buttons">
         <el-button @click="goToAllPosts"
-                   type="success"
-                   text bg>글 전체 보기</el-button>
+                   class="all-posts-button"
+                   text >전체 글 보기</el-button>
       </div>
     </div>
 
@@ -77,8 +77,7 @@ function handlePageChange(page: number) {
               <span class="post-title">{{ post.title }}</span>
               <el-link
                   v-if="!props.showAllPostsButton"
-                  class="category-link bold-text"
-                  type="warning"
+                  class="category-link bold-text custom-category-link"
                   @click.stop="goToCategory(post.categoryName)"
               >
                 {{ post.categoryName }}
@@ -197,5 +196,26 @@ function handlePageChange(page: number) {
 
 .opacity-blur {
   opacity: 0.6;
+}
+
+.all-posts-button {
+  color: #dcdc83 !important;
+  font-size: 20px !important;
+  font-weight: bold;
+
+}
+
+.all-posts-button:hover {
+  background-color: #424242 !important;
+}
+
+.custom-category-link {
+  color: #dcdc83 !important;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.custom-category-link:hover {
+  color: #f0f0a0 !important;
 }
 </style>
