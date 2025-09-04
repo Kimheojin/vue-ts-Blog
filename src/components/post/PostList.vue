@@ -54,8 +54,8 @@ function handlePageChange(page: number) {
 
       <div v-if="props.showAllPostsButton" class="navigation-buttons">
         <el-button @click="goToAllPosts"
-                   type="success"
-                   text bg>글 전체 보기</el-button>
+                   class="all-posts-button"
+                   text >전체 글 보기</el-button>
       </div>
     </div>
 
@@ -197,5 +197,16 @@ function handlePageChange(page: number) {
 
 .opacity-blur {
   opacity: 0.6;
+}
+
+.all-posts-button {
+  color: #dcdc83 !important;
+  font-size: 20px !important;
+  font-weight: bold;
+
+}
+
+.all-posts-button:hover {
+  background-color: #424242 !important;
 }
 </style>
