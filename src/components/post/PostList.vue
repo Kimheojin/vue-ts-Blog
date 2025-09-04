@@ -77,8 +77,7 @@ function handlePageChange(page: number) {
               <span class="post-title">{{ post.title }}</span>
               <el-link
                   v-if="!props.showAllPostsButton"
-                  class="category-link bold-text"
-                  type="warning"
+                  class="category-link bold-text custom-category-link"
                   @click.stop="goToCategory(post.categoryName)"
               >
                 {{ post.categoryName }}
@@ -208,5 +207,15 @@ function handlePageChange(page: number) {
 
 .all-posts-button:hover {
   background-color: #424242 !important;
+}
+
+.custom-category-link {
+  color: #dcdc83 !important;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.custom-category-link:hover {
+  color: #f0f0a0 !important;
 }
 </style>
