@@ -23,7 +23,7 @@ export default class CommentAdminRepository {
     // 전체 댓글 조회
     public async getAdminCommentList(): Promise<Comment[]> {
         const response = await this.httpRepository.get({
-            path: `/api/admin/posts/comments`,
+            path: `/api/admin/comments`,
         }, CommentListResponse);
 
         return response.commentDtoList || [];

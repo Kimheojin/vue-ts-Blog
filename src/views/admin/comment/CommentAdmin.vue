@@ -132,10 +132,10 @@ async function deleteComment(comment: Comment) {
         : comment.content;
 
     await ElMessageBox.confirm(
-        `댓글을 삭제하시겠습니까?\n\n"${contentPreview}"`,
+        `댓글을 관리자 삭제하시겠습니까?\n\n"${contentPreview}"`,
         '댓글 삭제',
         {
-          confirmButtonText: '삭제',
+          confirmButtonText: '관리자 삭제',
           cancelButtonText: '취소',
           type: 'warning',
         }
@@ -164,7 +164,7 @@ async function deleteComment(comment: Comment) {
 
   } catch (error: any) {
     if (error !== 'cancel') {
-      customHandleError(error, '댓글 삭제에 실패했습니다.');
+      customHandleError(error, '댓글 관리자 삭제에 실패했습니다.');
 
       // 에러가 발생한 경우에만 다시 조회해서 실제 상태 확인
       if (selectedPostId.value) {
@@ -186,16 +186,7 @@ async function backToAllComments() {
 }
 
 
-// 이메일 마스킹
-function maskEmail(email: string): string {
-  if (!email) return '익명';
-  const [local, domain] = email.split('@');
-  if (!domain) return email;
-  if (local.length <= 3) {
-    return `${local[0]}***@${domain}`;
-  }
-  return `${local.substring(0, 3)}***@${domain}`;
-}
+
 
 // 날짜 포맷팅
 function formatDate(dateString: string): string {
@@ -322,7 +313,7 @@ function goBack() {
                 <div class="comment-content">
                   <div class="comment-header">
                     <div class="comment-info">
-                      <span class="comment-author">{{ maskEmail(comment.email) }}</span>
+                      <span class="comment-author">{{ (comment.email) }}</span>
                       <span class="comment-date">{{ formatDate(comment.regDate) }}</span>
                       <span class="post-id-badge">게시물 ID: {{ comment.postId }}</span>
                       <span v-if="isReply(comment)" class="reply-badge">답글</span>
@@ -343,7 +334,7 @@ function goBack() {
                           :loading="isDeleting"
                           class="bold-text"
                       >
-                        삭제
+                        관리자 삭제
                       </el-button>
                       <span v-else class="delete-disabled">삭제 불가</span>
                     </div>
@@ -415,7 +406,7 @@ function goBack() {
                 <div class="comment-content">
                   <div class="comment-header">
                     <div class="comment-info">
-                      <span class="comment-author">{{ maskEmail(comment.email) }}</span>
+                      <span class="comment-author">{{ (comment.email) }}</span>
                       <span class="comment-date">{{ formatDate(comment.regDate) }}</span>
                       <span v-if="isReply(comment)" class="reply-badge">답글</span>
                       <span
@@ -435,7 +426,7 @@ function goBack() {
                           :loading="isDeleting"
                           class="bold-text"
                       >
-                        삭제
+                        관리자 삭제
                       </el-button>
                       <span v-else class="delete-disabled">삭제 불가</span>
                     </div>
@@ -551,24 +542,20 @@ function goBack() {
   cursor: pointer;
 }
 
-.clickable-comment:hover {
-  border-color: #66b1ff;
-  box-shadow: 0 2px 8px rgba(102, 177, 255, 0.3);
-}
 
 .post-id-badge {
   background-color: #66b1ff;
   color: white;
   padding: 2px 8px;
   border-radius: 12px;
-  font-size: 10px;
+  font-size: 13px;
   font-weight: bold;
 }
 
 .click-hint {
   margin-top: 10px;
   color: #888;
-  font-size: 12px;
+  font-size: 16px;
   font-style: italic;
   text-align: center;
 }
@@ -581,10 +568,7 @@ function goBack() {
   transition: all 0.3s ease;
 }
 
-.comment-item:hover {
-  border-color: #555;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
+
 
 .reply-comment {
   margin-left: 40px;
