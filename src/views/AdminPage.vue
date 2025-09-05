@@ -39,9 +39,7 @@ function goToPostWrite() {
 function goToPostDelete() {
   router.push('/admin/post/delete');
 }
-function goToAdminPosts() {
-  router.push('/admin/post/delete');
-}
+
 function goToPostModify() {
   router.push('/admin/post/modify');
 }
@@ -100,7 +98,6 @@ function goToImageList() {
           <div class="admin-actions">
           <div class="admin-title">Comment 관련</div>
             <el-button plain @click="goToCommentManage">Comment 수정</el-button>
-            <el-button plain @click="goToAdminPosts">관리자 post</el-button>
           </div>
 
           <div class="admin-actions">
