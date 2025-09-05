@@ -12,10 +12,18 @@ export default class CommentAdminRepository {
     }
 
 
-    // 댓글 조회(관리자)
+    // 전체 댓글 조회 (post Id에 따른)
     public async getAdminCommentByPostId(postId: number): Promise<Comment[]> {
         const response = await this.httpRepository.get({
             path: `/api/admin/posts/${postId}/comments`,
+        }, CommentListResponse);
+
+        return response.commentDtoList || [];
+    }
+    // 전체 댓글 조회
+    public async getAdminCommentList(): Promise<Comment[]> {
+        const response = await this.httpRepository.get({
+            path: `/api/admin/posts/comments`,
         }, CommentListResponse);
 
         return response.commentDtoList || [];
