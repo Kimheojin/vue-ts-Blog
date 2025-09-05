@@ -3,7 +3,7 @@ import { ref, onMounted } from 'vue';
 import { container } from 'tsyringe';
 import { ElMessage } from 'element-plus';
 import CommentRepository from '../repository/comment/CommentRepository.ts';
-import CommentWriteRequest from '../entity/comment/request/CommentWirteRequest.ts';
+import CommentWriteRequest from '../entity/comment/request/CommentWriteRequest.ts';
 import CommentDeleteRequest from '../entity/comment/request/CommentDeleteRequest.ts';
 import type Comment from '../entity/comment/data/Comment.ts';
 import { useErrorHandler } from '../composables/useErrorHandler.ts';
@@ -201,7 +201,7 @@ function maskEmail(email: string): string {
             v-model="commentForm.email"
             placeholder="이메일"
             class="form-input"
-            type="email"
+            type="text"
         />
         <el-input
             v-model="commentForm.password"
@@ -285,7 +285,7 @@ function maskEmail(email: string): string {
                   v-model="replyForms[comment.id].email"
                   placeholder="이메일"
                   class="form-input-small"
-                  type="email"
+                  type="text"
               />
               <el-input
                   v-model="replyForms[comment.id].password"
@@ -318,7 +318,7 @@ function maskEmail(email: string): string {
                   v-model="deleteForm[comment.id].email"
                   placeholder="이메일"
                   class="form-input-small"
-                  type="email"
+                  type="text"
               />
               <el-input
                   v-model="deleteForm[comment.id].password"
@@ -368,7 +368,7 @@ function maskEmail(email: string): string {
                       v-model="deleteForm[reply.id].email"
                       placeholder="이메일"
                       class="form-input-small"
-                      type="email"
+                      type="text"
                   />
                   <el-input
                       v-model="deleteForm[reply.id].password"

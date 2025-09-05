@@ -3,7 +3,7 @@ import HttpRepository from "../HttpRepository.ts";
 import type Comment from "../../entity/comment/data/Comment.ts";
 import CommentListResponse from "../../entity/comment/response/CommentListResponse.ts";
 import CommentDeleteRequest from "../../entity/comment/request/CommentDeleteRequest.ts";
-import CommentWriteRequest from "../../entity/comment/request/CommentWirteRequest.ts";
+import CommentWriteRequest from "../../entity/comment/request/CommentWriteRequest.ts";
 
 @singleton()
 export default class CommentRepository {

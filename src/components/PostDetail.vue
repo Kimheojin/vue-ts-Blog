@@ -153,12 +153,7 @@ function goBack() {
   margin: 40px 0;
 }
 
-.navigation-buttons {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 30px;
-  gap: 10px;
-}
+
 
 .post-header {
   margin-bottom: 30px;
@@ -300,7 +295,7 @@ function goBack() {
     padding: 15px;
   }
 
-  .navigation-buttons,
+
   .bottom-navigation {
     flex-direction: column;
     gap: 10px;
