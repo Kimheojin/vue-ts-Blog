@@ -286,9 +286,7 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.image-delete-page {
 
-}
 
 .delete-container {
   max-width: 1400px;
