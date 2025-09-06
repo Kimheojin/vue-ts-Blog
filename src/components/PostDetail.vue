@@ -120,8 +120,8 @@ function goBack() {
         </div>
 
         <div class="bottom-navigation">
-          <el-button @click="goBack" type='warning' text bg >이전으로</el-button>
-          <el-button @click="goToCategory(post.categoryName)" type='warning' text bg>
+          <el-button @click="goBack" type='warning' text bg class="nav-button">이전으로</el-button>
+          <el-button @click="goToCategory(post.categoryName)" type='warning' text bg class="nav-button">
             {{ post.categoryName }} 카테고리 더 보기
           </el-button>
         </div>
@@ -287,6 +287,12 @@ function goBack() {
   border-top: 1px solid #444;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+.nav-button {
+  font-weight: bold !important;
+  color: #a3d363 !important;
+  font-size: 19px !important;
 }
 
 /* 반응형 */
