@@ -68,23 +68,27 @@
 //   }
 // })
 
-
 // =================================================================
 // vite.config.ts (프로덕션용)
-import { defineConfig } from 'vite'
-import AutoImport from 'unplugin-auto-import/vite'
-import Components from 'unplugin-vue-components/vite'
-import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
-import vue from '@vitejs/plugin-vue'
+import { defineConfig } from "vite";
+import AutoImport from "unplugin-auto-import/vite";
+import Components from "unplugin-vue-components/vite";
+import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
+import vue from "@vitejs/plugin-vue";
+import sitemap from "vite-plugin-sitemap";
 
 export default defineConfig({
-  plugins: [
-    AutoImport({
-      resolvers: [ElementPlusResolver()],
-    }),
-    Components({
-      resolvers: [ElementPlusResolver()],
-    }),
-    vue()
-  ]
-})
+    plugins: [
+        AutoImport({
+            resolvers: [ElementPlusResolver()],
+        }),
+        Components({
+            resolvers: [ElementPlusResolver()],
+        }),
+        vue(),
+        sitemap({
+            hostname: "https://heojin.vercel.app",
+            dynamicRoutes: ["/post/67", "/post/65"],
+        }),
+    ],
+});
