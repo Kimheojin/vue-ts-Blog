@@ -87,8 +87,9 @@ export default defineConfig({
         }),
         vue(),
         sitemap({
+            // 2025.10.23
             hostname: "https://heojin.vercel.app",
-            dynamicRoutes: ["/post/67", "/post/65"],
+            dynamicRoutes: ["/post/37", "/post/38"],
         }),
     ],
 });
