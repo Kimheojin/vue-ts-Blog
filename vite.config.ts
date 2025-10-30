@@ -80,15 +80,15 @@ import sitemap from "vite-plugin-sitemap";
 // ISitemapField 타입을 직접 정의
 interface ISitemapField {
     route: string;
-    lastmod?: string;
+    lastmod?: Date;
 }
 
 const dynamicRoutes: ISitemapField[] = [
-    { route: "/post/37", lastmod: "2025-10-23" },
-    { route: "/post/38", lastmod: "2025-10-23" },
-    { route: "/post/39", lastmod: "2025-10-25" },
-    { route: "/post/40", lastmod: "2025-10-27" },
-    { route: "/post/41", lastmod: "2025-10-30" },
+    { route: "/post/37", lastmod: new Date("2025-10-23") },
+    { route: "/post/38", lastmod: new Date("2025-10-24") },
+    { route: "/post/39", lastmod: new Date("2025-10-25") },
+    { route: "/post/40", lastmod: new Date("2025-10-26") },
+    { route: "/post/41", lastmod: new Date("2025-10-27") },
 ];
 
 export default defineConfig({
