@@ -75,21 +75,6 @@ import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
 import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 import vue from "@vitejs/plugin-vue";
-import sitemap from "vite-plugin-sitemap";
-
-// ISitemapField 타입을 직접 정의
-interface ISitemapField {
-    route: string;
-    lastmod?: Date;
-}
-
-const dynamicRoutes: ISitemapField[] = [
-    { route: "/post/37", lastmod: new Date("2025-10-23") },
-    { route: "/post/38", lastmod: new Date("2025-10-24") },
-    { route: "/post/39", lastmod: new Date("2025-10-25") },
-    { route: "/post/40", lastmod: new Date("2025-10-26") },
-    { route: "/post/41", lastmod: new Date("2025-10-27") },
-];
 
 export default defineConfig({
     plugins: [
@@ -100,9 +85,5 @@ export default defineConfig({
             resolvers: [ElementPlusResolver()],
         }),
         vue(),
-        sitemap({
-            hostname: "https://heojin.vercel.app",
-            dynamicRoutes: dynamicRoutes as any,
-        }),
     ],
 });
