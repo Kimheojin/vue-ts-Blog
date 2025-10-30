@@ -89,7 +89,13 @@ export default defineConfig({
         sitemap({
             // 2025.10.23
             hostname: "https://heojin.vercel.app",
-            dynamicRoutes: ["/post/37", "/post/38", "/post/39", "/post/40"],
+            dynamicRoutes: [
+                "/post/37",
+                "/post/38",
+                "/post/39",
+                "/post/40",
+                "/post/41",
+            ],
         }),
     ],
 });
